@@ -1,10 +1,10 @@
 Package: compareDF
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Do a git diff of the rows between two dataframes with similar structure
 Version: 0.1
 Date: 2016-01-28
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Alex Joseph
+Maintainer: Alex Joseph <alexsanjoseph@gmail.com>
+Description: This package compares two dataframes which have the same column structure to show the rows that have changed. Also gives a git style diff format to quickly see what has changes in addition to summary statistics.
 License: What license is it under?
 LazyData: TRUE
