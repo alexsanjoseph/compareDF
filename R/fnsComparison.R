@@ -1,70 +1,16 @@
 
-# This file has different comparison functions
-
-.reportRange <- function(x){
-  x %>% group_by(Device) %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
-}
-
-.colour_coding_df <- function(df){
-  df[df == 2] = "green"
-  df[df == 1] = "red"
-  df[df == 0] = "grey"
-  df
-}
-
-
-
-.diff_type_df <- function(df, tolerance = 1e-6){
-
-  lapply(df, function(x) {
-    len_unique_x = length(na.omit(unique(x)))
-
-    # Score = 1 here implies it should be coloured
-    if(length(na.omit(x)) == 1){
-      score = 1
-    }else{
-      if(is.numeric(x) & !is.POSIXct(x) & len_unique_x > 1){
-        range_x = diff(range(x, na.rm = T))
-        score = as.numeric(range_x/min(x, na.rm = T) > tolerance)
-      }else
-        score = as.numeric(len_unique_x > 1)
-    }
-    # This step decides what colour it should be.
-    score = score + score * as.numeric(df$type == "+")
-  }) %>% data.frame
-}
-
-
-setdiffDFwithoutNA <- function(x, y){
-  random_string = "asdasd"
-  random_number = 180114L
-
-  assert_that(all(as.character(sapply(x, is)) == as.character(sapply(y, is))))
-  # x[sapply(x, is.int)]
-  numeric_columns = sapply(x, is.numeric)
-  char_columns = sapply(x, is.character)
-
-  x[,numeric_columns][is.na(x[,numeric_columns])] = random_number
-  x[,char_columns][is.na(x[,char_columns])] = random_string
-
-  y[,numeric_columns][is.na(y[,numeric_columns])] = random_number
-  y[,char_columns][is.na(y[,char_columns])] = random_string
-
-  output = setdiff(x, y)
-
-  if (isEmpty(output)) stop("No Difference between the two DF")
-
-  if (sum(numeric_columns) > 0) output[,numeric_columns][output[,numeric_columns] == random_number] = NA
-  if (sum(char_columns) > 0) output[,char_columns][output[,char_columns] == random_string] = NA
-  output
-}
-
-
-
+#' @title Compare Two dataframe
+#'
+#' @description Do a git style comparison
+#'
+#' @param df_new
+#' @param df_old
+#'
+#' @export
 CompareDataFrames <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
   message("Checking that the two ICT reports are actually different")
-  assert_that(!isTRUE(all.equal(df_old, df_new)))
+  # assert_that(!isTRUE(all.equal(df_old, df_new)))
 
   if(!is.null(exclude)) {
     df_old = df_old %>% select(-one_of(exclude))
@@ -156,6 +102,66 @@ CompareDataFrames <- function(df_new, df_old, group_col, exclude = NULL, limit_h
                 change_detail_summary = change_detail_count_summary)
 
 }
+
+# This file has different comparison functions
+
+.reportRange <- function(x){
+  x %>% group_by(Device) %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
+}
+
+.colour_coding_df <- function(df){
+  df[df == 2] = "green"
+  df[df == 1] = "red"
+  df[df == 0] = "grey"
+  df
+}
+
+.diff_type_df <- function(df, tolerance = 1e-6){
+
+  lapply(df, function(x) {
+    len_unique_x = length(na.omit(unique(x)))
+
+    # Score = 1 here implies it should be coloured
+    if(length(na.omit(x)) == 1){
+      score = 1
+    }else{
+      if(is.numeric(x) & !is.POSIXct(x) & len_unique_x > 1){
+        range_x = diff(range(x, na.rm = T))
+        score = as.numeric(range_x/min(x, na.rm = T) > tolerance)
+      }else
+        score = as.numeric(len_unique_x > 1)
+    }
+    # This step decides what colour it should be.
+    score = score + score * as.numeric(df$type == "+")
+  }) %>% data.frame
+}
+
+
+setdiffDFwithoutNA <- function(x, y){
+  random_string = "asdasd"
+  random_number = 180114L
+
+  # assert_that(all(as.character(sapply(x, is)) == as.character(sapply(y, is))))
+  # x[sapply(x, is.int)]
+  numeric_columns = sapply(x, is.numeric)
+  char_columns = sapply(x, is.character)
+
+  browser()
+  x[,numeric_columns][is.na(x[,numeric_columns])] = random_number
+  x[,char_columns][is.na(x[,char_columns])] = random_string
+
+  y[,numeric_columns][is.na(y[,numeric_columns])] = random_number
+  y[,char_columns][is.na(y[,char_columns])] = random_string
+
+  output = setdiff(x, y)
+
+  if (nrow(output) == 0) stop("No Difference between the two DF")
+
+  if (sum(numeric_columns) > 0) output[,numeric_columns][output[,numeric_columns] == random_number] = NA
+  if (sum(char_columns) > 0) output[,char_columns][output[,char_columns] == random_string] = NA
+  output
+}
+
 
 #' @title Convert timestamp tables to character
 .ts2char <- function(dataframe)
