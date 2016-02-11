@@ -1,16 +1,23 @@
 
-#' @title Compare Two dataframe
+#' @title Compare Two dataframes
 #'
-#' @description Do a git style comparison
+#' @description Do a git style comparison between two data frames of similar columnar structure
 #'
-#' @param df_new
-#' @param df_old
-#'
+#' @param df_new The data frame for which any changes will be shown as an addition (green)
+#' @param df_old The data frame for which any changes will be shown as a removal (red)
+#' @param group_col A character vector of a string of character vector showing the columns
+#'  by which to group_by.
+#' @param exclude The columns which should be excluded from the comparison
+#' @param tolerance The amount in fraction to which changes are ignored while showing the
+#'  visual representation. By default, the value is 0 and any change in the value of variables
+#'  is shown off. Doesn't apply to categorical variables.
+#' @importFrom dplyr '%>%'
 #' @export
-CompareDataFrames <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
+#' @examples
+compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
   message("Checking that the two ICT reports are actually different")
-  # assert_that(!isTRUE(all.equal(df_old, df_new)))
+  assert_that(!isTRUE(all.equal(df_old, df_new)))
 
   if(!is.null(exclude)) {
     df_old = df_old %>% select(-one_of(exclude))
@@ -103,7 +110,6 @@ CompareDataFrames <- function(df_new, df_old, group_col, exclude = NULL, limit_h
 
 }
 
-# This file has different comparison functions
 
 .reportRange <- function(x){
   x %>% group_by(Device) %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
