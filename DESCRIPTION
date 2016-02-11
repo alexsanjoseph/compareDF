@@ -1,10 +1,13 @@
 Package: compareDF
 Type: Package
-Title: Do a git style diff of the rows between two dataframes with similar structure
+Title: Do a git style diff of the rows between two dataframes with similar
+    structure
 Version: 0.1
 Date: 2016-01-28
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
-Description: This package compares two dataframes which have the same column structure to show the rows that have changed. Also gives a git style diff format to quickly see what has changes in addition to summary statistics.
+Description: This package compares two dataframes which have the same column
+    structure to show the rows that have changed. Also gives a git style diff format
+    to quickly see what has changes in addition to summary statistics.
 License: What license is it under?
 Imports:
     stringr  (>= 1.0),
@@ -13,3 +16,4 @@ Imports:
 Suggests:
     htmlTable (>= 1.5)
 LazyData: TRUE
+RoxygenNote: 5.0.1
