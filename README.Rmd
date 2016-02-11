@@ -1,4 +1,24 @@
 
 # Introduction
 
-Do Git style diff of two data frames
+This package shows what has changed between two data frames that have the same columnar
+structure. Such comparison is useful in many cases, for example when you expect only minor 
+changes in the data across two data sets such as:
+
+* Variation of a dataset across different time periods for the same grouping
+* Variation of values for different algorithms, etc.
+
+# Usage
+
+The package has a single function, `compare_df`. It takes in two data frames, and one or 
+more grouping variables and does a comparison between the the two. In addition you can 
+sepcificy columns to ignore, decide how many rows of changes to be displayed in the case 
+of the HTML output, and decide what tolerance you want to provide to detect change.
+
+# Examples
+
+```{r}
+
+
+
+```
