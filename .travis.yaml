@@ -2,8 +2,6 @@ language: r
 
 warnings_are_errors: true
 
-sudo: required
-
 env: _R_CHECK_CRAN_INCOMING_=FALSE
 
 r_github_packages:
