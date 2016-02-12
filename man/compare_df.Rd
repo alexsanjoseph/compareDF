@@ -24,4 +24,7 @@ is shown off. Doesn't apply to categorical variables.}
 \description{
 Do a git style comparison between two data frames of similar columnar structure
 }
+\examples{
+
+}
 

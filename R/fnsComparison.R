@@ -12,12 +12,15 @@
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
 #' @importFrom dplyr '%>%'
+#' @importFrom assertthat assert_that
+#' @importFrom dplyr '%>%'
 #' @export
 #' @examples
+#'
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
   message("Checking that the two ICT reports are actually different")
-  assert_that(!isTRUE(all.equal(df_old, df_new)))
+  if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same")
 
   if(!is.null(exclude)) {
     df_old = df_old %>% select(-one_of(exclude))
@@ -147,8 +150,6 @@ setdiffDFwithoutNA <- function(x, y){
   random_string = "asdasd"
   random_number = 180114L
 
-  # assert_that(all(as.character(sapply(x, is)) == as.character(sapply(y, is))))
-  # x[sapply(x, is.int)]
   numeric_columns = sapply(x, is.numeric)
   char_columns = sapply(x, is.character)
 
@@ -168,8 +169,6 @@ setdiffDFwithoutNA <- function(x, y){
   output
 }
 
-
-#' @title Convert timestamp tables to character
 .ts2char <- function(dataframe)
 {
   ts_cols = which(sapply(dataframe, is.POSIXct))
