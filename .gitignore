@@ -22,3 +22,6 @@ vignettes/*.pdf
 .Rbuildignore
 *.Rproj
 .gitignore
+
+# Mac stupidity
+.DS_Store
