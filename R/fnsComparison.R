@@ -11,9 +11,7 @@
 #' @param tolerance The amount in fraction to which changes are ignored while showing the
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
-#' @importFrom dplyr '%>%'
-#' @importFrom assertthat assert_that
-#' @importFrom dplyr '%>%'
+#' @import dplyr
 #' @export
 #' @examples
 #'
@@ -37,12 +35,12 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
     group_col = 'grp'
   }
 
-  df1_2 = setdiffDFwithoutNA(df_old, df_new)
-  df2_1 = setdiffDFwithoutNA(df_new, df_old)
+  df1_2 = rowdiff(df_old, df_new)
+  df2_1 = rowdiff(df_new, df_old)
 
   message("Creating comparison table...")
-  comparison_table = rbind(data.frame(type = "-", df1_2) , data.frame(type = "+", df2_1)) %>%
-    arrange(desc(type)) %>% arrange_(group_col) %>%
+  comparison_table = rbind(data.frame(chng_type = "-", df1_2) , data.frame(chng_type = "+", df2_1)) %>%
+    arrange(desc(chng_type)) %>% arrange_(group_col) %>%
     select(one_of(group_col), everything()) %>% r2two()
 
   html_table = NULL
@@ -56,7 +54,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
     require(htmlTable)
     comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(.)) %>% as.data.frame
 
-    shading = ifelse(SequenceOrderVector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
+    shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
 
     table_css = lapply(comparison_table_color_code, function(x)
       paste0("padding: .2em; color: ", x, ";")) %>% data.frame  %>% head(limit_html)
@@ -71,13 +69,13 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 
   ### Summary report
-  change_count = comparison_table_ts2char %>% group_by_(group_col, "type") %>% tally()
-  change_count_replace = change_count %>% spread(key = type, value = n)
+  change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
+  change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
   change_count_replace[is.na(change_count_replace)] = 0
   change_count_replace = change_count_replace %>% as.data.frame %>%
-    gather_("variable", "value", c("+", "-"))
+    tidyr::gather_("variable", "value", c("+", "-"))
 
-  change_count = change_count_replace %>% group_by_(group_col) %>% arrange(value) %>%
+  change_count = change_count_replace %>% group_by_("variable") %>% arrange(value) %>%
     summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
     mutate(additions = replace(additions, is.na(additions), 0)) %>%
     mutate(removals = replace(removals, is.na(removals), 0))
@@ -92,16 +90,19 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   change_detail = change_detail %>% reshape::melt.data.frame(group_col)
 
   change_detail_replace = change_detail %>% group_by_(group_col, "variable", "value") %>% tally()
-  change_detail_replace = change_detail_replace %>% group_by_(group_col, "variable") %>% spread(key = value, value = n)
+  change_detail_replace = change_detail_replace %>% group_by_(group_col, "variable") %>% tidyr::spread(key = value, value = n)
   change_detail_replace[is.na(change_detail_replace)] = 0
   change_detail_summary_replace = change_detail_replace %>% data.frame %>% dplyr::rename(param = variable) %>%
-    mutate(param = as.character(param)) %>% gather("variable", "value", 3:ncol(.))
+    mutate(param = as.character(param)) %>% tidyr::gather("variable", "value", 3:ncol(.))
 
   change_detail_count = change_detail_summary_replace %>% group_by_(group_col, "param") %>% arrange(desc(variable)) %>%
     summarize(changes = min(value[1:2]), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
     mutate(additions = replace(additions, is.na(additions), 0)) %>%
     mutate(removals = replace(removals, is.na(removals), 0))
-  change_detail_count[change_detail_count < 0] = 0
+  change_detail_count = change_detail_count %>%
+    mutate(replace(changes, changes < 0, 0)) %>%
+    mutate(replace(removals, removals < 0, 0)) %>%
+    mutate(replace(additions, additions < 0, 0))
 
   change_detail_count_summary = change_detail_count %>% group_by(param) %>%
     summarize(total_changes = sum(changes), total_additions = sum(additions), tot_removals = sum(removals))
@@ -113,6 +114,13 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
+r2two <- function(df, round_digits = 2)
+{
+  numeric_cols = which(sapply(df, is.numeric))
+  df[, numeric_cols] = lapply(df[, numeric_cols, drop = F], round, round_digits)
+
+  df
+}
 
 .reportRange <- function(x){
   x %>% group_by(Device) %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
@@ -141,44 +149,35 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
         score = as.numeric(len_unique_x > 1)
     }
     # This step decides what colour it should be.
-    score = score + score * as.numeric(df$type == "+")
+    score = score + score * as.numeric(df$chng_type == "+")
   }) %>% data.frame
 }
 
-
-setdiffDFwithoutNA <- function(x, y){
-  random_string = "asdasd"
-  random_number = 180114L
-
-  numeric_columns = sapply(x, is.numeric)
-  char_columns = sapply(x, is.character)
-
-  browser()
-  x[,numeric_columns][is.na(x[,numeric_columns])] = random_number
-  x[,char_columns][is.na(x[,char_columns])] = random_string
-
-  y[,numeric_columns][is.na(y[,numeric_columns])] = random_number
-  y[,char_columns][is.na(y[,char_columns])] = random_string
-
-  output = setdiff(x, y)
-
-  if (nrow(output) == 0) stop("No Difference between the two DF")
-
-  if (sum(numeric_columns) > 0) output[,numeric_columns][output[,numeric_columns] == random_number] = NA
-  if (sum(char_columns) > 0) output[,char_columns][output[,char_columns] == random_string] = NA
-  output
+# Courtesy - Gabor Grothendieck
+rowdiff2 <- function(x.1,x.2,...){
+  do.call("rbind", setdiff(split(x.1, rownames(x.1)), split(x.2, rownames(x.2))))
 }
 
-.ts2char <- function(dataframe)
+rowdiff <- function(x.1,x.2,...){
+  x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
+}
+
+.ts2char <- function(df)
 {
-  ts_cols = which(sapply(dataframe, is.POSIXct))
+  ts_cols = which(sapply(df, is.POSIXct))
   if (length(ts_cols) != 1) {
-    if (is.data.table(dataframe))
-      dataframe[, ts_cols] = lapply(dataframe[, ts_cols, with = F], as.character) else
-        dataframe[, ts_cols] = lapply(dataframe[, ts_cols], as.character)
+    df[, ts_cols] = lapply(df[, ts_cols], as.character)
   }else
-    dataframe[[ts_cols]] = as.character(dataframe[[ts_cols]])
+    df[[ts_cols]] = as.character(df[[ts_cols]])
+
+    df
+}
 
 
-    dataframe
+is.POSIXct <- function(x) inherits(x, "POSIXct")
+
+sequence_order_vector <- function(data)
+{
+  temp1 <- rle(as.vector(data))$lengths
+  rep(seq_along(temp1),temp1) - 1L
 }
