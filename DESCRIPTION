@@ -16,6 +16,7 @@ Imports:
     tidyr (>= 0.4.1),
     reshape (>= 0.8.5)
 Suggests:
-    htmlTable (>= 1.5)
+    htmlTable (>= 1.5),
+    testthat
 LazyData: TRUE
 RoxygenNote: 5.0.1
