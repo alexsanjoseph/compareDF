@@ -20,5 +20,33 @@ of the HTML output, and decide what tolerance you want to provide to detect chan
 ```{r}
 
 
+data("results_2010", "results_2011")
+
+context("compare_df_function")
+#===============================================================================
+# basic tests
+ctable = compare_df(results_2011, results_2010, c("Student"))
+
+ctable$comparison_df
+
+#===============================================================================
+# Table
+
+# Multiple Gourping
+
+# Exclude
+
+# Limit
+
+
+#===============================================================================
+contect("Exclude")
+
+#===============================================================================
+context("limit")
+
+#limit warning
+
+
 
 ```
