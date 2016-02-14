@@ -49,6 +49,12 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table_diff  = comparison_table_ts2char %>% group_by_(group_col) %>%
     do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
 
+  proceed = T
+  if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
+    warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
+
+  if(limit_html < nrow(comparison_table_diff))
+    message("Truncating HTML diff table to ", limit_html, " rows...")
   if (limit_html > 0){
     # Todo: Make seperate function
     require(htmlTable)
