@@ -12,7 +12,9 @@ License: What license is it under?
 Imports:
     stringr  (>= 1.0),
     dplyr (>= 0.4.3),
-    plyr (>= 1.8.3)
+    plyr (>= 1.8.3),
+    tidyr (>= 0.4.1),
+    reshape (>= 0.8.5)
 Suggests:
     htmlTable (>= 1.5)
 LazyData: TRUE
