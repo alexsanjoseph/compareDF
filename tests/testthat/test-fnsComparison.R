@@ -32,10 +32,6 @@ expect_equal(expected_comparison_df, ctable$comparison_df)
 
 
 #===============================================================================
-contect("Exclude")
-
-#===============================================================================
-context("limit")
 
 #limit warning
 
