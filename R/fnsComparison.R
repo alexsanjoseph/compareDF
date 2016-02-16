@@ -17,13 +17,12 @@
 #'
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
-  message("Checking that the two ICT reports are actually different")
-  if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same")
-
   if(!is.null(exclude)) {
     df_old = df_old %>% select(-one_of(exclude))
     df_new = df_new %>% select(-one_of(exclude))
   }
+
+  check_if_comparable(df_new, df_old, group_col)
 
   if (length(group_col) > 1) {
 
@@ -120,6 +119,20 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
+check_if_comparable <- function(df_new, df_old, group_col){
+  message("Checking that the two ICT reports are comparable..")
+
+  if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
+
+  if(any(names(df_new) != names(df_old))) stop("The two data frames have different columns!")
+
+  if(any("chng_type" %in% group_col)) stop("chng_type is a reserved keyword!")
+
+  if(!all(group_col %in% names(df_new))) stop("Grouping column(s) not found in the data.frames!")
+
+  return(TRUE)
+
+}
 r2two <- function(df, round_digits = 2)
 {
   numeric_cols = which(sapply(df, is.numeric))
