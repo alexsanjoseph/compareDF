@@ -1,5 +1,5 @@
 .onLoad <- function(libname, pkgname) {
-  options(stringsAsFactors = FALSE)
+  options(stringsAsFactors = FALSE) # nocov
 }
 
 #' Cerated data set to show off the package capabilities - old_df

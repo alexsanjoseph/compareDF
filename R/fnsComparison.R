@@ -149,11 +149,6 @@ r2two <- function(df, round_digits = 2)
   df
 }
 
-.reportRange <- function(x){
-  subRoutineStart = subRoutineDur = NULL
-  x %>% group_by_("Device") %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
-}
-
 .colour_coding_df <- function(df){
   df[df == 2] = "green"
   df[df == 1] = "red"
@@ -182,9 +177,9 @@ r2two <- function(df, round_digits = 2)
 }
 
 # Courtesy - Gabor Grothendieck
-rowdiff2 <- function(x.1,x.2,...){
-  do.call("rbind", setdiff(split(x.1, rownames(x.1)), split(x.2, rownames(x.2))))
-}
+# rowdiff2 <- function(x.1,x.2,...){
+#   do.call("rbind", setdiff(split(x.1, rownames(x.1)), split(x.2, rownames(x.2))))
+# }
 
 rowdiff <- function(x.1,x.2,...){
   x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
