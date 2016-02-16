@@ -11,9 +11,8 @@ context("compare_df_function")
 #===============================================================================
 # basic tests
 ctable = compare_df(new_df, old_df, c("var1"))
-expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
-print(expected_comparison_df[1,])
-print(ctable$comparison_df[1,])
+expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3)) %>%
+  arrange(desc(chng_type)) %>% arrange_("var1")
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
 
 #===============================================================================

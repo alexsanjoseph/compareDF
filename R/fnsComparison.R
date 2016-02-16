@@ -24,6 +24,9 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
+  one_of = everything = identity
+  . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
+
   if(!is.null(exclude)) {
     df_old = df_old %>% select(-one_of(exclude))
     df_new = df_new %>% select(-one_of(exclude))
@@ -147,6 +150,7 @@ r2two <- function(df, round_digits = 2)
 }
 
 .reportRange <- function(x){
+  subRoutineStart = subRoutineDur = NULL
   x %>% group_by_("Device") %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
 }
 
