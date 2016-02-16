@@ -17,6 +17,8 @@ by which to group_by.}
 
 \item{exclude}{The columns which should be excluded from the comparison}
 
+\item{limit_html}{maximum number of rows to show in the html diff. >1000 not recommended}
+
 \item{tolerance}{The amount in fraction to which changes are ignored while showing the
 visual representation. By default, the value is 0 and any change in the value of variables
 is shown off. Doesn't apply to categorical variables.}
@@ -25,6 +27,12 @@ is shown off. Doesn't apply to categorical variables.}
 Do a git style comparison between two data frames of similar columnar structure
 }
 \examples{
-
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    val1 = c(1, 2, 3))
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    val1 = c(1, 2, 4))
+ctable = compare_df(new_df, old_df, c("var1"))
+print(ctable$comparison_df)
+ctable$html_output
 }
 

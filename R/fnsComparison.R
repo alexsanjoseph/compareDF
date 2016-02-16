@@ -15,7 +15,13 @@
 #' @import dplyr
 #' @export
 #' @examples
-#'
+#' old_df = data.frame(var1 = c("A", "B", "C"),
+#'                     val1 = c(1, 2, 3))
+#' new_df = data.frame(var1 = c("A", "B", "C"),
+#'                     val1 = c(1, 2, 4))
+#' ctable = compare_df(new_df, old_df, c("var1"))
+#' print(ctable$comparison_df)
+#' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
   if(!is.null(exclude)) {
@@ -120,7 +126,6 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 }
 
 check_if_comparable <- function(df_new, df_old, group_col){
-  message("Checking that the two ICT reports are comparable..")
 
   if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
 
