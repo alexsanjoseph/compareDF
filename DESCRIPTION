@@ -9,12 +9,12 @@ Description: This package compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
     to quickly see what has changes in addition to summary statistics.
 License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0)
 Imports:
-    stringr  (>= 1.0),
     dplyr (>= 0.4.3),
-    plyr (>= 1.8.3),
     tidyr (>= 0.4.1),
-    reshape (>= 0.8.5)
+    reshape (>= 0.8.5),
 Suggests:
     htmlTable (>= 1.5),
     testthat
