@@ -11,7 +11,7 @@ context("compare_df_function")
 #===============================================================================
 # basic tests
 ctable = compare_df(new_df, old_df, c("var1"))
-
+ctable$html_output
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df, ctable$comparison_df)
 
@@ -28,8 +28,10 @@ new_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "W"),
                     val1 = c(1, 2, 3),
                     val2 = c("A1", "B1", "C2"),
-                    val3 = c(1, 2, 4)
+                    val3 = c(1, 3, 4)
 )
+ctable = compare_df(new_df, old_df, c("var1", "var2"))
+ctable$html_output
 
 # Test for sameness
 expect_error(compare_df(new_df, new_df),

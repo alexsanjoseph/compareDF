@@ -8,6 +8,7 @@
 #' @param group_col A character vector of a string of character vector showing the columns
 #'  by which to group_by.
 #' @param exclude The columns which should be excluded from the comparison
+#' @param limit_html maximum number of rows to show in the html diff. >1000 not recommended
 #' @param tolerance The amount in fraction to which changes are ignored while showing the
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
@@ -55,8 +56,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if(limit_html < nrow(comparison_table_diff))
     message("Truncating HTML diff table to ", limit_html, " rows...")
   if (limit_html > 0){
-    # Todo: Make seperate function
-    require(htmlTable)
+    requireNamespace("htmlTable")
     comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(.)) %>% as.data.frame
 
     shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
@@ -65,7 +65,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
       paste0("padding: .2em; color: ", x, ";")) %>% data.frame  %>% head(limit_html)
 
     message("Creating HTML table for first ", limit_html, " rows")
-    html_table = htmlTable(comparison_table_ts2char %>% head(limit_html),
+    html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
                            col.rgroup = shading,
                            rnames = F, css.cell = table_css,
                            padding.rgroup = rep("5em", length(shading))
@@ -142,7 +142,7 @@ r2two <- function(df, round_digits = 2)
 }
 
 .reportRange <- function(x){
-  x %>% group_by(Device) %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
+  x %>% group_by_("Device") %>% summarize(start = paste0(min(subRoutineStart), end = max(subRoutineStart+subRoutineDur)))
 }
 
 .colour_coding_df <- function(df){
@@ -192,6 +192,7 @@ rowdiff <- function(x.1,x.2,...){
     df
 }
 
+piped.do.call = function(x, fname, largs) do.call(fname, c(list(x), largs))
 
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
