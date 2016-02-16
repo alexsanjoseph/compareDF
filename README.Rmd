@@ -1,4 +1,9 @@
 
+# compareDF
+
+[![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
+[![codecov.io](http://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](http://codecov.io/github/alexsanjoseph/compareDF?branch=master)
+
 # Introduction
 
 This package shows what has changed between two data frames that have the same columnar
