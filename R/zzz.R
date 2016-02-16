@@ -1,6 +1,5 @@
 .onLoad <- function(libname, pkgname) {
   options(stringsAsFactors = FALSE)
-  data.table::setNumericRounding(0L)
 }
 
 #' Cerated data set to show off the package capabilities - old_df
