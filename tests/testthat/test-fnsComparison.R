@@ -13,8 +13,7 @@ context("compare_df_function")
 
 # Don't use + and - directly
 ctable = compare_df(new_df, old_df, c("var1"))
-expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3)) %>%
-  arrange(desc(chng_type)) %>% arrange_("var1")
+expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
 
 #===============================================================================
@@ -57,20 +56,18 @@ expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
 
 
-
 # Table
+ctable$comparison_table_diff
 
-# Multiple Gourping
-
-# Exclude
+# Multiple Grouping / Exclude
 ctable = compare_df(new_df, old_df, c("var1", "var2"), exclude = "val3")
 expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
                                     var1 = c("C", "C"),
                                     var2 = c("W", "X"),
                                     val1 = c(3,3),
-                                    val2 = c("C2", "C1")) %>%
-  arrange(desc(chng_type)) %>% arrange_("var1")
+                                    val2 = c("C2", "C1")) #%>%
+  # arrange(desc(chng_type)) %>% arrange_("var1")
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
 

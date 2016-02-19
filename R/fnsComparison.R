@@ -48,8 +48,9 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   df2_1 = rowdiff(df_new, df_old)
 
   message("Creating comparison table...")
-  comparison_table = rbind(data.frame(chng_type = "-", df1_2) , data.frame(chng_type = "+", df2_1)) %>%
+  comparison_table = rbind(data.frame(chng_type = "0", df1_2) , data.frame(chng_type = "1", df2_1)) %>%
     arrange(desc(chng_type)) %>% arrange_(group_col) %>%
+    mutate(chng_type = ifelse(chng_type == 0, "-", "+")) %>%
     select(one_of(group_col), everything()) %>% r2two()
 
   html_table = NULL
