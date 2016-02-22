@@ -72,11 +72,17 @@ expect_equal(ctable$comparison_df, expected_comparison_df)
 
 
 # Limit
+library("stringr")
+max_rows = 2
+ctable = compare_df(new_df, old_df, c("var1", "var2"), limit_html = max_rows)
+expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), max_rows)
 
 
 #===============================================================================
 
 #limit warning
+
+# Tolerance
 
 # Other stats
 
