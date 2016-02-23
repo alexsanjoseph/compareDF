@@ -20,12 +20,30 @@ more grouping variables and does a comparison between the the two. In addition y
 sepcificy columns to ignore, decide how many rows of changes to be displayed in the case 
 of the HTML output, and decide what tolerance you want to provide to detect change.
 
-# Examples
+# Basic Example
+
+Let's take the case of a teacher who wants to compare the marks and grades of students across
+two years, 2010 and 2011. The data is stored in tabular format.
 
 ```{r}
-
-
 data("results_2010", "results_2011")
+print(results_2010)
+print(results_2011)
+```
+
+The data shows the performance of students in two divisions, A and B for two years. Some subjects
+like Maths, Physics, Chemistry and Art are given scores while others like Discipline and PE are 
+given grades. 
+
+It is possible that there are students of the same name in two divisions, for example, there is 
+a Rohit in both the divisions in 2011.
+
+It is also possible that some students have dropped out, or added new across the two years. 
+Eg: - Mugger and Dhakkan dropped out while Vikram and Dikchik where added in the Division
+
+
+
+
 
 message("compare_df_function")
 #===============================================================================
@@ -33,7 +51,7 @@ message("compare_df_function")
 ctable = compare_df(results_2011, results_2010, c("Student"))
 
 ctable$comparison_df
-
+ctable$html_output
 #===============================================================================
 # Table
 
