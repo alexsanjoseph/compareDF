@@ -27,7 +27,7 @@ of the HTML output, and decide what tolerance you want to provide to detect chan
 
 data("results_2010", "results_2011")
 
-context("compare_df_function")
+message("compare_df_function")
 #===============================================================================
 # basic tests
 ctable = compare_df(results_2011, results_2010, c("Student"))
@@ -38,6 +38,8 @@ ctable$comparison_df
 # Table
 
 # Multiple Gourping
+ctable = compare_df(results_2011, results_2010, c("Division", "Student"))
+ctable$html_output
 
 # Exclude
 
@@ -45,10 +47,10 @@ ctable$comparison_df
 
 
 #===============================================================================
-contect("Exclude")
+message("Exclude")
 
 #===============================================================================
-context("limit")
+message("limit")
 
 #limit warning
 
