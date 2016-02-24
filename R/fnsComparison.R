@@ -59,30 +59,10 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table_diff  = comparison_table_ts2char %>% group_by_(group_col) %>%
     do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
 
-  proceed = T
-  if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
-    warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
+  if (limit_html > 0)
+    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html)
 
-  if(limit_html < nrow(comparison_table_diff))
-    message("Truncating HTML diff table to ", limit_html, " rows...")
-  if (limit_html > 0){
-    requireNamespace("htmlTable")
-    comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(.)) %>% as.data.frame
-
-    shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
-
-    table_css = lapply(comparison_table_color_code, function(x)
-      paste0("padding: .2em; color: ", x, ";")) %>% data.frame  %>% head(limit_html)
-
-    message("Creating HTML table for first ", limit_html, " rows")
-    html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
-                           col.rgroup = shading,
-                           rnames = F, css.cell = table_css,
-                           padding.rgroup = rep("5em", length(shading))
-    )
-  }
-
-
+  browser()
   ### Summary report
   change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
   change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
@@ -129,6 +109,29 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
+create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
+
+  if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
+    warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
+
+  if(limit_html < nrow(comparison_table_diff))
+    message("Truncating HTML diff table to ", limit_html, " rows...")
+
+  requireNamespace("htmlTable")
+  comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(.)) %>% as.data.frame
+
+  shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
+
+  table_css = lapply(comparison_table_color_code, function(x)
+    paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html)
+
+  message("Creating HTML table for first ", limit_html, " rows")
+  html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
+                                    col.rgroup = shading,
+                                    rnames = F, css.cell = table_css,
+                                    padding.rgroup = rep("5em", length(shading))
+  )
+}
 check_if_comparable <- function(df_new, df_old, group_col){
 
   if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
