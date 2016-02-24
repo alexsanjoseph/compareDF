@@ -39,19 +39,39 @@ It is possible that there are students of the same name in two divisions, for ex
 a Rohit in both the divisions in 2011.
 
 It is also possible that some students have dropped out, or added new across the two years. 
-Eg: - Mugger and Dhakkan dropped out while Vikram and Dikchik where added in the Division
+Eg: - Mugger and Dhakkan dropped out while Vikram and Dikchik where added in the Division B
 
+Now let's compare the performance of the students across the years. The grouping variables are
+the `Division` and the `Student` columns.
 
-
-
-
-message("compare_df_function")
-#===============================================================================
-# basic tests
-ctable = compare_df(results_2011, results_2010, c("Student"))
-
+```{r}
+library(compareDF)
+ctable = compare_df(results_2011, results_2010, c("Student", "Division"))
 ctable$comparison_df
+
+```
+
+By default, no columns are excluded from the comparison, so any of the tuple of grouping 
+variables which are different across the two data frames are shown in the comparison table.
+
+For example, Akshay, Division A has the exact same scores but has two different grades for Discipline across 
+the two years so that row is included.
+
+However, Macho, Division B has had the exact same scores in both the years, so his data is not
+shown in the comparison table.
+
+While the comparison, table can be quickly summarized in various forms futher, it is 
+very difficult to  process visually, so let's find a way to represent this is a way that is easier 
+for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
+
+```{r}
 ctable$html_output
+```
+
+```{r}
+
+ctable$change_detail_summary
+```
 #===============================================================================
 # Table
 
