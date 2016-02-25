@@ -11,7 +11,6 @@ context("compare_df_function")
 #===============================================================================
 # basic tests
 
-# Don't use + and - directly
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
@@ -29,10 +28,9 @@ new_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "W"),
                     val1 = c(1, 2, 3),
                     val2 = c("A1", "B1", "C2"),
-                    val3 = c(1, 3, 4)
+                    val3 = c(1, 2.1, 4)
 )
 ctable = compare_df(new_df, old_df, c("var1", "var2"))
-ctable$html_output
 
 # Test for sameness
 expect_error(compare_df(new_df, new_df),
@@ -81,7 +79,15 @@ expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), 
 #===============================================================================
 
 #limit warning
-
+ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.5)
+expected_comparison_df = data.frame(grp = c(3, 4),
+                                    chng_type = c("+", "-"),
+                                    var1 = c("C", "C"),
+                                    var2 = c("W", "X"),
+                                    val1 = c(3,3),
+                                    val2 = c("C2", "C1"),
+                                    cal3 = c(4.0, 3.0)) #%>%
+expect_equal(ctable$comparison_df, expected_comparison_df)
 # Tolerance
 
 # Other stats
