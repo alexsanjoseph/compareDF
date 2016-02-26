@@ -24,28 +24,17 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
-  one_of = everything = identity
-  . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
+#   one_of = everything = identity
+#   . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
 
-  if(!is.null(exclude)) {
-    df_old = df_old %>% select(-one_of(exclude))
-    df_new = df_new %>% select(-one_of(exclude))
-  }
+  if(!is.null(exclude)) both_tables = exclude_columns(list(df_new, df_old))
 
   check_if_comparable(df_new, df_old, group_col)
 
-  if (length(group_col) > 1) {
+  if (length(group_col) > 1) group_col = 'grp' ;  both_tables = group_columns(both_tables, group_col)
 
-    message("Grouping grouping columns")
-    df_combined = rbind(df_new %>% mutate(from = "new"), df_old %>% mutate(from = "old"))
-    df_combined = df_combined %>% piped.do.call(group_by_, group_col) %>% data.frame(grp = group_indices(.), .) %>% ungroup
-    df_new = df_combined %>% filter(from == "new") %>% select(-from)
-    df_old = df_combined %>% filter(from == "old") %>% select(-from)
-    group_col = 'grp'
-  }
-
-  df1_2 = rowdiff(df_old, df_new)
-  df2_1 = rowdiff(df_new, df_old)
+  both_diffs = list(df1_2 = rowdiff(df_old, df_new),
+                    df2_1 = rowdiff(df_new, df_old))
 
   message("Creating comparison table...")
   comparison_table = rbind(data.frame(chng_type = "0", df1_2) , data.frame(chng_type = "1", df2_1)) %>%
@@ -53,11 +42,17 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
     mutate(chng_type = ifelse(chng_type == 0, "-", "+")) %>%
     select(one_of(group_col), everything()) %>% r2two()
 
+  browser()
   html_table = NULL
   comparison_table_ts2char = .ts2char(comparison_table)
 
   comparison_table_diff  = comparison_table_ts2char %>% group_by_(group_col) %>%
     do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
+
+  rows_outside_tolerance = comparison_table_diff %>% select(-chng_type) %>%
+    apply(1, function(x) all(x == 0))
+
+  comparison
 
   if (limit_html > 0)
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html)
@@ -109,7 +104,26 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
+exclude_columns <- function(both_tables, exclude){
+  list(df_old = df_old %>% select(-one_of(exclude)),
+       df_new = df_new %>% select(-one_of(exclude)))
+}
+
+group_columns <- function(both_tables, group_col){
+  message("Grouping grouping columns")
+  df_combined = rbind(both_tables$df_new %>% mutate(from = "new"), both_tables$df_old %>% mutate(from = "old"))
+  df_combined = df_combined %>% piped.do.call(group_by_, group_col) %>% data.frame(grp = group_indices(.), .) %>% ungroup
+  list(df_new = df_combined %>% filter(from == "new") %>% select(-from),
+       df_old = df_combined %>% filter(from == "old") %>% select(-from))
+}
+
+eliminate_tolerant_rows <- function(comparison_table_diff, comparison_table_ts2char){
+
+}
+
 create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
+
+  . = NULL # R CMD
 
   if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
     warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
@@ -132,6 +146,7 @@ create_html_table <- function(comparison_table_diff, comparison_table_ts2char, g
                                     padding.rgroup = rep("5em", length(shading))
   )
 }
+
 check_if_comparable <- function(df_new, df_old, group_col){
 
   if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
@@ -145,6 +160,7 @@ check_if_comparable <- function(df_new, df_old, group_col){
   return(TRUE)
 
 }
+
 r2two <- function(df, round_digits = 2)
 {
   numeric_cols = which(sapply(df, is.numeric))
