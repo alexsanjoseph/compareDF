@@ -27,54 +27,49 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 #   one_of = everything = identity
 #   . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
 
-  if(!is.null(exclude)) both_tables = exclude_columns(list(df_new, df_old))
-
-  check_if_comparable(df_new, df_old, group_col)
-
-  if (length(group_col) > 1) group_col = 'grp' ;  both_tables = group_columns(both_tables, group_col)
-
-  both_diffs = list(df1_2 = rowdiff(df_old, df_new),
-                    df2_1 = rowdiff(df_new, df_old))
-
-  message("Creating comparison table...")
-  comparison_table = rbind(data.frame(chng_type = "0", df1_2) , data.frame(chng_type = "1", df2_1)) %>%
-    arrange(desc(chng_type)) %>% arrange_(group_col) %>%
-    mutate(chng_type = ifelse(chng_type == 0, "-", "+")) %>%
-    select(one_of(group_col), everything()) %>% r2two()
-
-  browser()
   html_table = NULL
+  both_tables = list(df_new = df_new, df_old = df_old)
+
+  if(!is.null(exclude)) both_tables = exclude_columns(both_tables)
+
+  check_if_comparable(both_tables$df_new, both_tables$df_old, group_col)
+
+  if (length(group_col) > 1) {
+    both_tables = group_columns(both_tables, group_col)
+    group_col = 'grp'
+  }
+
+  both_diffs = combined_rowdiffs(both_tables)
+  comparison_table         = create_comparison_table(both_diffs, group_col)
   comparison_table_ts2char = .ts2char(comparison_table)
-
-  comparison_table_diff  = comparison_table_ts2char %>% group_by_(group_col) %>%
-    do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
-
-  rows_outside_tolerance = comparison_table_diff %>% select(-chng_type) %>%
-    apply(1, function(x) all(x == 0))
-
-  comparison
+  comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance)
+  comparison_table         = eliminate_tolerant_rows(comparison_table, comparison_table_diff)
 
   if (limit_html > 0)
-    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html)
+    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html) else
+      html_table = NULL
 
   browser()
-  ### Summary report
-  change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
-  change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
-  change_count_replace[is.na(change_count_replace)] = 0
-  change_count_replace = change_count_replace %>% as.data.frame %>%
-    tidyr::gather_("variable", "value", c("+", "-"))
 
-  change_count = change_count_replace %>% group_by_("variable") %>% arrange(value) %>%
-    summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
-    mutate(additions = replace(additions, is.na(additions), 0)) %>%
-    mutate(removals = replace(removals, is.na(removals), 0))
-  change_count[change_count < 0] = 0
+  change_summary =  create_change_summary(both_tables)
 
-  change_summary = c(old_obs = nrow(df_old), new_obs = nrow(df_new),
-                     changes = sum(change_count$changes), additions = sum(change_count$additions),
-                     removals = sum(change_count$removals))
+  create_change_summary <- function(comparison_table_ts2char, both_tables, group_col){
 
+    change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
+    change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
+    change_count_replace[is.na(change_count_replace)] = 0
+    change_count_replace = change_count_replace %>% as.data.frame %>%
+      tidyr::gather_("variable", "value", c("+", "-"))
+
+    change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
+      summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
+      mutate(additions = replace(additions, is.na(additions), 0)) %>%
+      mutate(removals = replace(removals, is.na(removals), 0))
+    change_count[change_count < 0] = 0
+
+    c(old_obs = nrow(both_tables$df_old), new_obs = nrow(both_tables$df_new),
+      changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
+  }
   change_detail = comparison_table_diff
   change_detail[[group_col]] = comparison_table_ts2char[[group_col]]
   change_detail = change_detail %>% reshape::melt.data.frame(group_col)
@@ -117,8 +112,29 @@ group_columns <- function(both_tables, group_col){
        df_old = df_combined %>% filter(from == "old") %>% select(-from))
 }
 
-eliminate_tolerant_rows <- function(comparison_table_diff, comparison_table_ts2char){
+combined_rowdiffs <- function(both_tables){
+  list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
+       df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+}
 
+create_comparison_table <- function(both_diffs, group_col){
+  message("Creating comparison table...")
+  rbind(data.frame(chng_type = "0", both_diffs$df1_2) , data.frame(chng_type = "1", both_diffs$df2_1)) %>%
+    arrange(desc(chng_type)) %>% arrange_(group_col) %>%
+    mutate(chng_type = ifelse(chng_type == 0, "0", "1")) %>%
+    select(one_of(group_col), everything()) %>% r2two()
+}
+
+
+create_comparison_table_diff <- function(comparison_table_ts2char, group_col, tolerance){
+  comparison_table_ts2char %>% group_by_(group_col) %>%
+    do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
+}
+
+eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
+  rows_inside_tolerance = comparison_table_diff %>% select(-chng_type) %>%
+    apply(1, function(x) all(x == 0))
+  comparison_table[!rows_inside_tolerance,]
 }
 
 create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
