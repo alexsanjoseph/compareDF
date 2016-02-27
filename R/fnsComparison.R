@@ -27,9 +27,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 #   one_of = everything = identity
 #   . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
 
-  html_table = NULL
   both_tables = list(df_new = df_new, df_old = df_old)
-
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables)
 
   check_if_comparable(both_tables$df_new, both_tables$df_old, group_col)
@@ -43,65 +41,38 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table         = create_comparison_table(both_diffs, group_col)
   comparison_table_ts2char = .ts2char(comparison_table)
   comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance)
+
   comparison_table         = eliminate_tolerant_rows(comparison_table, comparison_table_diff)
+  comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
+  comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
 
   if (limit_html > 0)
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html) else
       html_table = NULL
 
-  browser()
+  change_count =  create_change_count(comparison_table, group_col)
+  change_summary =  create_change_summary(change_count, both_tables)
 
-  change_summary =  create_change_summary(both_tables)
-
-  create_change_summary <- function(comparison_table_ts2char, both_tables, group_col){
-
-    change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
-    change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
-    change_count_replace[is.na(change_count_replace)] = 0
-    change_count_replace = change_count_replace %>% as.data.frame %>%
-      tidyr::gather_("variable", "value", c("+", "-"))
-
-    change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
-      summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
-      mutate(additions = replace(additions, is.na(additions), 0)) %>%
-      mutate(removals = replace(removals, is.na(removals), 0))
-    change_count[change_count < 0] = 0
-
-    c(old_obs = nrow(both_tables$df_old), new_obs = nrow(both_tables$df_new),
-      changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
-  }
-  change_detail = comparison_table_diff
-  change_detail[[group_col]] = comparison_table_ts2char[[group_col]]
-  change_detail = change_detail %>% reshape::melt.data.frame(group_col)
-
-  change_detail_replace = change_detail %>% group_by_(group_col, "variable", "value") %>% tally()
-  change_detail_replace = change_detail_replace %>% group_by_(group_col, "variable") %>% tidyr::spread(key = value, value = n)
-  change_detail_replace[is.na(change_detail_replace)] = 0
-  change_detail_summary_replace = change_detail_replace %>% data.frame %>% dplyr::rename(param = variable) %>%
-    mutate(param = as.character(param)) %>% tidyr::gather("variable", "value", 3:ncol(.))
-
-  change_detail_count = change_detail_summary_replace %>% group_by_(group_col, "param") %>% arrange(desc(variable)) %>%
-    summarize(changes = min(value[1:2]), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
-    mutate(additions = replace(additions, is.na(additions), 0)) %>%
-    mutate(removals = replace(removals, is.na(removals), 0))
-  change_detail_count = change_detail_count %>%
-    mutate(replace(changes, changes < 0, 0)) %>%
-    mutate(replace(removals, removals < 0, 0)) %>%
-    mutate(replace(additions, additions < 0, 0))
-
-  change_detail_count_summary = change_detail_count %>% group_by(param) %>%
-    summarize(total_changes = sum(changes), total_additions = sum(additions), tot_removals = sum(removals))
+  comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
+  comparison_table_diff = comparison_table_diff %>% replace_numbers_with_symbols()
 
   output = list(comparison_df = comparison_table, html_output = html_table,
                 comparison_table_diff = comparison_table_diff,
-                change_count = change_count, change_summary = change_summary,
-                change_detail_summary = change_detail_count_summary)
+                change_count = change_count, change_summary = change_summary)
 
 }
 
+replace_numbers_with_symbols <- function(x){
+  x[x == 2] = "+"
+  x[x == 1] = "-"
+  x[x == 0] = "."
+  x
+}
+
+
 exclude_columns <- function(both_tables, exclude){
-  list(df_old = df_old %>% select(-one_of(exclude)),
-       df_new = df_new %>% select(-one_of(exclude)))
+  list(df_old = both_tables$df_old %>% select(-one_of(exclude)),
+       df_new = both_tables$df_new %>% select(-one_of(exclude)))
 }
 
 group_columns <- function(both_tables, group_col){
@@ -119,9 +90,9 @@ combined_rowdiffs <- function(both_tables){
 
 create_comparison_table <- function(both_diffs, group_col){
   message("Creating comparison table...")
-  rbind(data.frame(chng_type = "0", both_diffs$df1_2) , data.frame(chng_type = "1", both_diffs$df2_1)) %>%
+  rbind(data.frame(chng_type = "1", both_diffs$df1_2) , data.frame(chng_type = "2", both_diffs$df2_1)) %>%
     arrange(desc(chng_type)) %>% arrange_(group_col) %>%
-    mutate(chng_type = ifelse(chng_type == 0, "0", "1")) %>%
+    mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
     select(one_of(group_col), everything()) %>% r2two()
 }
 
@@ -134,12 +105,13 @@ create_comparison_table_diff <- function(comparison_table_ts2char, group_col, to
 eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
   rows_inside_tolerance = comparison_table_diff %>% select(-chng_type) %>%
     apply(1, function(x) all(x == 0))
-  comparison_table[!rows_inside_tolerance,]
+  comparison_table %>% filter(!rows_inside_tolerance)
 }
 
 create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
 
   . = NULL # R CMD
+  comparison_table_ts2char$chng_type = comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
 
   if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
     warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
@@ -208,7 +180,7 @@ r2two <- function(df, round_digits = 2)
         score = as.numeric(len_unique_x > 1)
     }
     # This step decides what colour it should be.
-    score = score + score * as.numeric(df$chng_type == "+")
+    score = score + score * as.numeric(df$chng_type == "2")
   }) %>% data.frame
 }
 
@@ -241,3 +213,51 @@ sequence_order_vector <- function(data)
   temp1 <- rle(as.vector(data))$lengths
   rep(seq_along(temp1),temp1) - 1L
 }
+
+create_change_count <- function(comparison_table_ts2char, group_col){
+
+  change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
+  change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
+  change_count_replace[is.na(change_count_replace)] = 0
+  change_count_replace = change_count_replace %>% as.data.frame %>%
+    tidyr::gather_("variable", "value", c("2", "1"))
+
+  change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
+    summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
+    mutate(additions = replace(additions, is.na(additions), 0)) %>%
+    mutate(removals = replace(removals, is.na(removals), 0))
+  change_count[change_count < 0] = 0
+
+  change_count
+
+}
+
+create_change_summary <- function(change_count, both_tables){
+  c(old_obs = nrow(both_tables$df_old), new_obs = nrow(both_tables$df_new),
+    changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
+}
+
+# Deprecated. Will bring it back in a letter version if deemed necessary
+# create_change_detail_summary <- function(){
+#   change_detail = comparison_table_diff
+#   change_detail[[group_col]] = comparison_table_ts2char[[group_col]]
+#   change_detail = change_detail %>% reshape::melt.data.frame(group_col)
+#
+#   change_detail_replace = change_detail %>% group_by_(group_col, "variable", "value") %>% tally()
+#   change_detail_replace = change_detail_replace %>% group_by_(group_col, "variable") %>% tidyr::spread(key = value, value = n)
+#   change_detail_replace[is.na(change_detail_replace)] = 0
+#   change_detail_summary_replace = change_detail_replace %>% data.frame %>% dplyr::rename(param = variable) %>%
+#     mutate(param = as.character(param)) %>% tidyr::gather("variable", "value", 3:ncol(.))
+#
+#   change_detail_count = change_detail_summary_replace %>% group_by_(group_col, "param") %>% arrange(desc(variable)) %>%
+#     summarize(changes = min(value[1:2]), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
+#     mutate(additions = replace(additions, is.na(additions), 0)) %>%
+#     mutate(removals = replace(removals, is.na(removals), 0))
+#   change_detail_count = change_detail_count %>%
+#     mutate(replace(changes, changes < 0, 0)) %>%
+#     mutate(replace(removals, removals < 0, 0)) %>%
+#     mutate(replace(additions, additions < 0, 0))
+#
+#   change_detail_count_summary = change_detail_count %>% group_by(param) %>%
+#     summarize(total_changes = sum(changes), total_additions = sum(additions), tot_removals = sum(removals))
+# }
