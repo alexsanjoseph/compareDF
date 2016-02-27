@@ -66,8 +66,8 @@ While the comparison, table can be quickly summarized in various forms futher, i
 very difficult to  process visually, so let's find a way to represent this is a way that is easier 
 for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
 
-```{r}
-ctable_student$html_output
+```{r, results = 'asis'}
+print(ctable_student$html_output)
 ```
 
 The same data is represented in tabular form (for further analysis, if necessary) in the
@@ -91,9 +91,9 @@ ctable_student$change_summary
 
 ## Grouping Multiple Columns
 
-```{r}
+```{r, results = 'asis'}
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"))
-ctable
+print(ctable_student_div$html_output)
 ```
 ## Excluding certain Colums
 
