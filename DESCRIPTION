@@ -13,8 +13,7 @@ Depends:
     R (>= 3.0.0)
 Imports:
     dplyr (>= 0.4.3),
-    tidyr (>= 0.4.1),
-    reshape (>= 0.8.5),
+    tidyr (>= 0.4.1)
 Suggests:
     htmlTable (>= 1.5),
     testthat
