@@ -70,10 +70,12 @@ shown in the comparison table.
 While the comparison, table can be quickly summarized in various forms futher, it is 
 very difficult to  process visually, so let's find a way to represent this is a way that is easier 
 for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
+_For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles_
 
-```{r, results = 'asis'}
+```{r, results = 'hide'}
 print(ctable_student$html_output)
 ```
+<img src="github_assets/pic_1.png" alt="Bring on the, github! " width="600" />
 
 The same data is represented in tabular form (for further analysis, if necessary) in the
 `comparison_table_diff` object
@@ -96,9 +98,8 @@ ctable_student$change_summary
 
 ## Grouping Multiple Columns
 
-```{r, results = 'asis'}
+```{r, results = 'hide'}
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"))
-print(ctable_student_div$html_output)
 ```
 ## Excluding certain Colums
 
