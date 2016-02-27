@@ -1,6 +1,7 @@
 
 library(testthat)
 library(dplyr)
+library(compareDF)
 old_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 3))
 
@@ -86,9 +87,14 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     var2 = c("W", "X"),
                                     val1 = c(3,3),
                                     val2 = c("C2", "C1"),
-                                    cal3 = c(4.0, 3.0)) #%>%
+                                    val3 = c(4.0, 3.0))
 expect_equal(ctable$comparison_df, expected_comparison_df)
+
+ctable = compare_df(ctable$comparison_df %>% rename(chng = chng_type),
+                    expected_comparison_df%>% rename(chng = chng_type), c("chng"))
+
 # Tolerance
 
+# show tolerant columns
 # Other stats
 
