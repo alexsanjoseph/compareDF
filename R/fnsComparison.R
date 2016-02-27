@@ -28,7 +28,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 #   . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
 
   both_tables = list(df_new = df_new, df_old = df_old)
-  if(!is.null(exclude)) both_tables = exclude_columns(both_tables)
+  if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
 
   check_if_comparable(both_tables$df_new, both_tables$df_old, group_col)
 

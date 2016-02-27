@@ -54,10 +54,11 @@ expect_error(compare_df(new_df %>% rename(chng_type = var1),
 expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
 
-
+#===============================================================================
 # Table
 ctable$comparison_table_diff
 
+#===============================================================================
 # Multiple Grouping / Exclude
 ctable = compare_df(new_df, old_df, c("var1", "var2"), exclude = "val3")
 expected_comparison_df = data.frame(grp = c(3, 4),
@@ -69,6 +70,7 @@ expected_comparison_df = data.frame(grp = c(3, 4),
   # arrange(desc(chng_type)) %>% arrange_("var1")
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
+#===============================================================================
 
 # Limit
 library("stringr")
@@ -78,8 +80,7 @@ expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), 
 
 
 #===============================================================================
-
-#limit warning
+# Tolerance
 ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.5)
 expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
@@ -90,11 +91,9 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     val3 = c(4.0, 3.0))
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
-ctable = compare_df(ctable$comparison_df %>% rename(chng = chng_type),
-                    expected_comparison_df%>% rename(chng = chng_type), c("chng"))
+#limit warning
 
-# Tolerance
-
-# show tolerant columns
 # Other stats
+
+# Two types of tolerance
 
