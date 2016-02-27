@@ -2,6 +2,9 @@
   options(stringsAsFactors = FALSE) # nocov
 }
 
+# R CMD Check love
+utils::globalVariables(c("chng_type", ".", "one_of", "everything", "value", "additions", "removals", "from"))
+
 #' Data set created set to show off the package capabilities - Results of students for 2010
 #'
 #' A manually created dataset showing the hypothetical scores of two divisions of students

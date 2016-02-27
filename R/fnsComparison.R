@@ -24,9 +24,6 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
 
-#   one_of = everything = identity
-#   . = from = chng_type = value = additions = removals = variable = param = NULL # F*** R CMD Check
-
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
 
@@ -110,7 +107,6 @@ eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
 
 create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
 
-  . = NULL # R CMD
   comparison_table_ts2char$chng_type = comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
 
   if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
