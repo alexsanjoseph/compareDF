@@ -11,28 +11,12 @@ new_df = data.frame(var1 = c("A", "B", "C"),
 context("compare_df_function")
 #===============================================================================
 # basic tests
-
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
 
 #===============================================================================
-
-old_df = data.frame(var1 = c("A", "B", "C"),
-                    var2 = c("Z", "Y", "X"),
-                    val1 = c(1, 2, 3),
-                    val2 = c("A1", "B1", "C1"),
-                    val3 = c(1, 2, 3)
-                    )
-
-new_df = data.frame(var1 = c("A", "B", "C"),
-                    var2 = c("Z", "Y", "W"),
-                    val1 = c(1, 2, 3),
-                    val2 = c("A1", "B1", "C2"),
-                    val3 = c(1, 2.1, 4)
-)
-ctable = compare_df(new_df, old_df, c("var1", "var2"))
-
+# Testing errors and warnings
 # Test for sameness
 expect_error(compare_df(new_df, new_df),
              "The two data frames are the same")
@@ -55,6 +39,22 @@ expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
 
 #===============================================================================
+# Let's get more complicated
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C1"),
+                    val3 = c(1, 2, 3)
+)
+
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "W"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C2"),
+                    val3 = c(1, 2.1, 4)
+)
+ctable = compare_df(new_df, old_df, c("var1", "var2"))
+
 # Table
 ctable$comparison_table_diff
 
@@ -71,13 +71,31 @@ expected_comparison_df = data.frame(grp = c(3, 4),
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
-
 # Limit
 library("stringr")
 max_rows = 2
 ctable = compare_df(new_df, old_df, c("var1", "var2"), limit_html = max_rows)
 expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), max_rows)
 
+
+#===============================================================================
+#limit warning
+
+#===============================================================================
+# Other stats
+change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
+comparison_table_expected = data.frame(grp = c(".", ".", "+", "-"),
+                                       chng_type = c("+", "-", "+", "-"),
+                                       var1 = c(".", ".", "+", "-"),
+                                       var2 = c(".", ".", "+", "-"),
+                                       val1 = c(".", ".", "+", "-"),
+                                       val2 = c(".", ".", "+", "-"),
+                                       val3 = c("+", "-", "+", "-")
+                                       )
+change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
+
+expect_equal(ctable$change_summary, change_summary_expected)
+expect_equal(ctable$comparison_table_diff, comparison_table_expected)
 
 #===============================================================================
 # Tolerance
@@ -91,9 +109,6 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     val3 = c(4.0, 3.0))
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
-#limit warning
-
-# Other stats
-
+#===============================================================================
 # Two types of tolerance
 
