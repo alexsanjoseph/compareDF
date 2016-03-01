@@ -1,9 +1,3 @@
----
-output: 
-  html_document: 
-    keep_md: yes
----
-
 # compareDF
 
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
