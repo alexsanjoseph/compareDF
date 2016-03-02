@@ -79,9 +79,6 @@ expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), 
 
 
 #===============================================================================
-#limit warning
-
-#===============================================================================
 # Other stats
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
 comparison_table_expected = data.frame(grp = c(".", ".", "+", "-"),
