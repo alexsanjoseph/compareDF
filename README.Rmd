@@ -12,7 +12,7 @@ output:
 # Introduction
 
 This package shows what has changed between two data frames that have the same columnar
-structure. Such comparison is useful in many cases, for example when you expect only minor 
+structure. Such comparison is useful in many cases, for example when you expect to see   
 changes in the data across two data sets such as:
 
 * Variation of a dataset across different time periods for the same grouping
@@ -27,7 +27,7 @@ of the HTML output, and decide what tolerance you want to provide to detect chan
 
 # Basic Example
 
-Let's take the case of a teacher who wants to compare the marks and grades of students across
+Let's take the example of a teacher who wants to compare the marks and grades of students across
 two years, 2010 and 2011. The data is stored in tabular format.
 
 ```{r}
@@ -37,18 +37,22 @@ print(results_2011)
 ```
 
 The data shows the performance of students in two divisions, A and B for two years. Some subjects
-like Maths, Physics, Chemistry and Art are given scores while others like Discipline and PE are 
+like _Maths, Physics, Chemistry and Art_ are given scores while others like _Discipline and PE_ are 
 given grades. 
 
 It is possible that there are students of the same name in two divisions, for example, there is 
-a Rohit in both the divisions in 2011.
+a _Rohit_ in both the divisions in 2011.
 
 It is also possible that some students have dropped out, or added new across the two years. 
-Eg: - Mugger and Dhakkan dropped out while Vikram and Dikchik where added in the Division B
+Eg: - _Mugger and Dhakkan_ dropped out while _Vikram and Dikchik_ where added in the Division B
+
+The package allows a user to quickly identify these changes.
 
 ## Basic Comparison
 Now let's compare the performance of the students across the years. The grouping variables is the
-_Student_ columns. We will ignore the _Division_ columns and assume that the 
+_Student_ columns. We will ignore the _Division_ columns and assume that the student names are unique 
+across divisions. In this sub-example, if a student appears in two division, he has studied in both 
+of them.
 
 ```{r}
 library(compareDF)
@@ -59,23 +63,40 @@ ctable_student$comparison_df
 
 By default, no columns are excluded from the comparison, so any of the tuple of grouping 
 variables which are different across the two data frames are shown in the comparison table.
+The `comparison_df` table shows all the rows for which at least one record has changed. If
+nothing has changed across the two tables, the rows are not displayed. If a new record has been
+introduced or a record has been removed, those are displayed as well.
 
-For example, Akshay, Division A has the exact same scores but has two different grades for Discipline across 
+For example, _Akshay, Division A_ has the exact same scores but has two different grades for _Discipline_ across 
 the two years so that row is included.
 
-However, Macho, Division B has had the exact same scores in both the years, so his data is not
+However, _Macho, Division B_ has had the exact same scores in both the years, so his data is not
 shown in the comparison table.
 
 ## HTML Output
-While the comparison, table can be quickly summarized in various forms futher, it is 
-very difficult to  process visually, so let's find a way to represent this is a way that is easier 
+While the comparison, table can be quickly summarized in various forms for futher analysis, it is 
+very difficult to  process visually. The `html_output` provides a way to represent this is a way that is easier 
 for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
-_For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles_
+_For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles._
 
 ```{r, results = 'hide'}
 print(ctable_student$html_output)
 ```
 <img src="github_assets/pic_1.png" alt="Bring on the, github! " width="600" />
+
+Now it is very easy to see recognize what has changed. A single cell is colored 
+if it has changed across the two datasets. The value of the cell in the older dataset
+is colored red and the value of the cell in the newer dataset is colored green. Cells
+that haven't changed across the two datasets are colored grey.
+
+If a new row was introduced, the Row group names (and all the other columns for that row as well )
+are colored in Green. Similarly, a row group name (and the other columns in that row) are
+colored red if a row was removed.
+
+For Example, _Akshay_, _Ananth_ and _Bulla_ has had changes in 
+scored, which are in _Discipline_, _Maths_, and _Maths_ respectively.
+_Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the full rows are shown
+in red, which _DikChik_ and _Vikram_ have joined new in the data set and the full rows are in green.
 
 The same data is represented in tabular form (for further analysis, if necessary) in the
 `comparison_table_diff` object
@@ -85,7 +106,8 @@ ctable_student$comparison_table_diff
 ```
 
 ## Change Count and Summary
-You can get an idea of what has changed using the `change_count` object in the output. A summary 
+You can get an details of what has changed for each group using 
+the `change_count` object in the output. A summary 
 of the same is provided in the `change_summary` object.
 
 ```{r}

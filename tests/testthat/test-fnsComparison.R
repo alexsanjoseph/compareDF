@@ -107,5 +107,6 @@ expected_comparison_df = data.frame(grp = c(3, 4),
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
-# Two types of tolerance
+# For later: Two types of tolerance
 
+# Now: Change Group column names back to the original name at the end
