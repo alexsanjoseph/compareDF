@@ -105,6 +105,7 @@ eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
   comparison_table %>% filter(!rows_inside_tolerance)
 }
 
+#' @importFrom utils head
 create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html){
 
   comparison_table_ts2char$chng_type = comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
@@ -160,6 +161,7 @@ r2two <- function(df, round_digits = 2)
   df
 }
 
+#' @importFrom stats na.omit
 .diff_type_df <- function(df, tolerance = 1e-6){
 
   lapply(df, function(x) {

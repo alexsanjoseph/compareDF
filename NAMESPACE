@@ -2,3 +2,5 @@
 
 export(compare_df)
 import(dplyr)
+importFrom(stats,na.omit)
+importFrom(utils,head)
