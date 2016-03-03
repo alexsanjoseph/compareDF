@@ -118,9 +118,15 @@ ctable_student$change_summary
 
 ## Grouping Multiple Columns
 
+We can also group_multiple columns into the grouping variable
+
 ```{r, results = 'hide'}
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"))
+ctable_student_div$comparison_df
 ```
+<img src="github_assets/pic_1.png" alt="Bring on the, github! " width="600" />
+
+
 ## Excluding certain Colums
 
 ## Limiting

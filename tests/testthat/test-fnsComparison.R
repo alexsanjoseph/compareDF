@@ -108,5 +108,3 @@ expect_equal(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
 # For later: Two types of tolerance
-
-# Now: Change Group column names back to the original name at the end
