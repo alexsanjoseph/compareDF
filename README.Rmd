@@ -2,6 +2,7 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![codecov.io](http://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](http://codecov.io/github/alexsanjoseph/compareDF?branch=master)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 
 # Introduction
 
