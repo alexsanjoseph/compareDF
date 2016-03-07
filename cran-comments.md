@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Changed the DESCRIPTION to remove the 'In this package' starting as advised.
+
 ## Test environments
 * local OS X install - 10.11.3 (15D21), R 3.2.3
 * ubuntu 12.04 (on travis-ci), R 3.2.3

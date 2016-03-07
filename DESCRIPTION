@@ -4,7 +4,7 @@ Title: Do a Git Style Diff of the Rows Between Two Dataframes with Similar Struc
 Version: 1.0.0
 Date: 2016-03-05
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
-Description: This package compares two dataframes which have the same column
+Description: Compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
     to quickly see what has changes in addition to summary statistics.
 License: MIT + file LICENSE
