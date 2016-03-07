@@ -149,7 +149,7 @@ parameter. For this case, giving a tolerance of `0.05` would ignore all the chan
 less than 5% apart from the lower value.
 
 ```{r, results = 'hide'}
-ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0)
+ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0.05)
 ctable_student_div$comparison_df
 ```
 <img src="github_assets/pic_3.png" alt="Bring on the styles, github! " width="500" />
