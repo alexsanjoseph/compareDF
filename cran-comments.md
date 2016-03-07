@@ -3,6 +3,7 @@
 * ubuntu 12.04 (on travis-ci), R 3.2.3
 * local Windows 7 install
 * win-builder (devel and release)
+* Windows (on Appveyor)
 
 ## R CMD check results
 
