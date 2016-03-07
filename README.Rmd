@@ -124,7 +124,7 @@ ctable_student_div$comparison_df
 <img src="github_assets/pic_2.png" alt="Bring on the styles, github! " width="500" />
 
 Now _Rohits_ in each individual division are considered as belonging to separate 
-groups and compared accordingly. All the other summaries also change appropriately
+groups and compared accordingly. All the other summaries also change appropriately.
 
 ## Excluding certain Columns
 
@@ -132,7 +132,34 @@ You can ignore certain columns using the *exclude* parameter. The fields that ha
 excluded can be given as a character vector. (This is a convenience function to deal with 
 the case where some columns are not included)
 
-## Limiting
+## Limiting HTML size
+
+For dataframes which have a large amount of differences in them, generating HTML might take 
+a long time and crash your system. So the maximum diff size for the HTML (and for the HTML
+visualization only) is capped at 100 by default. If you want to see more difference, you can change
+the `limit_html` parameter appropriately.
+
 
 ## Tolerance
 
+It is possible that you'd like numbers very close to each other to be ignored. For example,
+if the marks of a student vary by less that 5% across the years, it could be due to random
+error and not any real performance indictaor. In such a case, you would want to give a tolerance
+parameter. For this case, giving a tolerance of `0.05` would ignore all the changes that are 
+less than 5% apart from the lower value.
+
+```{r, results = 'hide'}
+ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0)
+ctable_student_div$comparison_df
+```
+<img src="github_assets/pic_3.png" alt="Bring on the styles, github! " width="500" />
+
+_Venu from division A_ who had a score change from 100 to 99 is no longer present in the 
+diff calculation or in the output
+
+Naturally, tolerance has no meaning for non-numeric values.
+
+## Acknowledgements
+
+I'd like to thank System Insights Inc. for all the things that I have learned while working
+there which I have used one way or the other in this package.
