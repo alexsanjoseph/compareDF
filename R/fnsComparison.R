@@ -222,9 +222,8 @@ create_change_count <- function(comparison_table_ts2char, group_col){
 
   change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
     summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
-    mutate(additions = replace(additions, is.na(additions), 0)) %>%
-    mutate(removals = replace(removals, is.na(removals), 0))
-  change_count[change_count < 0] = 0
+    mutate(additions = replace(additions, is.na(additions) | additions < 0, 0)) %>%
+    mutate(removals = replace(removals, is.na(removals) | removals < 0, 0))
 
   change_count
 
