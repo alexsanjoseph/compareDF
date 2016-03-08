@@ -87,7 +87,11 @@ combined_rowdiffs <- function(both_tables){
 
 create_comparison_table <- function(both_diffs, group_col){
   message("Creating comparison table...")
-  rbind(data.frame(chng_type = "1", both_diffs$df1_2) , data.frame(chng_type = "2", both_diffs$df2_1)) %>%
+  mixed_df = NULL
+  if(nrow(both_diffs$df1_2) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "1", both_diffs$df1_2))
+  if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
+
+  mixed_df %>%
     arrange(desc(chng_type)) %>% arrange_(group_col) %>%
     mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
     select(one_of(group_col), everything()) %>% r2two()
@@ -213,10 +217,11 @@ sequence_order_vector <- function(data)
 }
 
 create_change_count <- function(comparison_table_ts2char, group_col){
-
   change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
   change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
   change_count_replace[is.na(change_count_replace)] = 0
+  if(is.null(change_count_replace[['1']])) change_count_replace[['1']] = 0L
+  if(is.null(change_count_replace[['2']])) change_count_replace[['2']] = 0L
   change_count_replace = change_count_replace %>% as.data.frame %>%
     tidyr::gather_("variable", "value", c("2", "1"))
 
