@@ -15,6 +15,13 @@ ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
 
+df1 <- data.frame(a = 1:5, b=letters[1:5], row = 1:5)
+df2 <- data.frame(a = 1:3, b=letters[1:3], row = 1:3)
+
+df_compare = compare_df(df1, df2, "row")
+expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"))
+expect_equal(df_compare$comparison_df, expected_df)
+
 #===============================================================================
 # Testing errors and warnings
 # Test for sameness
