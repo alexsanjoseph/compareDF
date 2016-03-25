@@ -10,6 +10,7 @@ output:
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/compareDF)](http://cran.r-project.org/package=compareDF)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/compareDF)](http://www.r-pkg.org/pkg/compareDF)
+![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
 # Introduction
 
