@@ -23,6 +23,13 @@ expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d",
 expect_equal(df_compare$comparison_df, expected_df)
 
 #===============================================================================
+# Case when there are only new rows
+new_df = data.frame(var1 = c("A", "B"), val1 = c(1, 2))
+ctable = compare_df(new_df, old_df, c("var1"), tolerance = 0.5)
+
+expected_comparison_df = data.frame(var1 = c('C'), chng_type = c("-"), val1 = c(3))
+expect_equal(ctable$comparison_df, expected_comparison_df)
+#===============================================================================
 # Testing errors and warnings
 # Test for sameness
 expect_error(compare_df(new_df, new_df),

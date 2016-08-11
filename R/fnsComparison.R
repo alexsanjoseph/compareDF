@@ -218,12 +218,13 @@ sequence_order_vector <- function(data)
 
 create_change_count <- function(comparison_table_ts2char, group_col){
   change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
-  change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n)
+  change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n) %>% data.frame
   change_count_replace[is.na(change_count_replace)] = 0
-  if(is.null(change_count_replace[['1']])) change_count_replace[['1']] = 0L
-  if(is.null(change_count_replace[['2']])) change_count_replace[['2']] = 0L
+
+  if(is.null(change_count_replace[['X1']])) change_count_replace[['X1']] = 0L
+  if(is.null(change_count_replace[['X2']])) change_count_replace[['X2']] = 0L
   change_count_replace = change_count_replace %>% as.data.frame %>%
-    tidyr::gather_("variable", "value", c("2", "1"))
+    tidyr::gather_("variable", "value", c("X2", "X1"))
 
   change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
     summarize(changes = min(value), additions = value[1] - value[2], removals = value[2] - value[1]) %>%
