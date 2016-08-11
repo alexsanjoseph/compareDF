@@ -10,6 +10,7 @@ output:
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/compareDF)](http://cran.r-project.org/package=compareDF)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/compareDF)](http://www.r-pkg.org/pkg/compareDF)
+![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
 # Introduction
 
@@ -176,8 +177,16 @@ Naturally, tolerance has no meaning for non-numeric values.
 
 ## Acknowledgements
 
-I'd like to thank System Insights Inc. for all the things that I have learned while working
-there which I have used one way or the other in this package. Special thanks to Nitin for 
-proofreading the doc and making sure everything made sense.
+Thanks to Nitin for proofreading the doc and making sure everything made sense.
+
+License (MIT)
+
+Copyright (c) 2016 System Insights, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 _A version of this README has been published as a blog [here](http://alexsanjoseph.github.io/r/2016/03/09/comparing-dataframes-in-r-using-comparedf)_
