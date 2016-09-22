@@ -115,10 +115,14 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
                                     var1 = c("C", "C"),
                                     var2 = c("W", "X"),
-                                    val1 = c(3,3),
+                                    val1 = c(3, 3),
                                     val2 = c("C2", "C1"),
                                     val3 = c(4.0, 3.0))
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
+# Error
+expect_error(compare_df(new_df %>% head(2), old_df %>% head(2), c("var1", "var2"), tolerance = 1))
+
 #===============================================================================
 # For later: Two types of tolerance
+

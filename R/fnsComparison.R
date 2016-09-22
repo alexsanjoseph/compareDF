@@ -43,6 +43,9 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
   comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
 
+  if(nrow(comparison_table) == 0) stop("The two data frames are the same after accounting for tolerance!")
+  if(nrow(comparison_table_diff) == 0) stop("The two data frames are the same after accounting for tolerance!")
+
   if (limit_html > 0)
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html) else
       html_table = NULL
