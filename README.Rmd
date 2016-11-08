@@ -4,7 +4,7 @@ output:
     keep_md: yes
 ---
 
-**NOTE: The CRAN version has some bugs that have been fixed in Github. Please install using devtools::install_github if you're facity and problems. -Alex **
+**NOTE: The CRAN version has some bugs that have been fixed in Github. Please install using devtools::install_github if you're facity and problems. -Alex**
 
 # compareDF
 
