@@ -1,18 +1,18 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+This is a new version. In this version I have:
 
-* Changed the DESCRIPTION to remove the 'In this package' starting as advised.
+* Fixed some bugs that were caused because of a new version of the htmlTable package
 
 ## Test environments
-* local OS X install - 10.11.3 (15D21), R 3.2.3
-* ubuntu 12.04 (on travis-ci), R 3.2.3
+* local OS X install - 10.11.6 (15D21), R 3.3.2 Patched
+* ubuntu 16.04 (on travis-ci), R 3.2.3
 * local Windows 7 install
 * win-builder (devel and release)
 * Windows (on Appveyor)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 note
 
 * This is a new release.
 

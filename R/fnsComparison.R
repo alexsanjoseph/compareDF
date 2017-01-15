@@ -129,7 +129,7 @@ create_html_table <- function(comparison_table_diff, comparison_table_ts2char, g
   shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
 
   table_css = lapply(comparison_table_color_code, function(x)
-    paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html)
+    paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html) %>% as.matrix()
 
   message("Creating HTML table for first ", limit_html, " rows")
   html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
