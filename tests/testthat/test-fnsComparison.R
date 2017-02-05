@@ -70,7 +70,13 @@ new_df = data.frame(var1 = c("A", "B", "C"),
 ctable = compare_df(new_df, old_df, c("var1", "var2"))
 
 # Table
-ctable$comparison_table_diff
+#===============================================================================
+# Change Count
+expected_change_count_df = data.frame( grp = c(2, 3, 4),
+                                       changes = c(1, 0, 0),
+                                       additions = c(0, 1, 0),
+                                       removals = c(0, 0, 1) )
+expect_equal(ctable$change_count, expected_change_count_df)
 
 #===============================================================================
 # Multiple Grouping / Exclude
