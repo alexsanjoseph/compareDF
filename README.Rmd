@@ -1,10 +1,10 @@
----
-output: 
-  html_document: 
-    keep_md: yes
----
 
 **NOTE: The CRAN version has some bugs which have been fixed in Github. Please install using devtools::install_github if you're facing any problems till the next version is released in CRAN. -Alex**
+
+#### Changes in the github version (will be added to the CRAN version in the next release)
+
+* Issue #3 Fixed a bug in `change count` and `change_count_summary` (Thanks, sngordon!)
+
 
 # compareDF
 
@@ -15,10 +15,6 @@ output:
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/compareDF)](http://www.r-pkg.org/pkg/compareDF)
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
-
-# Changes in the github version (will be added to the CRAN version in the next release)
-
-* Issue #3 Fixed a bug in `change count` and `change_count_summary` (Thanks, sngordon!)
 
 # Introduction
 
