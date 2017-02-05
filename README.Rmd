@@ -16,6 +16,10 @@ output:
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
+# Changes in the github version (will be added to the CRAN version in the next release)
+
+* Issue #3 Fixed a bug in `change count` and `change_count_summary` (Thanks, sngordon!)
+
 # Introduction
 
 Every so often while doing data analysis, I have come across a situation where I have
