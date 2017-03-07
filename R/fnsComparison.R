@@ -28,6 +28,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
 
   check_if_comparable(both_tables$df_new, both_tables$df_old, group_col)
+  both_tables$df_new = both_tables$df_new[, names(both_tables$df_old)]
 
   if (length(group_col) > 1) {
     both_tables = group_columns(both_tables, group_col)
@@ -35,6 +36,8 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   }
 
   both_diffs = combined_rowdiffs(both_tables)
+  check_if_similar_after_unique_and_reorder(both_tables, both_diffs)
+
   comparison_table         = create_comparison_table(both_diffs, group_col)
   comparison_table_ts2char = .ts2char(comparison_table)
   comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance)
@@ -49,7 +52,6 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if (limit_html > 0)
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html) else
       html_table = NULL
-
   change_count =  create_change_count(comparison_table, group_col)
   change_summary =  create_change_summary(change_count, both_tables)
 
@@ -88,12 +90,18 @@ combined_rowdiffs <- function(both_tables){
        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
 }
 
+check_if_similar_after_unique_and_reorder <- function(both_tables, both_diffs){
+  if(any(sapply(both_diffs, nrow) != 0)) return(TRUE)
+  if(nrow(both_tables$df_new) == nrow(both_tables$df_old))
+    stop("The two dataframes are similar after reordering") else
+      stop("The two dataframes are similar after reordering and doing unique")
+
+}
 create_comparison_table <- function(both_diffs, group_col){
   message("Creating comparison table...")
   mixed_df = NULL
   if(nrow(both_diffs$df1_2) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "1", both_diffs$df1_2))
   if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
-
   mixed_df %>%
     arrange(desc(chng_type)) %>% arrange_(group_col) %>%
     mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
@@ -143,7 +151,7 @@ check_if_comparable <- function(df_new, df_old, group_col){
 
   if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
 
-  if(any(names(df_new) != names(df_old))) stop("The two data frames have different columns!")
+  if(!(all(names(df_new) %in% names(df_old)))) stop("The two data frames have different columns!")
 
   if(any("chng_type" %in% group_col)) stop("chng_type is a reserved keyword!")
 
