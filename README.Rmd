@@ -4,7 +4,7 @@
 #### Changes in the github version (will be added to the CRAN version in the next release)
 
 * Issue #3 Fixed a bug in `change count` and `change_count_summary` (Thanks, sngordon!)
-
+* Fixed issue where obtuse error is shown when the two dataframes are similar but with different structure
 
 # compareDF
 
