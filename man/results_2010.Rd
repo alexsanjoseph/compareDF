@@ -18,4 +18,3 @@ A manually created dataset showing the hypothetical scores of two divisions of s
 }
 }
 \keyword{datasets}
-

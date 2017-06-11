@@ -35,4 +35,3 @@ ctable = compare_df(new_df, old_df, c("var1"))
 print(ctable$comparison_df)
 ctable$html_output
 }
-
