@@ -178,7 +178,6 @@ r2two <- function(df, round_digits = 2)
 
 #' @importFrom stats na.omit
 .diff_type_df <- function(df, tolerance = 1e-6){
-
   lapply(df, function(x) {
     len_unique_x = length(na.omit(unique(x)))
 
@@ -188,7 +187,7 @@ r2two <- function(df, round_digits = 2)
     }else{
       if(is.numeric(x) & !is.POSIXct(x) & len_unique_x > 1){
         range_x = diff(range(x, na.rm = T))
-        score = as.numeric(range_x/min(x, na.rm = T) > tolerance)
+        score = as.numeric(abs(range_x/min(x, na.rm = T)) > tolerance)
       }else
         score = as.numeric(len_unique_x > 1)
     }
