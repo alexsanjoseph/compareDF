@@ -250,7 +250,7 @@ create_change_summary <- function(change_count, both_tables){
     changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
 }
 
-
+# nocov start
 #' @title View Comparison output HTML
 #'
 #' @description Some versions of Rstudio doesn't automatically show the html pane for the html output. This is a workaround
@@ -272,7 +272,7 @@ view_html <- function(comparison_output){
   getOption("viewer")(temp_file)
   unlink("temp.html")
 }
-
+# nocov end
 
 # Deprecated. Will bring it back in a letter version if deemed necessary
 # create_change_detail_summary <- function(){
