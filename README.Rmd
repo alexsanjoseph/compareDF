@@ -1,11 +1,10 @@
 
-**NOTE: The CRAN version has some bugs which have been fixed in Github. Please install using devtools::install_github if you're facing any problems till the next version is released in CRAN. -Alex**
+~**NOTE: The CRAN version has some bugs which have been fixed in Github. Please install using devtools::install_github if you're facing any problems till the next version is released in CRAN. -Alex**~
 
-#### Changes in the github version (will be added to the CRAN version in the next release)
+~#### Changes in the github version (will be added to the CRAN version in the next release)~
 
-* Issue #6 `compareDF` now handle negative numbers correctly (Thanks, david2t!)
-* Issue #3 Fixed a bug in `change count` and `change_count_summary` (Thanks, sngordon!)
-* Fixed issue where obtuse error is shown when the two dataframes are similar but with different structure
+**Cran Version is upto date with the latest bug fixes as of 2017-09-11**
+
 
 # compareDF
 
