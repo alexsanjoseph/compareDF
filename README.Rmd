@@ -3,7 +3,7 @@
 
 ~#### Changes in the github version (will be added to the CRAN version in the next release)~
 
-**Cran Version is upto date with the latest bug fixes as of 2017-09-11**
+**CRAN Version is upto date with the latest bug fixes as of 2017-09-11**
 
 
 # compareDF
