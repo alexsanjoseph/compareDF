@@ -1,7 +1,8 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Fixed some bugs that were caused because of a new version of the htmlTable package
+* Fixed some bugs 
+* added a workaround for HTML
 
 ## Test environments
 * local OS X install - 10.11.6 (15D21), R 3.3.2 Patched
@@ -12,7 +13,7 @@ This is a new version. In this version I have:
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 0 notes
 
 
 ## Reverse dependencies

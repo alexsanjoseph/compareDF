@@ -250,6 +250,30 @@ create_change_summary <- function(change_count, both_tables){
     changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
 }
 
+
+#' @title View Comparison output HTML
+#'
+#' @description Some versions of Rstudio doesn't automatically show the html pane for the html output. This is a workaround
+#'
+#' @param comparison_output output from the comparisonDF compare function
+#' @export
+#' @examples
+#' old_df = data.frame(var1 = c("A", "B", "C"),
+#'                     val1 = c(1, 2, 3))
+#' new_df = data.frame(var1 = c("A", "B", "C"),
+#'                     val1 = c(1, 2, 4))
+#' ctable = compare_df(new_df, old_df, c("var1"))
+#' # Not Run::
+#' # view_html(ctable)
+view_html <- function(comparison_output){
+  temp_dir = tempdir()
+  temp_file <- paste0(temp_dir, "/temp.html")
+  cat(comparison_output$html_output, file = temp_file)
+  getOption("viewer")(temp_file)
+  unlink("temp.html")
+}
+
+
 # Deprecated. Will bring it back in a letter version if deemed necessary
 # create_change_detail_summary <- function(){
 #   change_detail = comparison_table_diff
