@@ -1,3 +1,7 @@
+# compareDF 1.2.0
+* Fixed bugs
+* view_html function to view the html file created for setups that cannot print html directly
+
 # compareDF 1.1.2
 * compareDF can now handle negative inputs correctly
 
