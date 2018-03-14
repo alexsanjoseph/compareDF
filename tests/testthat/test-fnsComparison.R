@@ -8,9 +8,9 @@ old_df = data.frame(var1 = c("A", "B", "C"),
 new_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 4))
 
-context("compare_df_function")
+context("compare_df: basic tests")
 #===============================================================================
-# basic tests
+
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
 expect_equal(expected_comparison_df[1,3], ctable$comparison_df[1,3])
@@ -57,35 +57,62 @@ new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
 expect_error(compare_df(new_df, old_df, c("var1"), tolerance = 0.5), "The two dataframes are similar after reordering")
 
 #===============================================================================
+context("compare_df: check warning output")
+old_df = data.frame(var1 = c("A", "C", "B"), val1 = c(1, 3, 2))
+new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
+expected_comparison_df = data.frame(var1 = character(), val1 = numeric(), chng_type = logical())
+expected_comparison_table_diff = data.frame(var1 = numeric(), val1 = numeric(), chng_type = numeric())
+expected_change_count = data.frame(var1 = character(), changes = numeric(), additions = numeric(), removals = numeric())
+expected_change_summary = c(old_obs = 3, new_obs = 3, changes = 0, additions = 0, removals = 0)
+
+output = expect_warning(compare_df(new_df, old_df, c("var1"), tolerance = 0.5, stop_on_error = F),
+                        "The two dataframes are similar after reordering")
+expect_equal(output$comparison_df, expected_comparison_df)
+expect_null(output$html_output, expected_comparison_df)
+expect_equal(output$comparison_table_diff, expected_comparison_table_diff)
+expect_equal(output$change_count, expected_change_count)
+expect_equal(output$change_summary, expected_change_summary)
+
+#===============================================================================
+context("compare_df: errors and warnings")
+
 # Case when the row order is different after unique
 old_df = data.frame(var1 = c("A", "C", "B", "C"), val1 = c(1, 3, 2, 3))
 new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
 expect_error(compare_df(new_df, old_df, c("var1"), tolerance = 0.5), "The two dataframes are similar after reordering and doing unique")
+expect_warning(compare_df(new_df, old_df, c("var1"), tolerance = 0.5, stop_on_error = F),
+               "The two dataframes are similar after reordering and doing unique")
 
-#===============================================================================
-# Testing errors and warnings
 # Test for sameness
 expect_error(compare_df(new_df, new_df, "var1"), "The two data frames are the same")
+expect_warning(compare_df(new_df, new_df, "var1", stop_on_error = F), "The two data frames are the same")
 
 # Test for sameness after exclusion
 expect_error(compare_df(new_df, new_df, "var1"),
+             "The two data frames are the same")
+expect_warning(compare_df(new_df, new_df, "var1", stop_on_error = F),
              "The two data frames are the same")
 
 # Test for different structure
 expect_error(compare_df(new_df %>% rename(val2 = val1), new_df, "var1"),
              "The two data frames have different columns!")
+expect_error(compare_df(new_df %>% rename(val2 = val1), new_df, "var1", stop_on_error = F),
+             "The two data frames have different columns!")
 
 # Error if chng_type is used
-expect_error(compare_df(new_df %>% rename(chng_type = var1),
-                        old_df %>% rename(chng_type = var1), "chng_type"),
-             "chng_type is a reserved keyword!")
+expect_error(compare_df(new_df %>% rename(chng_type = var1), old_df %>% rename(chng_type = var1), "chng_type"),
+             "chng_type, X1, X2) are reserved keywords!")
+expect_error(compare_df(new_df %>% rename(X1 = var1), old_df %>% rename(X1 = var1), "chng_type"),
+             "chng_type, X1, X2) are reserved keywords!")
+expect_error(compare_df(new_df %>% rename(X2 = var1), old_df %>% rename(X2 = var1), "chng_type"),
+             "chng_type, X1, X2) are reserved keywords!")
 
 # Error if group_col is not in the data.frames
 expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
 
 #===============================================================================
-# Let's get more complicated
+context("compare_df: change count")
 old_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "X"),
                     val1 = c(1, 2, 3),
@@ -111,7 +138,7 @@ expected_change_count_df = data.frame( grp = c(2, 3, 4),
 expect_equal(ctable$change_count, expected_change_count_df)
 
 #===============================================================================
-# Multiple Grouping / Exclude
+context("compare_df: Multiple Grouping / Exclude")
 ctable = compare_df(new_df, old_df, c("var1", "var2"), exclude = "val3")
 expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
@@ -124,14 +151,14 @@ expect_equal(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
 # Limit
-library("stringr")
+context("compare_df: limit")
 max_rows = 2
 ctable = compare_df(new_df, old_df, c("var1", "var2"), limit_html = max_rows)
-expect_equal(ctable$html_output %>% as.character() %>% str_count("<tr style="), max_rows)
+expect_equal(ctable$html_output %>% as.character() %>% stringr::str_count("<tr style="), max_rows)
 
 
 #===============================================================================
-# Other stats
+context("compare_df: Other stats")
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
 comparison_table_expected = data.frame(grp = c(".", ".", "+", "-"),
                                        chng_type = c("+", "-", "+", "-"),
@@ -147,7 +174,7 @@ expect_equal(ctable$change_summary, change_summary_expected)
 expect_equal(ctable$comparison_table_diff, comparison_table_expected)
 
 #===============================================================================
-# Tolerance
+context("compare_df: tolerance")
 ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.5)
 expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
@@ -162,7 +189,7 @@ expect_equal(ctable$comparison_df, expected_comparison_df)
 expect_error(compare_df(new_df %>% head(2), old_df %>% head(2), c("var1", "var2"), tolerance = 1))
 
 #===========================
-# Negative Numbers
+context("compare_df: negative numbers")
 old_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 3))
 

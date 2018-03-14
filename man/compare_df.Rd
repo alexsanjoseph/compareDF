@@ -5,7 +5,7 @@
 \title{Compare Two dataframes}
 \usage{
 compare_df(df_new, df_old, group_col, exclude = NULL, limit_html = 100,
-  tolerance = 0)
+  tolerance = 0, stop_on_error = TRUE)
 }
 \arguments{
 \item{df_new}{The data frame for which any changes will be shown as an addition (green)}

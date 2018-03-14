@@ -22,12 +22,12 @@
 #' ctable = compare_df(new_df, old_df, c("var1"))
 #' print(ctable$comparison_df)
 #' ctable$html_output
-compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0){
+compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, stop_on_error = TRUE){
 
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
 
-  check_if_comparable(both_tables$df_new, both_tables$df_old, group_col)
+  check_if_comparable(both_tables$df_new, both_tables$df_old, group_col, stop_on_error)
   both_tables$df_new = both_tables$df_new[, names(both_tables$df_old)]
 
   if (length(group_col) > 1) {
@@ -36,7 +36,8 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   }
 
   both_diffs = combined_rowdiffs(both_tables)
-  check_if_similar_after_unique_and_reorder(both_tables, both_diffs)
+
+  check_if_similar_after_unique_and_reorder(both_tables, both_diffs, stop_on_error)
 
   comparison_table         = create_comparison_table(both_diffs, group_col)
   comparison_table_ts2char = .ts2char(comparison_table)
@@ -46,10 +47,10 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
   comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
 
-  if(nrow(comparison_table) == 0) stop("The two data frames are the same after accounting for tolerance!")
-  if(nrow(comparison_table_diff) == 0) stop("The two data frames are the same after accounting for tolerance!")
+  if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
+  if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
 
-  if (limit_html > 0)
+  if (limit_html > 0 & nrow(comparison_table_diff) > 0 & nrow(comparison_table) > 0)
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html) else
       html_table = NULL
   change_count =  create_change_count(comparison_table, group_col)
@@ -64,7 +65,13 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
+# empty_output <= function(){
+#
+# }
+
 replace_numbers_with_symbols <- function(x){
+  if(is.vector(x) && length(x) == 0) return(x)
+  if(is.data.frame(x) && nrow(x) == 0) return(x)
   x[x == 2] = "+"
   x[x == 1] = "-"
   x[x == 0] = "."
@@ -90,16 +97,21 @@ combined_rowdiffs <- function(both_tables){
        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
 }
 
-check_if_similar_after_unique_and_reorder <- function(both_tables, both_diffs){
+stop_or_warn <- function(text, stop_on_error = TRUE){
+  if(stop_on_error) stop(text) else warning(text)
+}
+
+check_if_similar_after_unique_and_reorder <- function(both_tables, both_diffs, stop_on_error){
   if(any(sapply(both_diffs, nrow) != 0)) return(TRUE)
   if(nrow(both_tables$df_new) == nrow(both_tables$df_old))
-    stop("The two dataframes are similar after reordering") else
-      stop("The two dataframes are similar after reordering and doing unique")
+    stop_or_warn("The two dataframes are similar after reordering", stop_on_error) else
+      stop_or_warn("The two dataframes are similar after reordering and doing unique", stop_on_error)
 
 }
+
 create_comparison_table <- function(both_diffs, group_col){
   message("Creating comparison table...")
-  mixed_df = NULL
+  mixed_df = both_diffs$df1_2 %>% mutate(chng_type = NA_integer_) %>% slice(0) %>% data.frame()
   if(nrow(both_diffs$df1_2) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "1", both_diffs$df1_2))
   if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
   mixed_df %>%
@@ -147,13 +159,13 @@ create_html_table <- function(comparison_table_diff, comparison_table_ts2char, g
   )
 }
 
-check_if_comparable <- function(df_new, df_old, group_col){
+check_if_comparable <- function(df_new, df_old, group_col, stop_on_error){
 
-  if(isTRUE(all.equal(df_old, df_new))) stop("The two data frames are the same!")
+  if(isTRUE(all.equal(df_old, df_new))) stop_or_warn("The two data frames are the same!", stop_on_error)
 
   if(!(all(names(df_new) %in% names(df_old)))) stop("The two data frames have different columns!")
 
-  if(any("chng_type" %in% group_col)) stop("chng_type is a reserved keyword!")
+  if(any(c("chng_type", "X2", "X1") %in% group_col)) stop("chng_type, X1, X2) are reserved keywords!")
 
   if(!all(group_col %in% names(df_new))) stop("Grouping column(s) not found in the data.frames!")
 
@@ -170,6 +182,7 @@ r2two <- function(df, round_digits = 2)
 }
 
 .colour_coding_df <- function(df){
+  if(nrow(df) == 0) return(df)
   df[df == 2] = "green"
   df[df == 1] = "red"
   df[df == 0] = "grey"
@@ -231,8 +244,8 @@ create_change_count <- function(comparison_table_ts2char, group_col){
   change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n) %>% data.frame
   change_count_replace[is.na(change_count_replace)] = 0
 
-  if(is.null(change_count_replace[['X1']])) change_count_replace[['X1']] = 0L
-  if(is.null(change_count_replace[['X2']])) change_count_replace[['X2']] = 0L
+  if(is.null(change_count_replace[['X1']])) change_count_replace = change_count_replace %>% mutate(X1 = 0L)
+  if(is.null(change_count_replace[['X2']])) change_count_replace = change_count_replace %>% mutate(X2 = 0L)
   change_count_replace = change_count_replace %>% as.data.frame %>%
     tidyr::gather_("variable", "value", c("X2", "X1"))
 
