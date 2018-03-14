@@ -9,6 +9,7 @@
 #'  by which to group_by.
 #' @param exclude The columns which should be excluded from the comparison
 #' @param limit_html maximum number of rows to show in the html diff. >1000 not recommended
+#' @param stop_on_error Whether to stop on acceptable errors on not
 #' @param tolerance The amount in fraction to which changes are ignored while showing the
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.

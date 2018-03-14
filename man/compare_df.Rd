@@ -22,6 +22,8 @@ by which to group_by.}
 \item{tolerance}{The amount in fraction to which changes are ignored while showing the
 visual representation. By default, the value is 0 and any change in the value of variables
 is shown off. Doesn't apply to categorical variables.}
+
+\item{stop_on_error}{Whether to stop on acceptable errors on not}
 }
 \description{
 Do a git style comparison between two data frames of similar columnar structure
