@@ -1,9 +1,6 @@
 
-~**NOTE: The CRAN version has some bugs which have been fixed in Github. Please install using devtools::install_github if you're facing any problems till the next version is released in CRAN. -Alex**~
 
-~#### Changes in the github version (will be added to the CRAN version in the next release)~
-
-**CRAN Version is upto date with the latest bug fixes as of 2017-09-11**
+**CRAN Version is upto date with the latest bug fixes as of 2018-03-15**
 
 
 # compareDF
