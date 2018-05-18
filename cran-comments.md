@@ -1,7 +1,7 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* added an option to ignore errors `stop_on_error`
+* added a test dependency as notified by CRAN
 
 ## Test environments
 * local OS X install - 10.13.3 (17D47), R 3.4.3 Patched

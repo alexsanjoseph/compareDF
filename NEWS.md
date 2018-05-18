@@ -1,3 +1,6 @@
+# compareDF 1.3.1
+* added a test dependency(stringr) as notified by CRAN
+
 # compareDF 1.3.0
 * added an option to ignore errors `stop_on_error`
 
