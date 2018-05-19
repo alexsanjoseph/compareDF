@@ -247,5 +247,3 @@ expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
 expect_equivalent(expected_change_summary, ctable$change_summary)
 expect_equivalent(expected_change_count, ctable$change_count)
 #===============================================================================
-
-
