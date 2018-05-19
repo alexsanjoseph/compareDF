@@ -60,7 +60,7 @@ expect_error(compare_df(new_df, old_df, c("var1"), tolerance = 0.5), "The two da
 context("compare_df: check warning output")
 old_df = data.frame(var1 = c("A", "C", "B"), val1 = c(1, 3, 2))
 new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
-expected_comparison_df = data.frame(var1 = character(), val1 = numeric(), chng_type = logical())
+expected_comparison_df = data.frame(var1 = character(), val1 = numeric(), chng_type = numeric())
 expected_comparison_table_diff = data.frame(var1 = numeric(), val1 = numeric(), chng_type = numeric())
 expected_change_count = data.frame(var1 = character(), changes = numeric(), additions = numeric(), removals = numeric())
 expected_change_summary = c(old_obs = 3, new_obs = 3, changes = 0, additions = 0, removals = 0)
@@ -160,12 +160,12 @@ expect_equal(ctable$html_output %>% as.character() %>% stringr::str_count("<tr s
 #===============================================================================
 context("compare_df: Other stats")
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
-comparison_table_expected = data.frame(grp = c(".", ".", "+", "-"),
+comparison_table_expected = data.frame(grp = c("=", "=", "+", "-"),
                                        chng_type = c("+", "-", "+", "-"),
-                                       var1 = c(".", ".", "+", "-"),
-                                       var2 = c(".", ".", "+", "-"),
-                                       val1 = c(".", ".", "+", "-"),
-                                       val2 = c(".", ".", "+", "-"),
+                                       var1 = c("=", "=", "+", "-"),
+                                       var2 = c("=", "=", "+", "-"),
+                                       val1 = c("=", "=", "+", "-"),
+                                       val2 = c("=", "=", "+", "-"),
                                        val3 = c("+", "-", "+", "-")
                                        )
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
@@ -201,4 +201,51 @@ expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 
 expect_equal(expected_comparison_df, ctable$comparison_df)
 
 #===============================================================================
-# For later: Two types of tolerance
+
+context("compare_df: keep_unchanged")
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C1"),
+                    val3 = c(1, 2, 3)
+)
+
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "W"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C2"),
+                    val3 = c(1, 2.1, 4)
+)
+
+ctable = compare_df(new_df, old_df, c("var1", "var2"), keep_unchanged = T)
+expected_comparison_df = data.frame(grp = c(1, 1, 2, 2, 3, 4),
+                                   chng_type = c("=", "=", "+", "-", "+", "-"),
+                                   var1 = c("A", "A", "B", "B", "C", "C"),
+                                   var2 = c("Z", "Z", "Y", "Y", "W", "X"),
+                                   val1 = c(1, 1, 2, 2, 3, 3),
+                                   val2 = c("A1", "A1", "B1", "B1", "C2", "C1"),
+                                   val3 = c(1, 1, 2.1, 2, 4, 3) )
+
+expected_comparison_table_diff = data.frame(grp = c("=", "=", "=", "=", "+", "-"),
+                                            chng_type = c("=", "=", "+", "-", "+", "-"),
+                                            var1 = c("=", "=", "=", "=", "+", "-"),
+                                            var2 = c("=", "=", "=", "=", "+", "-"),
+                                            val1 = c("=", "=", "=", "=", "+", "-"),
+                                            val2 = c("=", "=", "=", "=", "+", "-"),
+                                            val3 = c("=", "=", "+", "-", "+", "-") )
+expected_change_count = data.frame(grp = c(1, 2, 3, 4),
+                                   changes = c(0, 1, 0, 0),
+                                   additions = c(0, 0, 1, 0),
+                                   removals = c(0, 0, 0, 1) )
+expected_change_summary = data.frame(old_obs = 3,
+                                     new_obs = 3,
+                                     changes = 1,
+                                     additions = 1,
+                                     removals = 1 )
+expect_equivalent(expected_comparison_df, ctable$comparison_df)
+expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
+expect_equivalent(expected_change_summary, ctable$change_summary)
+expect_equivalent(expected_change_count, ctable$change_count)
+#===============================================================================
+
+
