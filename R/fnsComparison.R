@@ -23,7 +23,8 @@
 #' ctable = compare_df(new_df, old_df, c("var1"))
 #' print(ctable$comparison_df)
 #' ctable$html_output
-compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, stop_on_error = TRUE){
+compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0,
+                       stop_on_error = TRUE, keep_unchanged = FALSE){
 
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
@@ -41,12 +42,24 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   check_if_similar_after_unique_and_reorder(both_tables, both_diffs, stop_on_error)
 
   comparison_table         = create_comparison_table(both_diffs, group_col)
+
   comparison_table_ts2char = .ts2char(comparison_table)
   comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance)
 
   comparison_table         = eliminate_tolerant_rows(comparison_table, comparison_table_diff)
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
   comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
+
+  if(keep_unchanged) {
+
+    comparison_table = comparison_table %>% keep_unchanged_rows(both_tables, group_col, "val_table")
+    comparison_table_ts2char = comparison_table_ts2char %>% keep_unchanged_rows(both_tables, group_col, "val_table")
+    comparison_table_diff    = comparison_table_diff %>% keep_unchanged_rows(both_tables, group_col, "color_table")
+
+    comparison_table_diff = comparison_table_diff[order(comparison_table[[group_col]]),]
+    comparison_table_ts2char = comparison_table_ts2char[order(comparison_table[[group_col]]),]
+    comparison_table = comparison_table[order(comparison_table[[group_col]]),]
+  }
 
   if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
   if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
@@ -60,22 +73,31 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
   comparison_table_diff = comparison_table_diff %>% replace_numbers_with_symbols()
 
-  output = list(comparison_df = comparison_table, html_output = html_table,
-                comparison_table_diff = comparison_table_diff,
-                change_count = change_count, change_summary = change_summary)
+  list(comparison_df = comparison_table, html_output = html_table,
+       comparison_table_diff = comparison_table_diff,
+       change_count = change_count, change_summary = change_summary)
 
 }
 
-# empty_output <= function(){
-#
-# }
+keep_unchanged_rows <- function(comparison_table, both_tables, group_col, type){
+  unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
+    Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
+
+  if(type == 'color_table') unchanged_rows[] = 0
+  comparison_table %>% rbind(unchanged_rows)
+}
+
+color_unchanged_rows <- function(){
+
+}
+
 
 replace_numbers_with_symbols <- function(x){
   if(is.vector(x) && length(x) == 0) return(x)
   if(is.data.frame(x) && nrow(x) == 0) return(x)
   x[x == 2] = "+"
   x[x == 1] = "-"
-  x[x == 0] = "."
+  x[x == 0] = "="
   x
 }
 
@@ -117,7 +139,7 @@ create_comparison_table <- function(both_diffs, group_col){
   if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
   mixed_df %>%
     arrange(desc(chng_type)) %>% arrange_(group_col) %>%
-    mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
+    # mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
     select(one_of(group_col), everything()) %>% r2two()
 }
 
@@ -192,6 +214,7 @@ r2two <- function(df, round_digits = 2)
 
 #' @importFrom stats na.omit
 .diff_type_df <- function(df, tolerance = 1e-6){
+
   lapply(df, function(x) {
     len_unique_x = length(na.omit(unique(x)))
 
