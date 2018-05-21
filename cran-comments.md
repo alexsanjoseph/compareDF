@@ -1,7 +1,11 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* added a test dependency as notified by CRAN
+* Added an option to preserve the rows that have not changed in the anlysis using the `keep_unchanged` argument
+* Added an option to set the color scheme in the HTML using the `color_scheme` argument.
+* Updated Documentation
+* Fixed some bugs
+* Fixed dependencies
 
 ## Test environments
 * local OS X install - 10.13.3 (17D47), R 3.4.3 Patched
