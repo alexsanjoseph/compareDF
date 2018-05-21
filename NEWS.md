@@ -1,3 +1,10 @@
+# compareDF 1.5.0
+* Added an option to preserve the rows that have not changed in the anlysis using the `keep_unchanged` argument
+* Added an option to set the color scheme in the HTML using the `color_scheme` argument.
+* Updated Documentation
+* Fixed some bugs
+* Fixed dependencies
+
 # compareDF 1.3.1
 * added a test dependency(stringr) as notified by CRAN
 

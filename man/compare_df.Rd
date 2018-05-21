@@ -29,7 +29,8 @@ is shown off. Doesn't apply to categorical variables.}
 
 \item{keep_unchanged}{whether to preserve unchanged values or not. Defaults to FALSE}
 
-\item{color_scheme}{What color scheme to use for the HTML output}
+\item{color_scheme}{What color scheme to use for the HTML output. Should be a vector/list with
+named_elements. Default - c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
 }
 \description{
 Do a git style comparison between two data frames of similar columnar structure

@@ -148,6 +148,11 @@ You can ignore certain columns using the *exclude* parameter. The fields that ha
 excluded can be given as a character vector. (This is a convenience function to deal with 
 the case where some columns are not included)
 
+## Preserving all rows
+
+The default behavior of the `compare_df` function is to show only the records that have changed. Sometimes the use might want to preserve all the records even after the comparison and not just see the values that have been changed (especially in the HTML). In this case, you can set the `keep_unchanged` parameter to `TRUE`. 
+
+
 ## Limiting HTML size
 
 For dataframes which have a large amount of differences in them, generating HTML might take 
@@ -155,6 +160,10 @@ a long time and crash your system. So the maximum diff size for the HTML (and fo
 visualization only) is capped at 100 by default. If you want to see more difference, you can change
 the `limit_html` parameter appropriately. NOTE: This is only of the HTML output which is used for visual
 checking. The main comparison data frame and the summaries ALWAYS include data from all the rows.
+
+## Changing HTML color
+
+You can use the `color_scheme` parameter to change the color of the HTML generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
 
 
 ## Tolerance
@@ -176,9 +185,15 @@ diff calculation or in the output
 
 Naturally, tolerance has no meaning for non-numeric values.
 
+## Using compare DF in GAP analysis
+
+The compareDF package can be used to conduct effective Gap analyses. If the package is used in this way, a configuration recommendation should be considered when using the compare_df function. Make sure the group column (group_col argument) being used as the gap classifier is unique and is not duplicated within either of the datasets being compared. Duplicate group names can skew gap analysis results. For example, using the results_2010 and results_2011 samples where Student represents the group_col argument, 'Rohit' group results are skewed. This is because student 'Rohit' is provided in the results_2011 sample twice. In this example Rohit represents two different students with the same last name. In short, if there are more than (2) records per grouping in a typical Gap analysis result, it suggests that there is a duplicate grouping contained within a single dataset that should be renamed and re-identified. If this occurs, changes should be made to the comparison datasets, and the Gap analysis should be re-conducted. The best way to prevent skewed results from occurring is to use all the columns that uniquely define a row in the group column argument - in this case, both name and student columns (alternatively a unique key identifier can also be constructed).
+
 ## Acknowledgements
 
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
+
+Thanks to Mr. Brice Richard for suggestions and inputs on GAP analysis.
 
 License (MIT)
 
