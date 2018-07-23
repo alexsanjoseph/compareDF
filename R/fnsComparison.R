@@ -241,6 +241,7 @@ r2two <- function(df, round_digits = 2)
 # }
 
 rowdiff <- function(x.1,x.2,...){
+  if(nrow(x.2) == 0) return(x.1)
   x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
 }
 
