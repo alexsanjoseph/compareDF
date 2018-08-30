@@ -175,7 +175,7 @@ expect_equal(ctable$comparison_table_diff, comparison_table_expected)
 
 #===============================================================================
 context("compare_df: tolerance")
-ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.5)
+ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.06)
 expected_comparison_df = data.frame(grp = c(3, 4),
                                     chng_type = c("+", "-"),
                                     var1 = c("C", "C"),
@@ -185,6 +185,18 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     val3 = c(4.0, 3.0))
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
+context("compare_df: tolerance with compare_type = 'difference'")
+ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.06, tolerance_type = 'difference')
+expected_comparison_df = data.frame(grp = c(2, 2, 3, 4),
+                                    chng_type = c("+", "-", "+", "-"),
+                                    var1 = c("B", "B", "C", "C"),
+                                    var2 = c("Y", "Y", "W", "X"),
+                                    val1 = c(2, 2, 3, 3),
+                                    val2 = c("B1", "B1", "C2", "C1"),
+                                    val3 = c(2.1, 2.0, 4.0, 3.0))
+expect_equal(ctable$comparison_df, expected_comparison_df)
+
+expect_error(compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.06, tolerance_type = 'random'), "Unknown tolerance type")
 # Error
 expect_error(compare_df(new_df %>% head(2), old_df %>% head(2), c("var1", "var2"), tolerance = 1))
 
