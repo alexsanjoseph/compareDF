@@ -259,3 +259,22 @@ expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
 expect_equivalent(expected_change_summary, ctable$change_summary)
 expect_equivalent(expected_change_count, ctable$change_count)
 #===============================================================================
+
+context("fnsComparison: compare_df")
+df_old = data.frame(a = c(1), b = c(1))
+df_new = data.frame(a = numeric(0), b = numeric(0))
+
+actual_comparison_summary = compare_df(df_new = df_new, df_old = df_old, group_col = c("a"))
+
+expected_comparison_df = data.frame(a = 1, chng_type = "-", b = 1)
+expected_comparison_table_diff = data.frame(a = "-", chng_type = "-", b = "-")
+expected_change_count = structure(list(a = 1, changes = 0, additions = 0, removals = 1), 
+                                  .Names = c("a", "changes", "additions", "removals"), 
+                                  class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, -1L))
+expected_change_summary = setNames(c(1, 0, 0, 0, 1), c("old_obs", "new_obs", "changes", "additions", "removals"))
+
+expect_equal(expected_comparison_df, actual_comparison_summary$comparison_df)
+expect_equal(expected_comparison_table_diff, actual_comparison_summary$comparison_table_diff)
+expect_equal(expected_change_count, actual_comparison_summary$change_count)
+expect_equal(expected_change_summary, actual_comparison_summary$change_summary)
+
