@@ -13,6 +13,7 @@
 #' @param tolerance The amount in fraction to which changes are ignored while showing the
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
+#' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
 #' @param keep_unchanged whether to preserve unchanged values or not. Defaults to FALSE
 #' @param color_scheme What color scheme to use for the HTML output. Should be a vector/list with
 #'  named_elements. Default - c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")
@@ -26,7 +27,7 @@
 #' ctable = compare_df(new_df, old_df, c("var1"))
 #' print(ctable$comparison_df)
 #' ctable$html_output
-compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0,
+compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged = FALSE,
                        color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")){
 
@@ -48,7 +49,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table         = create_comparison_table(both_diffs, group_col)
 
   comparison_table_ts2char = .ts2char(comparison_table)
-  comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance)
+  comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance, tolerance_type)
 
   comparison_table         = eliminate_tolerant_rows(comparison_table, comparison_table_diff)
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
@@ -145,9 +146,9 @@ create_comparison_table <- function(both_diffs, group_col){
 }
 
 
-create_comparison_table_diff <- function(comparison_table_ts2char, group_col, tolerance){
+create_comparison_table_diff <- function(comparison_table_ts2char, group_col, tolerance, tolerance_type){
   comparison_table_ts2char %>% group_by_(group_col) %>%
-    do(.diff_type_df(., tolerance = tolerance)) %>% as.data.frame
+    do(.diff_type_df(., tolerance = tolerance, tolerance_type = tolerance_type)) %>% as.data.frame
 }
 
 eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
@@ -215,7 +216,8 @@ r2two <- function(df, round_digits = 2)
 }
 
 #' @importFrom stats na.omit
-.diff_type_df <- function(df, tolerance = 1e-6){
+
+.diff_type_df <- function(df, tolerance = 1e-6, tolerance_type = 'ratio'){
   df = df %>% mutate(value = as.numeric(value))
   lapply(df, function(x) {
     len_unique_x = length(na.omit(unique(x)))
@@ -225,8 +227,12 @@ r2two <- function(df, round_digits = 2)
       score = 1
     }else{
       if(is.numeric(x) & !is.POSIXct(x) & len_unique_x > 1){
+
         range_x = diff(range(x, na.rm = T))
-        score = as.numeric(abs(range_x/min(x, na.rm = T)) > tolerance)
+        if(tolerance_type == 'ratio') score = as.numeric(abs(range_x/min(x, na.rm = T)) > tolerance) else
+          if(tolerance_type == 'difference') score = range_x > tolerance else
+            stop("Unknown tolerance type: Should be `ratio` or `difference`")
+
       }else
         score = as.numeric(len_unique_x > 1)
     }
