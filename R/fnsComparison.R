@@ -216,8 +216,9 @@ r2two <- function(df, round_digits = 2)
 }
 
 #' @importFrom stats na.omit
-.diff_type_df <- function(df, tolerance = 1e-6, tolerance_type = 'ratio'){
 
+.diff_type_df <- function(df, tolerance = 1e-6, tolerance_type = 'ratio'){
+  df = df %>% mutate(value = as.numeric(value))
   lapply(df, function(x) {
     len_unique_x = length(na.omit(unique(x)))
 
