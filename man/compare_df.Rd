@@ -5,9 +5,9 @@
 \title{Compare Two dataframes}
 \usage{
 compare_df(df_new, df_old, group_col, exclude = NULL, limit_html = 100,
-  tolerance = 0, stop_on_error = TRUE, keep_unchanged = FALSE,
-  color_scheme = c(addition = "green", removal = "red", unchanged_cell =
-  "gray", unchanged_row = "deepskyblue"))
+  tolerance = 0, tolerance_type = "ratio", stop_on_error = TRUE,
+  keep_unchanged = FALSE, color_scheme = c(addition = "green", removal =
+  "red", unchanged_cell = "gray", unchanged_row = "deepskyblue"))
 }
 \arguments{
 \item{df_new}{The data frame for which any changes will be shown as an addition (green)}
@@ -24,6 +24,8 @@ by which to group_by.}
 \item{tolerance}{The amount in fraction to which changes are ignored while showing the
 visual representation. By default, the value is 0 and any change in the value of variables
 is shown off. Doesn't apply to categorical variables.}
+
+\item{tolerance_type}{Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'}
 
 \item{stop_on_error}{Whether to stop on acceptable errors on not}
 
