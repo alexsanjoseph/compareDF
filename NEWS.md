@@ -1,3 +1,8 @@
+# compareDF 1.6.0
+* Added option to specify different types of tolerances. Now you can use `difference` as an argument to use difference rather than ratio
+* Fixed some bugs
+* Lot more tests
+
 # compareDF 1.5.0
 * Added an option to preserve the rows that have not changed in the anlysis using the `keep_unchanged` argument
 * Added an option to set the color scheme in the HTML using the `color_scheme` argument.
