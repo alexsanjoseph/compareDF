@@ -14,9 +14,10 @@
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
 #' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
-#' @param keep_unchanged whether to preserve unchanged values or not. Defaults to FALSE
+#' @param keep_unchanged whether to preserve unchanged values or not. Defaults to \code{FALSE}
 #' @param color_scheme What color scheme to use for the HTML output. Should be a vector/list with
-#'  named_elements. Default - c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")
+#'  named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
+#' @param headers A character vector of column names to be used in the table. Defaults to \code{colnames}.
 #' @import dplyr
 #' @export
 #' @examples
@@ -29,7 +30,8 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged = FALSE,
-                       color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")){
+                       color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue"),
+                       headers = NULL){
 
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
@@ -69,18 +71,31 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
   if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
 
-  if (limit_html > 0 & nrow(comparison_table_diff) > 0 & nrow(comparison_table) > 0)
-    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme) else
+  if (is.null(headers)) {
+    headers = names(comparison_table_diff)
+  } else {
+    chng_type_position = grep(pattern = "chng_type", names(comparison_table_diff))
+    headers = append(x = headers, values = "Type of Change", after = chng_type_position - 1)
+    
+    table_length = length(names(comparison_table_diff))
+    header_length = length(headers)
+    if(table_length != header_length) stop("Length of headers [", 
+                                           header_length - 1,"] must be the same as the number of columns [", 
+                                           table_length - 1, "]")
+  }
+  
+  if (limit_html > 0 & nrow(comparison_table_diff) > 0 & nrow(comparison_table) > 0) 
+    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme, headers) else
       html_table = NULL
   change_count =  create_change_count(comparison_table, group_col)
   change_summary =  create_change_summary(change_count, both_tables)
 
   comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
   comparison_table_diff = comparison_table_diff %>% replace_numbers_with_symbols()
-
+  
   list(comparison_df = comparison_table, html_output = html_table,
        comparison_table_diff = comparison_table_diff,
-       change_count = change_count, change_summary = change_summary)
+       change_count = change_count, change_summary = change_summary, headers = headers)
 
 }
 
@@ -158,7 +173,7 @@ eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
 }
 
 #' @importFrom utils head
-create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme){
+create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme, headers){
 
   comparison_table_ts2char$chng_type = comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
 
@@ -175,10 +190,12 @@ create_html_table <- function(comparison_table_diff, comparison_table_ts2char, g
 
   table_css = lapply(comparison_table_color_code, function(x)
     paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html) %>% as.matrix()
+  
+  colnames(comparison_table_ts2char) <- headers
 
   message("Creating HTML table for first ", limit_html, " rows")
   html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
-                                    col.rgroup = shading,
+                                    col.rgroup = shading, 
                                     rnames = F, css.cell = table_css,
                                     padding.rgroup = rep("5em", length(shading))
   )
