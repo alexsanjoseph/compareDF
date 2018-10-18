@@ -6,8 +6,9 @@
 \usage{
 compare_df(df_new, df_old, group_col, exclude = NULL, limit_html = 100,
   tolerance = 0, tolerance_type = "ratio", stop_on_error = TRUE,
-  keep_unchanged = FALSE, color_scheme = c(addition = "green", removal =
-  "red", unchanged_cell = "gray", unchanged_row = "deepskyblue"))
+  keep_unchanged = FALSE, color_scheme = c(addition = "green", removal
+  = "red", unchanged_cell = "gray", unchanged_row = "deepskyblue"),
+  headers = NULL)
 }
 \arguments{
 \item{df_new}{The data frame for which any changes will be shown as an addition (green)}
@@ -29,10 +30,12 @@ is shown off. Doesn't apply to categorical variables.}
 
 \item{stop_on_error}{Whether to stop on acceptable errors on not}
 
-\item{keep_unchanged}{whether to preserve unchanged values or not. Defaults to FALSE}
+\item{keep_unchanged}{whether to preserve unchanged values or not. Defaults to \code{FALSE}}
 
 \item{color_scheme}{What color scheme to use for the HTML output. Should be a vector/list with
-named_elements. Default - c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
+named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}}
+
+\item{headers}{A character vector of column names to be used in the table. Defaults to \code{colnames}.}
 }
 \description{
 Do a git style comparison between two data frames of similar columnar structure
