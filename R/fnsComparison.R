@@ -71,18 +71,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
   if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
 
-  if (is.null(headers)) {
-    headers = names(comparison_table_diff)
-  } else {
-    chng_type_position = grep(pattern = "chng_type", names(comparison_table_diff))
-    headers = append(x = headers, values = "Type of Change", after = chng_type_position - 1)
-    
-    table_length = length(names(comparison_table_diff))
-    header_length = length(headers)
-    if(table_length != header_length) stop("Length of headers [", 
-                                           header_length - 1,"] must be the same as the number of columns [", 
-                                           table_length - 1, "]")
-  }
+  headers = get_headers_for_html_table(headers, comparison_table_diff)
   
   if (limit_html > 0 & nrow(comparison_table_diff) > 0 & nrow(comparison_table) > 0) 
     html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme, headers) else
@@ -107,7 +96,6 @@ keep_unchanged_rows <- function(comparison_table, both_tables, group_col, type){
   comparison_table %>% rbind(unchanged_rows)
 }
 
-
 replace_numbers_with_symbols <- function(x){
   if(is.vector(x) && length(x) == 0) return(x)
   if(is.data.frame(x) && nrow(x) == 0) return(x)
@@ -117,7 +105,6 @@ replace_numbers_with_symbols <- function(x){
   x[x == -1] = "="
   x
 }
-
 
 exclude_columns <- function(both_tables, exclude){
   list(df_old = both_tables$df_old %>% select(-one_of(exclude)),
@@ -310,6 +297,25 @@ create_change_count <- function(comparison_table_ts2char, group_col){
 create_change_summary <- function(change_count, both_tables){
   c(old_obs = nrow(both_tables$df_old), new_obs = nrow(both_tables$df_new),
     changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
+}
+
+get_headers_for_html_table <- function(headers, comparison_table_diff) {
+  if (is.null(headers)) {
+    headers = names(comparison_table_diff)
+  } else {
+    chng_type_position = grep(pattern = "^chng_type$", names(comparison_table_diff))
+    grp_exists = grep(pattern = "^grp$", names(comparison_table_diff))
+    headers = if(length(grp_exists) > 0) c("Group ID", headers) else headers
+    headers = append(x = headers, values = "Type of Change", after = chng_type_position - 1)
+
+    table_length = length(names(comparison_table_diff))
+    header_length = length(headers)
+    if(table_length != header_length) stop("Length of headers [", 
+                                           header_length - 1,"] must be the same as the number of columns [", 
+                                           table_length - 1, "]")
+    
+    headers
+  }
 }
 
 # nocov start
