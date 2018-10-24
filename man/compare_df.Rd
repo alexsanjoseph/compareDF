@@ -8,7 +8,8 @@ compare_df(df_new, df_old, group_col, exclude = NULL, limit_html = 100,
   tolerance = 0, tolerance_type = "ratio", stop_on_error = TRUE,
   keep_unchanged = FALSE, color_scheme = c(addition = "green", removal
   = "red", unchanged_cell = "gray", unchanged_row = "deepskyblue"),
-  headers = NULL)
+  html_headers = NULL, html_change_col_name = "chng_type",
+  html_group_col_name = "grp")
 }
 \arguments{
 \item{df_new}{The data frame for which any changes will be shown as an addition (green)}
@@ -35,7 +36,11 @@ is shown off. Doesn't apply to categorical variables.}
 \item{color_scheme}{What color scheme to use for the HTML output. Should be a vector/list with
 named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}}
 
-\item{headers}{A character vector of column names to be used in the table. Defaults to \code{colnames}.}
+\item{html_headers}{A character vector of column names to be used in the table. Defaults to \code{colnames}.}
+
+\item{html_change_col_name}{Name of the change column to use in the HTML table. Defaults to \code{chng_type}.}
+
+\item{html_group_col_name}{Name of the group column to be used in the table (if there are multiple grouping vars). Defaults to \code{grp}.}
 }
 \description{
 Do a git style comparison between two data frames of similar columnar structure
