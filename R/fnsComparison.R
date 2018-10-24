@@ -304,10 +304,9 @@ create_change_summary <- function(change_count, both_tables){
 get_headers_for_html_table <- function(headers, change_col_name, group_col_name, comparison_table_diff) {
   # if (is.null(headers)) return(names(comparison_table_diff))
 
-  headers_all = names(comparison_table_diff)
-
-  headers_all = headers_all %>% replace(headers_all == 'grp', group_col_name)
-  headers_all = headers_all %>% replace(headers_all == 'chng_type', change_col_name)
+  headers_all = names(comparison_table_diff) %>%
+    replace(. == 'grp', group_col_name) %>%
+    replace(. == 'chng_type', change_col_name)
 
   matching_vals = names(headers) %>% sapply(function(x) which(x == headers_all)) %>% Filter(function(x) length(x) > 0, .) %>% unlist()
   headers_all[matching_vals] = headers[names(matching_vals)]
