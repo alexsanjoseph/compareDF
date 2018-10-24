@@ -12,6 +12,7 @@ Depends:
     R (>= 3.4.0)
 Imports:
     dplyr (>= 0.4.3),
+    magrittr (>= 1.5),
     htmlTable (>= 1.5),
     tidyr (>= 0.4.1),
     stringr (>= 1.0.0)
@@ -19,3 +20,4 @@ Suggests:
     testthat
 LazyData: TRUE
 RoxygenNote: 6.1.0
+Encoding: UTF-8

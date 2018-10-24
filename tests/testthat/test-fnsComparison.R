@@ -266,7 +266,7 @@ get_html_header_names <- function(ctable){
   html_output_string = ctable$html_output %>% str_replace_all("\\n", "")
 
   html_output_string %>%
-    stringr::str_extract("thead.*thead") %>%
+    str_extract("thead.*thead") %>%
     str_extract_all("'>.+?<") %>%
     magrittr::extract2(1) %>%
     str_replace_all("'>(.*)<", "\\1")
@@ -274,6 +274,7 @@ get_html_header_names <- function(ctable){
 }
 
 context("compare_df: Headers")
+
 test_that("compare_df: headers with 1 grouping column", {
   ctable = compare_df(new_df, old_df, c("var1"),
                       html_headers = c(var1 = "Variable 1", var2 = "Variable 2", val1 = "Value 1", val2 = "Value 2", val3 = "Value 3"))
