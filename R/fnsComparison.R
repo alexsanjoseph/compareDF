@@ -14,9 +14,12 @@
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
 #' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
-#' @param keep_unchanged whether to preserve unchanged values or not. Defaults to FALSE
+#' @param keep_unchanged whether to preserve unchanged values or not. Defaults to \code{FALSE}
 #' @param color_scheme What color scheme to use for the HTML output. Should be a vector/list with
-#'  named_elements. Default - c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")
+#'  named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
+#' @param html_headers A character vector of column names to be used in the table. Defaults to \code{colnames}.
+#' @param html_change_col_name Name of the change column to use in the HTML table. Defaults to \code{chng_type}.
+#' @param html_group_col_name Name of the group column to be used in the table (if there are multiple grouping vars). Defaults to \code{grp}.
 #' @import dplyr
 #' @export
 #' @examples
@@ -29,7 +32,8 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged = FALSE,
-                       color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")){
+                       color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue"),
+                       html_headers = NULL, html_change_col_name = "chng_type", html_group_col_name = "grp"){
 
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
@@ -39,7 +43,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
   if (length(group_col) > 1) {
     both_tables = group_columns(both_tables, group_col)
-    group_col = 'grp'
+    group_col = "grp"
   }
 
   both_diffs = combined_rowdiffs(both_tables)
@@ -69,8 +73,10 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
   if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
 
+  html_headers_all = get_headers_for_html_table(html_headers, html_change_col_name, html_group_col_name, comparison_table_diff)
+
   if (limit_html > 0 & nrow(comparison_table_diff) > 0 & nrow(comparison_table) > 0)
-    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme) else
+    html_table = create_html_table(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme, html_headers_all) else
       html_table = NULL
   change_count =  create_change_count(comparison_table, group_col)
   change_summary =  create_change_summary(change_count, both_tables)
@@ -92,7 +98,6 @@ keep_unchanged_rows <- function(comparison_table, both_tables, group_col, type){
   comparison_table %>% rbind(unchanged_rows)
 }
 
-
 replace_numbers_with_symbols <- function(x){
   if(is.vector(x) && length(x) == 0) return(x)
   if(is.data.frame(x) && nrow(x) == 0) return(x)
@@ -102,7 +107,6 @@ replace_numbers_with_symbols <- function(x){
   x[x == -1] = "="
   x
 }
-
 
 exclude_columns <- function(both_tables, exclude){
   list(df_old = both_tables$df_old %>% select(-one_of(exclude)),
@@ -158,7 +162,7 @@ eliminate_tolerant_rows <- function(comparison_table, comparison_table_diff){
 }
 
 #' @importFrom utils head
-create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme){
+create_html_table <- function(comparison_table_diff, comparison_table_ts2char, group_col, limit_html, color_scheme, html_headers_all){
 
   comparison_table_ts2char$chng_type = comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
 
@@ -175,6 +179,8 @@ create_html_table <- function(comparison_table_diff, comparison_table_ts2char, g
 
   table_css = lapply(comparison_table_color_code, function(x)
     paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html) %>% as.matrix()
+
+  colnames(comparison_table_ts2char) <- html_headers_all
 
   message("Creating HTML table for first ", limit_html, " rows")
   html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
@@ -293,6 +299,19 @@ create_change_count <- function(comparison_table_ts2char, group_col){
 create_change_summary <- function(change_count, both_tables){
   c(old_obs = nrow(both_tables$df_old), new_obs = nrow(both_tables$df_new),
     changes = sum(change_count$changes), additions = sum(change_count$additions), removals = sum(change_count$removals))
+}
+
+get_headers_for_html_table <- function(headers, change_col_name, group_col_name, comparison_table_diff) {
+  # if (is.null(headers)) return(names(comparison_table_diff))
+
+  headers_all = names(comparison_table_diff) %>%
+    replace(. == 'grp', group_col_name) %>%
+    replace(. == 'chng_type', change_col_name)
+
+  matching_vals = names(headers) %>% sapply(function(x) which(x == headers_all)) %>% Filter(function(x) length(x) > 0, .) %>% unlist()
+  headers_all[matching_vals] = headers[names(matching_vals)]
+
+  headers_all
 }
 
 # nocov start
