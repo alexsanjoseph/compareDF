@@ -1,3 +1,8 @@
+# compareDF 1.7.0
+* Provided options to name the columns in the HTML output
+* Provided option change column name
+* Provided optiongroup column name
+
 # compareDF 1.6.0
 * Added option to specify different types of tolerances. Now you can use `difference` as an argument to use difference rather than ratio
 * Fixed some bugs

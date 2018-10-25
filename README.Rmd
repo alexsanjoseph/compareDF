@@ -193,7 +193,9 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
-Thanks to Mr. Brice Richard for suggestions and inputs on GAP analysis.
+## Contributors
+- Brice Richard
+- Joshua David Barillas - https://github.com/jdbarillas
 
 License (MIT)
 
