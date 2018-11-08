@@ -93,7 +93,7 @@ _For the purpose of the readme I am attaching the html as a png because github m
 ```{r, results = 'hide'}
 print(ctable_student$html_output)
 ```
-<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_1.png" width="500" />
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_1.png" width="500" />
 
 Now it is very easy to see recognize what has changed. A single cell is colored 
 if it has changed across the two datasets. The value of the cell in the older dataset
@@ -137,7 +137,7 @@ We can also group_multiple columns into the grouping variable
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"))
 ctable_student_div$comparison_df
 ```
-<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_2.png" width="500" />
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_2.png" width="500" />
 
 Now _Rohits_ in each individual division are considered as belonging to separate 
 groups and compared accordingly. All the other summaries also change appropriately.
@@ -178,7 +178,7 @@ less than 5% apart from the lower value.
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0.05)
 ctable_student_div$html_output
 ```
-<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_3.png" width="500" /> 
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_3.png" width="500" /> 
 
 _Venu from division A_ who had a score change from 100 to 99 is no longer present in the 
 diff calculation or in the output
