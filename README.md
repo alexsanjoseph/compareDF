@@ -93,7 +93,7 @@ _For the purpose of the readme I am attaching the html as a png because github m
 ```{r, results = 'hide'}
 print(ctable_student$html_output)
 ```
-<img src="github_assets/pic_1.png" alt="Bring on the styles, github! " width="500" />
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_1.png" width="500" />
 
 Now it is very easy to see recognize what has changed. A single cell is colored 
 if it has changed across the two datasets. The value of the cell in the older dataset
@@ -137,7 +137,7 @@ We can also group_multiple columns into the grouping variable
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"))
 ctable_student_div$comparison_df
 ```
-<img src="github_assets/pic_2.png" alt="Bring on the styles, github! " width="500" />
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_2.png" width="500" />
 
 Now _Rohits_ in each individual division are considered as belonging to separate 
 groups and compared accordingly. All the other summaries also change appropriately.
@@ -178,7 +178,7 @@ less than 5% apart from the lower value.
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0.05)
 ctable_student_div$html_output
 ```
-<img src="github_assets/pic_3.png" alt="Bring on the styles, github! " width="500" />
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/github_assets/pic_3.png" width="500" /> 
 
 _Venu from division A_ who had a score change from 100 to 99 is no longer present in the 
 diff calculation or in the output
@@ -207,4 +207,4 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-_A version of this README has been published as a blog [here](http://alexsanjoseph.github.io/r/2016/03/09/comparing-dataframes-in-r-using-comparedf)_
+_A version of this README has been published as a blog [here](http://alexsanjoseph.github.io/r/2018/10/03/comparing-dataframes-in-r-using-comparedf)_
