@@ -10,6 +10,9 @@ init:
 install:
   ps: Bootstrap
 
+environment:
+  USE_RTOOLS: true
+
 # Adapt as necessary starting from here
 
 build_script:
