@@ -1,6 +1,6 @@
 
 
-**CRAN Version is upto date with the latest bug fixes as of 2018-09-02**
+**CRAN Version is upto date with the latest bug fixes as of 2018-11-08**
 
 
 # compareDF
