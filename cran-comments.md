@@ -2,7 +2,7 @@
 This is a new version. In this version I have:
 
 * Updated tests to take dplyr development version into account
-
+* Fixed cran URL
 
 ## Test environments
 * local OS X install - 10.14, R 3.5.1

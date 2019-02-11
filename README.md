@@ -8,8 +8,8 @@
 [![codecov.io](http://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](http://codecov.io/github/alexsanjoseph/compareDF?branch=master)
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/compareDF)](http://cran.r-project.org/package=compareDF)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/compareDF)](http://www.r-pkg.org/pkg/compareDF)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/compareDF)](http://cran.r-project.org/package=compareDF)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/compareDF)](http://www.r-pkg.org/pkg/compareDF)
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
