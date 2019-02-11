@@ -1,3 +1,6 @@
+# compareDF 1.7.1
+* Fixed tests to work with dplyr 0.8.0
+
 # compareDF 1.7.0
 * Provided options to name the columns in the HTML output
 * Provided option change column name
