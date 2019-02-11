@@ -1,9 +1,7 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Provided options to name the columns in the HTML output
-* Provided option change column name
-* Provided optiongroup column name
+* Updated tests to take dplyr development version into account
 
 
 ## Test environments

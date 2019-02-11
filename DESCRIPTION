@@ -1,8 +1,8 @@
 Package: compareDF
 Type: Package
 Title: Do a Git Style Diff of the Rows Between Two Dataframes with Similar Structure
-Version: 1.7.0
-Date: 2018-10-25
+Version: 1.7.1
+Date: 2019-02-11
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
 Description: Compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
@@ -19,5 +19,5 @@ Imports:
 Suggests:
     testthat
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8

@@ -70,9 +70,9 @@ output = expect_warning(compare_df(new_df, old_df, c("var1"), tolerance = 0.5, s
                         "The two dataframes are similar after reordering")
 expect_equal(output$comparison_df, expected_comparison_df)
 expect_null(output$html_output, expected_comparison_df)
-expect_equal(output$comparison_table_diff, expected_comparison_table_diff)
-expect_equal(output$change_count, expected_change_count)
-expect_equal(output$change_summary, expected_change_summary)
+expect_equivalent(output$comparison_table_diff, expected_comparison_table_diff)
+expect_equivalent(output$change_count, expected_change_count)
+expect_equivalent(output$change_summary, expected_change_summary)
 
 #===============================================================================
 context("compare_df: errors and warnings")
@@ -171,8 +171,8 @@ comparison_table_expected = data.frame(grp = c("=", "=", "+", "-"),
                                        )
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
 
-expect_equal(ctable$change_summary, change_summary_expected)
-expect_equal(ctable$comparison_table_diff, comparison_table_expected)
+expect_equivalent(ctable$change_summary, change_summary_expected)
+expect_equivalent(ctable$comparison_table_diff, comparison_table_expected)
 
 #===============================================================================
 context("compare_df: tolerance")
@@ -352,8 +352,8 @@ expected_change_count = structure(list(a = 1, changes = 0, additions = 0, remova
                                   class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, -1L))
 expected_change_summary = setNames(c(1, 0, 0, 0, 1), c("old_obs", "new_obs", "changes", "additions", "removals"))
 
-expect_equal(expected_comparison_df, actual_comparison_summary$comparison_df)
-expect_equal(expected_comparison_table_diff, actual_comparison_summary$comparison_table_diff)
-expect_equal(expected_change_count, actual_comparison_summary$change_count)
-expect_equal(expected_change_summary, actual_comparison_summary$change_summary)
+expect_equivalent(expected_comparison_df, actual_comparison_summary$comparison_df)
+expect_equivalent(expected_comparison_table_diff, actual_comparison_summary$comparison_table_diff)
+expect_equivalent(expected_change_count, actual_comparison_summary$change_count)
+expect_equivalent(expected_change_summary, actual_comparison_summary$change_summary)
 
