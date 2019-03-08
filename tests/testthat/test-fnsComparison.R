@@ -213,6 +213,18 @@ ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(-3,3))
 expect_equal(expected_comparison_df, ctable$comparison_df)
 
+#===========================
+context("compare_df: Extremely small values - compare rounding parameter")
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    val1 = c(0.0001, 2e-5, 3))
+
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    val1 = c(0.00011, 2e-5, 5))
+
+ctable = compare_df(new_df, old_df, c("var1"), round_output_to = 10)
+expected_comparison_df = data.frame(var1 = c("A", "A", "C", "C"), chng_type = c("+", "-"), val1 = c(0.00011,0.00010, 5, 3))
+expect_equal(expected_comparison_df, ctable$comparison_df)
+
 #===============================================================================
 
 context("compare_df: keep_unchanged")
