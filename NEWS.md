@@ -1,3 +1,6 @@
+# compareDF 1.7.2
+* Fixed tests to work with dplyr 0.8.1
+
 # compareDF 1.7.1
 * Fixed tests to work with dplyr 0.8.0
 
