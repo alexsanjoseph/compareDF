@@ -1,8 +1,7 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Updated tests to take dplyr development version into account
-* Fixed cran URL
+* Fixed tests to deal with latest updates to dplyr
 
 ## Test environments
 * local OS X install - 10.14, R 3.5.1
