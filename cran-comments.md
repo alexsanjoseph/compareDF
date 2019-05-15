@@ -1,7 +1,8 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Fixed tests to deal with latest updates to dplyr
+* Fixed tests to deal with latest updates to dplyr 0.8.2 on other packages
+* Removed some unused imports
 
 ## Test environments
 * local OS X install - 10.14, R 3.5.1

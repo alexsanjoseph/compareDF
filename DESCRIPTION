@@ -1,7 +1,7 @@
 Package: compareDF
 Type: Package
 Title: Do a Git Style Diff of the Rows Between Two Dataframes with Similar Structure
-Version: 1.7.2
+Version: 1.7.3
 Date: 2019-04-02
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
 Description: Compares two dataframes which have the same column
@@ -12,10 +12,8 @@ Depends:
     R (>= 3.4.0)
 Imports:
     dplyr (>= 0.4.3),
-    magrittr (>= 1.5),
     htmlTable (>= 1.5),
     tidyr (>= 0.4.1),
-    stringr (>= 1.0.0)
 Suggests:
     testthat
 LazyData: TRUE
