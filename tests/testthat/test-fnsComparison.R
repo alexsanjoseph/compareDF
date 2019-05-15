@@ -352,20 +352,22 @@ test_that("compare_df: headers with more than 1 grouping column and group column
 #===============================================================================
 
 context("compare_df: Integration Edge case")
-df_old = data.frame(a = c(1), b = c(1))
-df_new = data.frame(a = numeric(0), b = numeric(0))
+test_that("compare_df: Some integration edge case", {
 
-actual_comparison_summary = compare_df(df_new = df_new, df_old = df_old, group_col = c("a"))
+  df_old = data.frame(a = c(1), b = c(1))
+  df_new = data.frame(a = numeric(0), b = numeric(0))
 
-expected_comparison_df = data.frame(a = 1, chng_type = "-", b = 1)
-expected_comparison_table_diff = data.frame(a = "-", chng_type = "-", b = "-")
-expected_change_count = structure(list(a = 1, changes = 0, additions = 0, removals = 1),
-                                  .Names = c("a", "changes", "additions", "removals"),
-                                  class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, -1L))
-expected_change_summary = setNames(c(1, 0, 0, 0, 1), c("old_obs", "new_obs", "changes", "additions", "removals"))
+  actual_comparison_summary = compare_df(df_new = df_new, df_old = df_old, group_col = c("a"))
 
-expect_equivalent(expected_comparison_df, actual_comparison_summary$comparison_df)
-expect_equivalent(expected_comparison_table_diff, actual_comparison_summary$comparison_table_diff)
-expect_equivalent(expected_change_count, actual_comparison_summary$change_count)
-expect_equivalent(expected_change_summary, actual_comparison_summary$change_summary)
+  expected_comparison_df = data.frame(a = 1, chng_type = "-", b = 1)
+  expected_comparison_table_diff = data.frame(a = "-", chng_type = "-", b = "-")
+  expected_change_count = structure(list(a = 1, changes = 0, additions = 0, removals = 1),
+                                    .Names = c("a", "changes", "additions", "removals"),
+                                    class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, -1L))
+  expected_change_summary = setNames(c(1, 0, 0, 0, 1), c("old_obs", "new_obs", "changes", "additions", "removals"))
 
+  expect_equivalent(expected_comparison_df, actual_comparison_summary$comparison_df)
+  expect_equivalent(expected_comparison_table_diff, actual_comparison_summary$comparison_table_diff)
+  #expect_equivalent(expected_change_count, actual_comparison_summary$change_count) # Might bring in back later if needed
+  expect_equivalent(expected_change_summary, actual_comparison_summary$change_summary)
+})
