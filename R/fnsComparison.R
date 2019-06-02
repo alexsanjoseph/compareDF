@@ -14,7 +14,8 @@
 #'  visual representation. By default, the value is 0 and any change in the value of variables
 #'  is shown off. Doesn't apply to categorical variables.
 #' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
-#' @param keep_unchanged whether to preserve unchanged values or not. Defaults to \code{FALSE}
+#' @param keep_unchanged_rows whether to preserve unchanged values or not. Defaults to \code{FALSE}
+#' @param keep_unchanged_cols whether to preserve unchanged values or not. Defaults to \code{TRUE}
 #' @param color_scheme What color scheme to use for the HTML output. Should be a vector/list with
 #'  named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
 #' @param html_headers A character vector of column names to be used in the table. Defaults to \code{colnames}.
@@ -32,7 +33,7 @@
 #' print(ctable$comparison_df)
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 100, tolerance = 0, tolerance_type = 'ratio',
-                       stop_on_error = TRUE, keep_unchanged = FALSE,
+                       stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
                        color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue"),
                        html_headers = NULL, html_change_col_name = "chng_type", html_group_col_name = "grp",
                        round_output_to = 3){
@@ -61,15 +62,23 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
   comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
 
-  if(keep_unchanged) {
+  if(keep_unchanged_rows) {
 
-    comparison_table = comparison_table %>% keep_unchanged_rows(both_tables, group_col, "val_table")
-    comparison_table_ts2char = comparison_table_ts2char %>% keep_unchanged_rows(both_tables, group_col, "val_table")
-    comparison_table_diff    = comparison_table_diff %>% keep_unchanged_rows(both_tables, group_col, "color_table")
+    comparison_table = comparison_table %>% keep_unchanged_rows_fn(both_tables, group_col, "val_table")
+    comparison_table_ts2char = comparison_table_ts2char %>% keep_unchanged_rows_fn(both_tables, group_col, "val_table")
+    comparison_table_diff    = comparison_table_diff %>% keep_unchanged_rows_fn(both_tables, group_col, "color_table")
 
     comparison_table_diff = comparison_table_diff[order(comparison_table[[group_col]]),]
     comparison_table_ts2char = comparison_table_ts2char[order(comparison_table[[group_col]]),]
     comparison_table = comparison_table[order(comparison_table[[group_col]]),]
+  }
+
+  if(!keep_unchanged_cols){
+    all_unchanged = apply(comparison_table_diff %>% select(-!!group_col), 2, function(x) all(x <= 0))
+    unchanged_cols = names(Filter(identity, all_unchanged))
+    comparison_table = comparison_table %>% select(-one_of(unchanged_cols))
+    comparison_table_ts2char = comparison_table_ts2char %>% select(-one_of(unchanged_cols))
+    comparison_table_diff = comparison_table_diff %>% select(-one_of(unchanged_cols))
   }
 
   if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
@@ -92,7 +101,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, limit_html = 1
 
 }
 
-keep_unchanged_rows <- function(comparison_table, both_tables, group_col, type){
+keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, type){
   unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
     Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
 

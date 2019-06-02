@@ -1,3 +1,7 @@
+# compareDF 1.8.0
+* Added new option to keep only the columns which have changed. 
+* changed option `keep_unchanged` to `keep_unchanged_rows`
+
 # compareDF 1.7.3
 * Fixed tests to work with dplyr 0.8.2 and on Linux systems
 
