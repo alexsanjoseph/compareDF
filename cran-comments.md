@@ -1,8 +1,8 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Fixed tests to deal with latest updates to dplyr 0.8.2 on other packages
-* Removed some unused imports
+* Added new option to keep only the columns which have changed. 
+* changed option `keep_unchanged` to `keep_unchanged_rows`
 
 ## Test environments
 * local OS X install - 10.14, R 3.5.1
@@ -13,7 +13,6 @@ This is a new version. In this version I have:
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
-
 
 ## Reverse dependencies
 

@@ -227,7 +227,7 @@ expect_equal(expected_comparison_df, ctable$comparison_df)
 
 #===============================================================================
 
-context("compare_df: keep_unchanged")
+context("compare_df: keep_unchanged_rows")
 old_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "X"),
                     val1 = c(1, 2, 3),
@@ -242,7 +242,7 @@ new_df = data.frame(var1 = c("A", "B", "C"),
                     val3 = c(1, 2.1, 4)
 )
 
-ctable = compare_df(new_df, old_df, c("var1", "var2"), keep_unchanged = T)
+ctable = compare_df(new_df, old_df, c("var1", "var2"), keep_unchanged_rows = T)
 expected_comparison_df = data.frame(grp = c(1, 1, 2, 2, 3, 4),
                                    chng_type = c("=", "=", "+", "-", "+", "-"),
                                    var1 = c("A", "A", "B", "B", "C", "C"),
@@ -271,6 +271,51 @@ expect_equivalent(expected_comparison_df, ctable$comparison_df)
 expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
 expect_equivalent(expected_change_summary, ctable$change_summary)
 expect_equivalent(expected_change_count, ctable$change_count)
+
+#===============================================================================
+
+context("compare_df: keep_unchanged_cols")
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C1"),
+                    val3 = c(1, 2, 3)
+)
+
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C2"),
+                    val3 = c(1, 2.1, 4)
+)
+
+ctable = compare_df(new_df, old_df, c("var1", "var2"), keep_unchanged_rows = T, keep_unchanged_cols = F)
+expected_comparison_df = data.frame(grp = c(1, 1, 2, 2, 3, 3),
+                                   chng_type = c("=", "=", "+", "-", "+", "-"),
+                                   val2 = c("A1", "A1", "B1", "B1", "C2", "C1"),
+                                   val3 = c(1, 1, 2.1, 2, 4, 3))
+
+expected_comparison_table_diff = data.frame(grp = c("=", "=", "=", "=", "=", "="),
+                                            chng_type = c("=", "=", "+", "-", "+", "-"),
+                                            val2 = c("=", "=", "=", "=", "+", "-"),
+                                            val3 = c("=", "=", "+", "-", "+", "-"))
+
+expected_change_count = data.frame(grp = c(1, 2, 3),
+                                   changes = c(0, 1, 1),
+                                   additions = c(0, 0, 0),
+                                   removals = c(0, 0, 0))
+
+expected_change_summary = data.frame(old_obs = 3,
+                                     new_obs = 3,
+                                     changes = 2,
+                                     additions = 0,
+                                     removals = 0)
+
+expect_equivalent(expected_comparison_df, ctable$comparison_df)
+expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
+expect_equivalent(expected_change_summary, ctable$change_summary)
+expect_equivalent(expected_change_count, ctable$change_count)
+
 #===============================================================================
 # Headers
 
@@ -371,3 +416,4 @@ test_that("compare_df: Some integration edge case", {
   #expect_equivalent(expected_change_count, actual_comparison_summary$change_count) # Might bring in back later if needed
   expect_equivalent(expected_change_summary, actual_comparison_summary$change_summary)
 })
+
