@@ -185,6 +185,15 @@ diff calculation or in the output
 
 Naturally, tolerance has no meaning for non-numeric values.
 
+## Additional features
+- set the color scheme in the HTML using the `color_scheme` argument
+- preserve the rows that have not changed in the anlysis using the `keep_unchanged_rows` argument
+- use `difference` as an argument to use difference rather than ratio for tolerance
+- options to name the columns in the HTML output
+- option change column name
+- option to change group column name
+- keep only the columns which have changed using `keep_unchanged_cols`
+
 ## Using compare DF in GAP analysis
 
 The compareDF package can be used to conduct effective Gap analyses. If the package is used in this way, a configuration recommendation should be considered when using the compare_df function. Make sure the group column (group_col argument) being used as the gap classifier is unique and is not duplicated within either of the datasets being compared. Duplicate group names can skew gap analysis results. For example, using the results_2010 and results_2011 samples where Student represents the group_col argument, 'Rohit' group results are skewed. This is because student 'Rohit' is provided in the results_2011 sample twice. In this example Rohit represents two different students with the same last name. In short, if there are more than (2) records per grouping in a typical Gap analysis result, it suggests that there is a duplicate grouping contained within a single dataset that should be renamed and re-identified. If this occurs, changes should be made to the comparison datasets, and the Gap analysis should be re-conducted. The best way to prevent skewed results from occurring is to use all the columns that uniquely define a row in the group column argument - in this case, both name and student columns (alternatively a unique key identifier can also be constructed).

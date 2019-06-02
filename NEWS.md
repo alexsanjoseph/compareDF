@@ -1,5 +1,5 @@
 # compareDF 1.8.0
-* Added new option to keep only the columns which have changed. 
+* Added new option to keep only the columns which have changed using `keep_unchanged_cols`. 
 * changed option `keep_unchanged` to `keep_unchanged_rows`
 
 # compareDF 1.7.3
@@ -14,7 +14,7 @@
 # compareDF 1.7.0
 * Provided options to name the columns in the HTML output
 * Provided option change column name
-* Provided optiongroup column name
+* Provided option to change group column name
 
 # compareDF 1.6.0
 * Added option to specify different types of tolerances. Now you can use `difference` as an argument to use difference rather than ratio
@@ -22,7 +22,7 @@
 * Lot more tests
 
 # compareDF 1.5.0
-* Added an option to preserve the rows that have not changed in the anlysis using the `keep_unchanged` argument
+* Added an option to preserve the rows that have not changed in the anlysis using the `keep_unchanged_rows` argument
 * Added an option to set the color scheme in the HTML using the `color_scheme` argument.
 * Updated Documentation
 * Fixed some bugs
