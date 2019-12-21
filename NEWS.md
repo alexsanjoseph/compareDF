@@ -1,3 +1,11 @@
+# compareDF 2.0.0
+* New Major Version! Contains some breaking changes
+* Support for `XLSX` format
+* Write output to file directly
+* Separate functions to compare output and create output tables
+* Cleaner abstractions in functions
+* More bugs squashed
+
 # compareDF 1.8.0
 * Added new option to keep only the columns which have changed using `keep_unchanged_cols`. 
 * changed option `keep_unchanged` to `keep_unchanged_rows`
