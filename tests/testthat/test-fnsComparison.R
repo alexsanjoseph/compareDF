@@ -151,15 +151,8 @@ expected_comparison_df = data.frame(grp = c(3, 4),
 expect_equal(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
-# Limit
-context("compare_df: limit")
-max_rows = 2
-ctable = compare_df(new_df, old_df, c("var1", "var2"), limit_html = max_rows)
-expect_equal(ctable$html_output %>% as.character() %>% stringr::str_count("<tr style="), max_rows)
-
-
-#===============================================================================
 context("compare_df: Other stats")
+ctable = compare_df(new_df, old_df, c("var1", "var2"))
 change_summary_expected = c(old_obs = 3, new_obs = 3, changes = 1, additions = 1, removals = 1)
 comparison_table_expected = data.frame(grp = c("=", "=", "+", "-"),
                                        chng_type = c("+", "-", "+", "-"),
@@ -315,84 +308,6 @@ expect_equivalent(expected_comparison_df, ctable$comparison_df)
 expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
 expect_equivalent(expected_change_summary, ctable$change_summary)
 expect_equivalent(expected_change_count, ctable$change_count)
-
-#===============================================================================
-# Headers
-
-get_html_header_names <- function(ctable){
-  html_output_string = ctable$html_output %>% str_replace_all("\\n", "")
-
-  html_output_string %>%
-    str_extract("thead.*thead") %>%
-    str_extract_all("'>.+?<") %>%
-    magrittr::extract2(1) %>%
-    str_replace_all("'>(.*)<", "\\1")
-
-}
-
-context("compare_df: Headers")
-
-test_that("compare_df: headers with 1 grouping column", {
-  ctable = compare_df(new_df, old_df, c("var1"),
-                      html_headers = c(var1 = "Variable 1", var2 = "Variable 2", val1 = "Value 1", val2 = "Value 2", val3 = "Value 3"))
-
-  expected_headers = c("Variable 1", "chng_type", "Variable 2",
-                       "Value 1", "Value 2", "Value 3")
-  expect_equal(expected_headers, get_html_header_names(ctable))
-})
-
-
-
-test_that("compare_df: headers with partial matching", {
-  ctable = compare_df(new_df, old_df, c("var1"),
-                      html_headers = c(var1 = "Variable 1", val1 = "Value 1", val3 = "Value 3"))
-
-  expected_headers = c("Variable 1", "chng_type", "var2",
-                       "Value 1", "val2", "Value 3")
-  expect_equal(expected_headers, get_html_header_names(ctable))
-})
-
-test_that("compare_df: headers with additional matching", {
-  ctable = compare_df(new_df, old_df, c("var1"),
-                      html_headers = c(var1 = "Variable 1", var2 = "Variable 2", val1 = "Value 1", val2 = "Value 2", val4 = "Value 4"))
-
-  expected_headers = c("Variable 1", "chng_type", "Variable 2",
-                       "Value 1", "Value 2", "val3")
-  expect_equal(expected_headers, get_html_header_names(ctable))
-
-})
-
-test_that("compare_df: headers and group column and change column", {
-  ctable = compare_df(new_df, old_df, c("var1"),
-                      html_headers = c(var1 = "Variable 1", var2 = "Variable 2", val1 = "Value 1", val2 = "Value 2", val3 = "Value 3"),
-                      html_group_col_name = "Group ID", html_change_col_name = "Type of Change")
-  expected_headers = c("Variable 1", "Type of Change", "Variable 2",
-                       "Value 1", "Value 2", "Value 3")
-  expect_equal(expected_headers, get_html_header_names(ctable))
-})
-
-test_that("compare_df: only group column and change column", {
-  ctable = compare_df(new_df, old_df, c("var1"),
-                      html_group_col_name = "Group ID", html_change_col_name = "Type of Change")
-
-  expected_headers = c("var1", "Type of Change", "var2",
-                       "val1", "val2", "val3")
-  expect_equal(expected_headers, get_html_header_names(ctable))
-
-
-})
-
-test_that("compare_df: headers with more than 1 grouping column and group column and change column", {
-
-  ctable = compare_df(new_df, old_df, c("var1", "var2"),
-                      html_headers = c(var1 = "Variable 1", var2 = "Variable 2", val1 = "Value 1", val2 = "Value 2", val3 = "Value 3"),
-                      html_change_col_name = "Type of Change", html_group_col_name = "Group ID")
-
-  expected_headers = c("Group ID", "Type of Change", "Variable 1", "Variable 2",
-                       "Value 1", "Value 2", "Value 3")
-
-  expect_equal(expected_headers, get_html_header_names(ctable))
-})
 
 #===============================================================================
 
