@@ -91,36 +91,6 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
 
 }
 
-#' @title Create human readable output from the comparison_df output
-#'
-#' @description Currently `html` and `xlsx` are supported
-#'
-#' @param comparison_output Output from the comparison Table functions
-#' @param output_type Type of comparison output. Defaults to `html`
-#' @param file_name Where to write the output to. Default to NULL which output to the Rstudio viewer (not supported for `xlsx`)
-#' @param limit maximum number of rows to show in the diff. >1000 not recommended for HTML
-#' @param color_scheme What color scheme to use for the  output. Should be a vector/list with
-#'  named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}
-#' @param headers A character vector of column names to be used in the table. Defaults to \code{colnames}.
-#' @param change_col_name Name of the change column to use in the table. Defaults to \code{chng_type}.
-#' @param group_col_name Name of the group column to be used in the table (if there are multiple grouping vars). Defaults to \code{grp}.
-#' @export
-create_output_table <- function(comparison_output, output_type = 'html', file_name = NULL, limit = 100,
-                                color_scheme = c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue"),
-                                headers = NULL, change_col_name = "chng_type", group_col_name = "grp"){
-  headers_all = get_headers_for_table(headers, change_col_name, group_col_name, comparison_output$comparison_table_diff)
-
-  comparison_output$comparison_table_ts2char$chng_type = comparison_output$comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
-
-  if (limit == 0 || nrow(comparison_output$comparison_table_diff) == 0 || nrow(comparison_output$comparison_df) == 0)
-    return(NULL)
-  output = switch(output_type,
-         'html' = create_html_table(comparison_output, file_name, limit, color_scheme, headers_all),
-         'xlsx' = create_xlsx_document(comparison_output, file_name, limit, color_scheme, headers_all)
-  )
-  output
-}
-
 keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, type){
   unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
     Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
@@ -212,15 +182,6 @@ round_num_cols <- function(df, round_digits = 2)
   numeric_cols = which(sapply(df, is.numeric))
   df[, numeric_cols] = lapply(df[, numeric_cols, drop = F], round, round_digits)
 
-  df
-}
-
-.colour_coding_df <- function(df, color_scheme){
-  if(nrow(df) == 0) return(df)
-  df[df == 2] = color_scheme[['addition']]
-  df[df == 1] = color_scheme[['removal']]
-  df[df == 0] = color_scheme[['unchanged_cell']]
-  df[df == -1] = color_scheme[['unchanged_row']]
   df
 }
 

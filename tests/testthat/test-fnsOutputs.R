@@ -152,6 +152,8 @@ test_that("compare_df: Error out if file name is NULL", {
   expect_error(create_output_table(compare_output, output_type = 'xlsx'), "file_name cannot be null if output format is xlsx")
 })
 
+create_output_table(compare_output, output_type = 'xlsx', file_name = "test_file.xlsx")
+
 test_that("compare_df: Error out if file name is NULL", {
   temp_file = tempfile()
   create_output_table(compare_output, output_type = 'xlsx', file_name = temp_file)
@@ -172,4 +174,6 @@ test_that("compare_df: Error out if file name is NULL", {
 #                     val2 = c("A1", "B1", "C2"),
 #                     val3 = c(1, 2, 3)
 # )
-# output = compareDF::compare_df(old_df, new_df, c('var1', 'var2'))
+# big_output = compareDF::compare_df(old_df, new_df, c('var1', 'var2'))
+# create_output_table(big_output, output_type = 'xlsx', file_name = "test_file.xlsx")
+
