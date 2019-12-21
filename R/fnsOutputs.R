@@ -1,7 +1,7 @@
 #' @importFrom utils head
 create_html_table <- function(comparison_output, file_name, limit_html, color_scheme, headers_all){
 
-  comparison_table_diff = comparison_output$comparison_table_diff
+  comparison_table_diff = comparison_output$comparison_table_diff_numbers
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
   group_col = comparison_output$group_col
 
@@ -32,27 +32,28 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
 
 
 create_xlsx_document <- function(comparison_output, file_name, limit, color_scheme, headers_all){
-  comparison_table_diff = comparison_output$comparison_table_diff
+  if(is.null(file_name)) stop("file_name cannot be null if output format is xlsx")
+  comparison_table_diff = comparison_output$comparison_table_diff_numbers
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
   group_col = comparison_output$group_col
 
   requireNamespace("openxlsx")
   browser()
+
+  style <- createStyle(fontSize = 18, fontName = "Arial",
+                       textDecoration = "bold", halign = "left", fgFill = "#1A33CC", border= "TopBottomLeftRight")
+
   comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(., color_scheme)) %>% as.data.frame
 
-  shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
+  # shading = ifelse(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2, "#dedede", "white")
 
-  table_css = lapply(comparison_table_color_code, function(x)
-    paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html) %>% as.matrix()
+  # table_css = lapply(comparison_table_color_code, function(x)
+    # paste0("padding: .2em; color: ", x, ";")) %>% data.frame %>% head(limit_html) %>% as.matrix()
 
-  colnames(comparison_table_ts2char) <- headers_all
+  # colnames(comparison_table_ts2char) <- headers_all
 
-  message("Creating HTML table for first ", limit_html, " rows")
-  html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
-                                    col.rgroup = shading,
-                                    rnames = F, css.cell = table_css,
-                                    padding.rgroup = rep("5em", length(shading))
-  )
+  # message("Creating HTML table for first ", limit_html, " rows")
+  openxlsx::write.xlsx(comparison_table_ts2char, file_name)
 }
 
 # nocov start

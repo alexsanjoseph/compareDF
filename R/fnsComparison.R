@@ -80,13 +80,14 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   change_summary =  create_change_summary(change_count, both_tables)
 
   comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
-  comparison_table_diff = comparison_table_diff %>% replace_numbers_with_symbols()
+  comparison_table_diff_symbols = comparison_table_diff %>% replace_numbers_with_symbols()
 
   list(comparison_df = comparison_table,
-       comparison_table_diff = comparison_table_diff,
+       comparison_table_diff = comparison_table_diff_symbols,
        change_count = change_count, change_summary = change_summary,
        group_col = group_col,
-       comparison_table_ts2char = comparison_table_ts2char)
+       comparison_table_ts2char = comparison_table_ts2char,
+       comparison_table_diff_numbers = comparison_table_diff)
 
 }
 

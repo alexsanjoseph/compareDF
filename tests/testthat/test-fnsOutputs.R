@@ -116,12 +116,48 @@ test_that("compare_df: headers with more than 1 grouping column and group column
   expect_equal(expected_headers, get_html_header_names(html_output))
 })
 
+test_that("compare_df: write output to file", {
+
+  ctable = compare_df(new_df, old_df,  c("var1", "var2"))
+  temp_file = tempfile()
+  html_output = create_output_table(ctable, file_name = temp_file)
+  expect_true(file.exists(temp_file))
+  unlink(temp_file)
+})
+
 
 #===============================================================================
 # XLSX
 #===============================================================================
 
-# context("compare_df: Output to Excel")
+context("compare_df: Output to Excel")
+
+old_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C1"),
+                    val3 = c(1, 2, 3)
+)
+
+new_df = data.frame(var1 = c("A", "B", "C"),
+                    var2 = c("Z", "Y", "X"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C2"),
+                    val3 = c(1, 2.1, 4)
+)
+
+compare_output = compareDF::compare_df(old_df, new_df, c('var1', 'var2'))
+
+test_that("compare_df: Error out if file name is NULL", {
+  expect_error(create_output_table(compare_output, output_type = 'xlsx'), "file_name cannot be null if output format is xlsx")
+})
+
+test_that("compare_df: Error out if file name is NULL", {
+  temp_file = tempfile()
+  create_output_table(compare_output, output_type = 'xlsx', file_name = temp_file)
+})
+
+# context("compare_df: Test Large output")
 #
 # old_df = data.frame(var1 = paste(1:12000, c("A"), sep = "_"),
 #                     var2 = c("Z", "Y", "X"),
@@ -130,20 +166,10 @@ test_that("compare_df: headers with more than 1 grouping column and group column
 #                     val3 = c(1, 2, 3)
 # )
 #
-# context("compare_df: Output to Excel")
-#
-# old_df = data.frame(var1 = c("A", "B", "C"),
+# new_df = data.frame(var1 = paste(1:9000, c("A"), sep = "_"),
 #                     var2 = c("Z", "Y", "X"),
-#                     val1 = c(1, 2, 3),
-#                     val2 = c("A1", "B1", "C1"),
+#                     val1 = c(1, 5, 3),
+#                     val2 = c("A1", "B1", "C2"),
 #                     val3 = c(1, 2, 3)
 # )
-#
-# new_df = data.frame(var1 = c("A", "B", "C"),
-#                     var2 = c("Z", "Y", "X"),
-#                     val1 = c(1, 2, 3),
-#                     val2 = c("A1", "B1", "C2"),
-#                     val3 = c(1, 2.1, 4)
-# )
-#
 # output = compareDF::compare_df(old_df, new_df, c('var1', 'var2'))
