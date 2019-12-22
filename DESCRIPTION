@@ -14,6 +14,7 @@ Imports:
     dplyr (>= 0.4.3),
     magrittr (>= 1.5),
     htmlTable (>= 1.5),
+    openxlsx (>= 4.1),
     tidyr (>= 0.4.1),
     stringr (>= 1.0.0)
 Suggests:

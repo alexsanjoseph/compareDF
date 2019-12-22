@@ -4,12 +4,9 @@
 \alias{compare_df}
 \title{Compare Two dataframes}
 \usage{
-compare_df(df_new, df_old, group_col, exclude = NULL, limit_html = 100,
-  tolerance = 0, tolerance_type = "ratio", stop_on_error = TRUE,
+compare_df(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
+  tolerance_type = "ratio", stop_on_error = TRUE,
   keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
-  color_scheme = c(addition = "green", removal = "red", unchanged_cell =
-  "gray", unchanged_row = "deepskyblue"), html_headers = NULL,
-  html_change_col_name = "chng_type", html_group_col_name = "grp",
   round_output_to = 3)
 }
 \arguments{
@@ -22,8 +19,6 @@ by which to group_by.}
 
 \item{exclude}{The columns which should be excluded from the comparison}
 
-\item{limit_html}{maximum number of rows to show in the html diff. >1000 not recommended}
-
 \item{tolerance}{The amount in fraction to which changes are ignored while showing the
 visual representation. By default, the value is 0 and any change in the value of variables
 is shown off. Doesn't apply to categorical variables.}
@@ -35,15 +30,6 @@ is shown off. Doesn't apply to categorical variables.}
 \item{keep_unchanged_rows}{whether to preserve unchanged values or not. Defaults to \code{FALSE}}
 
 \item{keep_unchanged_cols}{whether to preserve unchanged values or not. Defaults to \code{TRUE}}
-
-\item{color_scheme}{What color scheme to use for the HTML output. Should be a vector/list with
-named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}}
-
-\item{html_headers}{A character vector of column names to be used in the table. Defaults to \code{colnames}.}
-
-\item{html_change_col_name}{Name of the change column to use in the HTML table. Defaults to \code{chng_type}.}
-
-\item{html_group_col_name}{Name of the group column to be used in the table (if there are multiple grouping vars). Defaults to \code{grp}.}
 
 \item{round_output_to}{Number of digits to round the output to. Defaults to 3.}
 }

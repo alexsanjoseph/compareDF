@@ -99,8 +99,6 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
 
   requireNamespace("openxlsx")
 
-  # style <- createStyle(fontColour = )
-  # ?createStyle
   comparison_table_color_code  = comparison_table_diff %>% .get_color_coding_indices()
 
   wb <- createWorkbook("Compare DF Output")
