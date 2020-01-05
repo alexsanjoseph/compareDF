@@ -25,4 +25,3 @@ This is a new version. In this version I have:
 ## Reverse dependencies
 
 There are no reverse dependencies.
-
