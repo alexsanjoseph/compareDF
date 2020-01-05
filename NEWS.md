@@ -5,7 +5,7 @@
 * Separate functions to compare output and create output tables
 * Cleaner abstractions in functions
 * More bugs squashed
-* Color blind friends default colors
+* Color blind friendly default colors
 
 # compareDF 1.8.0
 * Added new option to keep only the columns which have changed using `keep_unchanged_cols`. 

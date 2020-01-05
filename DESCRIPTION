@@ -1,15 +1,15 @@
 Package: compareDF
 Type: Package
 Title: Do a Git Style Diff of the Rows Between Two Dataframes with Similar Structure
-Version: 1.8.0
-Date: 2019-06-02
+Version: 2.0.0
+Date: 2020-01-05
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
 Description: Compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
     to quickly see what has changes in addition to summary statistics.
 License: MIT + file LICENSE
 Depends:
-    R (>= 3.4.0)
+    R (>= 3.5.0)
 Imports:
     dplyr (>= 0.4.3),
     magrittr (>= 1.5),
