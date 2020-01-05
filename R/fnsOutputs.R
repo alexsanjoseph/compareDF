@@ -59,9 +59,11 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
                                     rnames = F, css.cell = table_css,
                                     padding.rgroup = rep("5em", length(shading))
   )
-}
-
-create_xlsx_styles <- function(color_scheme){
+  if(!is.null(file_name)){
+    cat(html_table, file = file_name)
+    return(file_name)
+  }
+  return(html_table)
 
 }
 
@@ -97,7 +99,7 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
   group_col = comparison_output$group_col
 
-  requireNamespace("openxlsx")
+  library("openxlsx")
 
   comparison_table_color_code  = comparison_table_diff %>% .get_color_coding_indices()
 
@@ -116,7 +118,7 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
   even_rows = which(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2 == 0) + 1
   addStyle(wb, sheet = 1, createStyle(fgFill = 'lightgray'), rows = even_rows, cols = 1:ncol(comparison_table_ts2char), gridExpand = T, stack = TRUE)
 
-  openxlsx::saveWorkbook(wb, "test_file.xlsx", overwrite = T)
+  openxlsx::saveWorkbook(wb, file_name, overwrite = T)
 
 }
 

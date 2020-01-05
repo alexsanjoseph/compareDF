@@ -152,11 +152,12 @@ test_that("compare_df: Error out if file name is NULL", {
   expect_error(create_output_table(compare_output, output_type = 'xlsx'), "file_name cannot be null if output format is xlsx")
 })
 
-create_output_table(compare_output, output_type = 'xlsx', file_name = "test_file.xlsx")
 
-test_that("compare_df: Error out if file name is NULL", {
+test_that("compare_df: Write to file correctly", {
   temp_file = tempfile()
   create_output_table(compare_output, output_type = 'xlsx', file_name = temp_file)
+  expect_true(file.exists(temp_file))
+  unlink(temp_file)
 })
 
 # context("compare_df: Test Large output")

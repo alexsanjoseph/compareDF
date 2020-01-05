@@ -117,7 +117,9 @@ exclude_columns <- function(both_tables, exclude){
 group_columns <- function(both_tables, group_col){
   message("Grouping grouping columns")
   df_combined = rbind(both_tables$df_new %>% mutate(from = "new"), both_tables$df_old %>% mutate(from = "old"))
-  df_combined = df_combined %>% piped.do.call(group_by_, group_col) %>% data.frame(grp = group_indices(.), .) %>% ungroup
+  df_combined =  df_combined %>%
+    group_by_at(group_col) %>%
+    data.frame(grp = group_indices(.), .) %>% ungroup()
   list(df_new = df_combined %>% filter(from == "new") %>% select(-from),
        df_old = df_combined %>% filter(from == "old") %>% select(-from))
 }
@@ -145,14 +147,15 @@ create_comparison_table <- function(both_diffs, group_col, round_output_to){
   if(nrow(both_diffs$df1_2) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "1", both_diffs$df1_2))
   if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
   mixed_df %>%
-    arrange(desc(chng_type)) %>% arrange_(group_col) %>%
+    arrange(desc(chng_type)) %>%
+    arrange_at(group_col) %>%
     # mutate(chng_type = ifelse(chng_type == 1, "1", "2")) %>%
     select(one_of(group_col), everything()) %>% round_num_cols(round_output_to)
 }
 
 
 create_comparison_table_diff <- function(comparison_table_ts2char, group_col, tolerance, tolerance_type){
-  comparison_table_ts2char %>% group_by_(group_col) %>%
+  comparison_table_ts2char %>% group_by_at(group_col) %>%
     do(.diff_type_df(., tolerance = tolerance, tolerance_type = tolerance_type)) %>% as.data.frame
 }
 
@@ -231,8 +234,6 @@ rowdiff <- function(x.1,x.2,...){
     df
 }
 
-piped.do.call = function(x, fname, largs) do.call(fname, c(list(x), largs))
-
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
 sequence_order_vector <- function(data)
@@ -242,7 +243,7 @@ sequence_order_vector <- function(data)
 }
 
 create_change_count <- function(comparison_table_ts2char, group_col){
-  change_count = comparison_table_ts2char %>% group_by_(group_col, "chng_type") %>% tally()
+  change_count = comparison_table_ts2char %>% group_by_at(c(group_col, "chng_type")) %>% tally()
   change_count_replace = change_count %>% tidyr::spread(key = chng_type, value = n) %>% data.frame
   change_count_replace[is.na(change_count_replace)] = 0
 
@@ -251,7 +252,7 @@ create_change_count <- function(comparison_table_ts2char, group_col){
   change_count_replace = change_count_replace %>% as.data.frame %>%
     tidyr::gather_("variable", "value", c("X2", "X1"))
 
-  change_count = change_count_replace %>% group_by_(group_col) %>% arrange_('variable') %>%
+  change_count = change_count_replace %>% group_by_at(group_col) %>% arrange_at('variable') %>%
     summarize(changes = min(value), additions = value[2] - value[1], removals = value[1] - value[2]) %>%
     mutate(additions = replace(additions, is.na(additions) | additions < 0, 0)) %>%
     mutate(removals = replace(removals, is.na(removals) | removals < 0, 0))
