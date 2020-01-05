@@ -6,7 +6,7 @@ Date: 2020-01-05
 Authors@R: person("Alex", "Joseph", email = "alexsanjoseph@gmail.com", role = c("aut", "cre"))
 Description: Compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
-    to quickly see what has changes in addition to summary statistics.
+    to quickly see what has changed in addition to summary statistics.
 License: MIT + file LICENSE
 Depends:
     R (>= 3.5.0)
