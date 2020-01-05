@@ -1,7 +1,6 @@
 
 
-**CRAN Version is upto date with the latest bug fixes as of 2019-06-02**
-
+**New Version released with XLSX Support!!**
 
 # compareDF
 
@@ -28,6 +27,8 @@ packages like the `compare` package on R, which have focused more on the structu
 the data frame and lesser on the data itself. I was not able to easily identify and
 isolate what has changed in the data itself. So I decided to write one for myself. That is
 what `compareDF` package is all about.
+
+The output can be visualized either on the RStudio Viewer, or sent to a file as an `HTML` or an `XLSX` file.
 
 # Usage
 
@@ -91,7 +92,7 @@ for the numan eye to read. NOTE: You need to install the `htmlTable` package for
 _For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles._
 
 ```{r, results = 'hide'}
-print(ctable_student$html_output)
+create_output_table(ctable_student)
 ```
 <img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_1.png" width="500" />
 
@@ -109,11 +110,16 @@ scores, which are in _Discipline_, _Maths_, and _Maths_ respectively.
 _Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the all the columns for the rows are shown
 in red, which _DikChik_ and _Vikram_ have joined new in the data set and all the columns for the rows are in green.
 
-The same data is represented in tabular form (for further analysis, if necessary) in the
-`comparison_table_diff` object
+```{r}
+create_output_table(ctable_student)
+```
+
+## XLSX Output
+
+Alternately you can write to an xlsx file as well
 
 ```{r}
-ctable_student$comparison_table_diff
+create_output_table(ctable_student, output_type = 'xlsx', file_name = "test_file.xlsx")
 ```
 
 ## Change Count and Summary
@@ -161,9 +167,9 @@ visualization only) is capped at 100 by default. If you want to see more differe
 the `limit_html` parameter appropriately. NOTE: This is only of the HTML output which is used for visual
 checking. The main comparison data frame and the summaries ALWAYS include data from all the rows.
 
-## Changing HTML color
+## Changing color
 
-You can use the `color_scheme` parameter to change the color of the HTML generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
+You can use the `color_scheme` parameter to change the color of the cells generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
 
 
 ## Tolerance
@@ -176,7 +182,7 @@ less than 5% apart from the lower value.
 
 ```{r, results = 'hide'}
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0.05)
-ctable_student_div$html_output
+create_output_table(ctable_student_div)
 ```
 <img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_3.png" width="500" /> 
 

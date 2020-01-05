@@ -99,24 +99,24 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
   group_col = comparison_output$group_col
 
-  library("openxlsx")
+  requireNamespace("openxlsx")
 
   comparison_table_color_code  = comparison_table_diff %>% .get_color_coding_indices()
 
-  wb <- createWorkbook("Compare DF Output")
-  addWorksheet(wb, "Sheet1", gridLines = FALSE)
-  writeData(wb, sheet = 1, comparison_table_ts2char, rowNames = FALSE)
+  wb <- openxlsx::createWorkbook("Compare DF Output")
+  openxlsx::addWorksheet(wb, "Sheet1", gridLines = FALSE)
+  openxlsx::writeData(wb, sheet = 1, comparison_table_ts2char, rowNames = FALSE)
 
   for(i in seq_along(comparison_table_color_code)){
-    addStyle(wb, sheet = 1,
-             createStyle(fontColour = color_scheme[[names(comparison_table_color_code)[i]]]),
-             rows = comparison_table_color_code[[i]]$rows, cols = comparison_table_color_code[[i]]$cols,
-             gridExpand = FALSE)
+    openxlsx::addStyle(wb, sheet = 1,
+                       openxlsx::createStyle(fontColour = color_scheme[[names(comparison_table_color_code)[i]]]),
+                       rows = comparison_table_color_code[[i]]$rows, cols = comparison_table_color_code[[i]]$cols,
+                       gridExpand = FALSE)
   }
 
-  # odd_rows = which(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2 != 0)
   even_rows = which(sequence_order_vector(comparison_table_ts2char[[group_col]]) %% 2 == 0) + 1
-  addStyle(wb, sheet = 1, createStyle(fgFill = 'lightgray'), rows = even_rows, cols = 1:ncol(comparison_table_ts2char), gridExpand = T, stack = TRUE)
+  openxlsx::addStyle(wb, sheet = 1, openxlsx::createStyle(fgFill = 'lightgray'), rows = even_rows,
+                     cols = 1:ncol(comparison_table_ts2char), gridExpand = T, stack = TRUE)
 
   openxlsx::saveWorkbook(wb, file_name, overwrite = T)
 
