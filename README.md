@@ -149,14 +149,13 @@ groups and compared accordingly. All the other summaries also change appropriate
 
 ### Excluding certain Columns
 
-You can ignore certain columns using the *exclude* parameter. The fields that have to be
+You can ignore certain columns using the _exclude_ parameter. The fields that have to be
 excluded can be given as a character vector. (This is a convenience function to deal with 
 the case where some columns are not included)
 
 ### Preserving all rows
 
 The default behavior of the `compare_df` function is to show only the records that have changed. Sometimes the use might want to preserve all the records even after the comparison and not just see the values that have been changed (especially in the HTML). In this case, you can set the `keep_unchanged` parameter to `TRUE`. 
-
 
 ### Limiting HTML size
 
@@ -169,7 +168,6 @@ checking. The main comparison data frame and the summaries ALWAYS include data f
 ### Changing color
 
 You can use the `color_scheme` parameter to change the color of the cells generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
-
 
 ### Tolerance
 
@@ -191,13 +189,13 @@ diff calculation or in the output
 Naturally, tolerance has no meaning for non-numeric values.
 
 ## Additional features
-*  set the color scheme in the HTML using the `color_scheme` argument
-*  preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
-*  use `difference` as an argument to use difference rather than ratio for tolerance
-*  options to name the columns in the HTML output
-*  option change column name
-*  option to change group column name
-*  keep only the columns which have changed using `keep_unchanged_cols`
+* set the color scheme in the HTML using the `color_scheme` argument
+* preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
+* use `difference` as an argument to use difference rather than ratio for tolerance
+* options to name the columns in the HTML output
+* option change column name
+* option to change group column name
+* keep only the columns which have changed using `keep_unchanged_cols`
 
 ## Using compare DF in GAP analysis
 
@@ -208,8 +206,8 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 ## Contributors
-*  Brice Richard
-*  Joshua David Barillas - https://github.com/jdbarillas
+* Brice Richard
+* Joshua David Barillas - <https://github.com/jdbarillas>
 
 License (MIT)
 
