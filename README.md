@@ -189,10 +189,10 @@ diff calculation or in the output
 Naturally, tolerance has no meaning for non-numeric values.
 
 ## Additional features
-* set the color scheme in the HTML using the `color_scheme` argument
+* set the color scheme in the output using the `color_scheme` argument
 * preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
 * use `difference` as an argument to use difference rather than ratio for tolerance
-* options to name the columns in the HTML output
+* options to name the columns in the output
 * option change column name
 * option to change group column name
 * keep only the columns which have changed using `keep_unchanged_cols`
