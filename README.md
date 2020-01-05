@@ -1,5 +1,4 @@
 
-
 **New Version released with XLSX Support!!**
 
 # compareDF
@@ -193,7 +192,7 @@ Naturally, tolerance has no meaning for non-numeric values.
 
 ## Additional features
 - set the color scheme in the HTML using the `color_scheme` argument
-- preserve the rows that have not changed in the anlysis using the `keep_unchanged_rows` argument
+- preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
 - use `difference` as an argument to use difference rather than ratio for tolerance
 - options to name the columns in the HTML output
 - option change column name
