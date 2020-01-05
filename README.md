@@ -191,13 +191,13 @@ diff calculation or in the output
 Naturally, tolerance has no meaning for non-numeric values.
 
 ## Additional features
-- set the color scheme in the HTML using the `color_scheme` argument
-- preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
-- use `difference` as an argument to use difference rather than ratio for tolerance
-- options to name the columns in the HTML output
-- option change column name
-- option to change group column name
-- keep only the columns which have changed using `keep_unchanged_cols`
+*  set the color scheme in the HTML using the `color_scheme` argument
+*  preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
+*  use `difference` as an argument to use difference rather than ratio for tolerance
+*  options to name the columns in the HTML output
+*  option change column name
+*  option to change group column name
+*  keep only the columns which have changed using `keep_unchanged_cols`
 
 ## Using compare DF in GAP analysis
 
@@ -208,8 +208,8 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 ## Contributors
-- Brice Richard
-- Joshua David Barillas - https://github.com/jdbarillas
+*  Brice Richard
+*  Joshua David Barillas - https://github.com/jdbarillas
 
 License (MIT)
 
