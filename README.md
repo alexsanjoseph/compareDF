@@ -1,9 +1,6 @@
+**New Version released with XLSX Support!!**
 
-
-**CRAN Version is upto date with the latest bug fixes as of 2019-06-02**
-
-
-# compareDF
+## compareDF
 
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
@@ -13,7 +10,7 @@
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
-# Introduction
+## Introduction
 
 Every so often while doing data analysis, I have come across a situation where I have
 two datasets, which have the same structure but with small differences in the actual
@@ -29,14 +26,16 @@ the data frame and lesser on the data itself. I was not able to easily identify 
 isolate what has changed in the data itself. So I decided to write one for myself. That is
 what `compareDF` package is all about.
 
-# Usage
+The output can be visualized either on the RStudio Viewer, or sent to a file as an `HTML` or an `XLSX` file.
+
+## Usage
 
 The package has a single function, `compare_df`. It takes in two data frames, and one or 
 more grouping variables and does a comparison between the the two. In addition you can 
 specify columns to ignore, decide how many rows of changes to be displayed in the case 
 of the HTML output, and decide what tolerance you want to provide to detect change.
 
-# Basic Example
+## Basic Example
 
 Let's take the example of a teacher who wants to compare the marks and grades of students across
 two years, 2010 and 2011. The data is stored in tabular format.
@@ -59,7 +58,8 @@ Eg: - _Mugger and Dhakkan_ dropped out while _Vikram and Dikchik_ where added in
 
 The package allows a user to quickly identify these changes.
 
-## Basic Comparison
+### Basic Comparison
+
 Now let's compare the performance of the students across the years. The grouping variables are the
 _Student_ column. We will ignore the _Division_ column and assume that the student names are unique 
 across divisions. In this sub-example, if a student appears in two divisions, he/she has studied in both 
@@ -84,14 +84,14 @@ the two years so that row is included.
 However, _Macho, Division B_ has had the exact same scores in both the years for all subjects, so his data is not
 shown in the comparison table.
 
-## HTML Output
+### HTML Output
 While the comparison table can be quickly summarized in various forms for futher analysis, it is 
 very difficult to  process visually. The `html_output` provides a way to represent this is a way that is easier 
 for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
 _For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles._
 
 ```{r, results = 'hide'}
-print(ctable_student$html_output)
+create_output_table(ctable_student)
 ```
 <img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_1.png" width="500" />
 
@@ -109,11 +109,16 @@ scores, which are in _Discipline_, _Maths_, and _Maths_ respectively.
 _Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the all the columns for the rows are shown
 in red, which _DikChik_ and _Vikram_ have joined new in the data set and all the columns for the rows are in green.
 
-The same data is represented in tabular form (for further analysis, if necessary) in the
-`comparison_table_diff` object
+```{r}
+create_output_table(ctable_student)
+```
+
+### XLSX Output
+
+Alternately you can write to an xlsx file as well
 
 ```{r}
-ctable_student$comparison_table_diff
+create_output_table(ctable_student, output_type = 'xlsx', file_name = "test_file.xlsx")
 ```
 
 ## Change Count and Summary
@@ -129,7 +134,7 @@ ctable_student$change_count
 ctable_student$change_summary
 ```
 
-## Grouping Multiple Columns
+### Grouping Multiple Columns
 
 We can also group_multiple columns into the grouping variable
 
@@ -142,18 +147,17 @@ ctable_student_div$comparison_df
 Now _Rohits_ in each individual division are considered as belonging to separate 
 groups and compared accordingly. All the other summaries also change appropriately.
 
-## Excluding certain Columns
+### Excluding certain Columns
 
-You can ignore certain columns using the *exclude* parameter. The fields that have to be
+You can ignore certain columns using the _exclude_ parameter. The fields that have to be
 excluded can be given as a character vector. (This is a convenience function to deal with 
 the case where some columns are not included)
 
-## Preserving all rows
+### Preserving all rows
 
 The default behavior of the `compare_df` function is to show only the records that have changed. Sometimes the use might want to preserve all the records even after the comparison and not just see the values that have been changed (especially in the HTML). In this case, you can set the `keep_unchanged` parameter to `TRUE`. 
 
-
-## Limiting HTML size
+### Limiting HTML size
 
 For dataframes which have a large amount of differences in them, generating HTML might take 
 a long time and crash your system. So the maximum diff size for the HTML (and for the HTML
@@ -161,12 +165,11 @@ visualization only) is capped at 100 by default. If you want to see more differe
 the `limit_html` parameter appropriately. NOTE: This is only of the HTML output which is used for visual
 checking. The main comparison data frame and the summaries ALWAYS include data from all the rows.
 
-## Changing HTML color
+### Changing color
 
-You can use the `color_scheme` parameter to change the color of the HTML generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
+You can use the `color_scheme` parameter to change the color of the cells generated. The parameter must me a named vector or a list with the appropriate names - The default values are `c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")` but can be changed as needed by the user.
 
-
-## Tolerance
+### Tolerance
 
 It is possible that you'd like numbers very close to each other to be ignored. For example,
 if the marks of a student vary by less that 5% across the years, it could be due to random
@@ -176,7 +179,7 @@ less than 5% apart from the lower value.
 
 ```{r, results = 'hide'}
 ctable_student_div = compare_df(results_2011, results_2010, c("Division", "Student"), tolerance = 0.05)
-ctable_student_div$html_output
+create_output_table(ctable_student_div)
 ```
 <img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/pic_3.png" width="500" /> 
 
@@ -186,13 +189,13 @@ diff calculation or in the output
 Naturally, tolerance has no meaning for non-numeric values.
 
 ## Additional features
-- set the color scheme in the HTML using the `color_scheme` argument
-- preserve the rows that have not changed in the anlysis using the `keep_unchanged_rows` argument
-- use `difference` as an argument to use difference rather than ratio for tolerance
-- options to name the columns in the HTML output
-- option change column name
-- option to change group column name
-- keep only the columns which have changed using `keep_unchanged_cols`
+* set the color scheme in the HTML using the `color_scheme` argument
+* preserve the rows that have not changed in the analysis using the `keep_unchanged_rows` argument
+* use `difference` as an argument to use difference rather than ratio for tolerance
+* options to name the columns in the HTML output
+* option change column name
+* option to change group column name
+* keep only the columns which have changed using `keep_unchanged_cols`
 
 ## Using compare DF in GAP analysis
 
@@ -203,8 +206,8 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 ## Contributors
-- Brice Richard
-- Joshua David Barillas - https://github.com/jdbarillas
+* Brice Richard
+* Joshua David Barillas - <https://github.com/jdbarillas>
 
 License (MIT)
 
