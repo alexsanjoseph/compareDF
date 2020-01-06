@@ -28,6 +28,20 @@ what `compareDF` package is all about.
 
 The output can be visualized either on the RStudio Viewer, or sent to a file as an `HTML` or an `XLSX` file.
 
+## Installation
+
+You can install the CRAN version of the package as below:
+
+```{r}
+install.packages("compareDF")
+```
+
+Development version can be installed using `devtools`
+
+```{r}
+devtools::install_github('alexsanjoseph/compareDF')
+```
+
 ## Usage
 
 The package has a single function, `compare_df`. It takes in two data frames, and one or 

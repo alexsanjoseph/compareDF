@@ -140,7 +140,7 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
 view_html <- function(comparison_output){
   temp_dir = tempdir()
   temp_file <- paste0(temp_dir, "/temp.html")
-  cat(comparison_output$html_output, file = temp_file)
+  cat(create_output_table(ctable_compare), file = temp_file)
   getOption("viewer")(temp_file)
   unlink("temp.html")
 }
