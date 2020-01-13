@@ -93,6 +93,13 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
     lapply(.convert_to_row_column_format, nrow(df))
 }
 
+.adjust_colors_for_excel <- function(types){
+  for(type in names(types)){
+    types[[type]][['rows']] = types[[type]][['rows']] + 1
+  }
+  types
+}
+
 create_xlsx_document <- function(comparison_output, file_name, limit, color_scheme, headers_all){
   if(is.null(file_name)) stop("file_name cannot be null if output format is xlsx")
   comparison_table_diff = comparison_output$comparison_table_diff_numbers
@@ -101,7 +108,8 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
 
   requireNamespace("openxlsx")
 
-  comparison_table_color_code  = comparison_table_diff %>% .get_color_coding_indices()
+  comparison_table_color_code  = comparison_table_diff %>% .get_color_coding_indices() %>%
+    .adjust_colors_for_excel()
 
   wb <- openxlsx::createWorkbook("Compare DF Output")
   openxlsx::addWorksheet(wb, "Sheet1", gridLines = FALSE)
