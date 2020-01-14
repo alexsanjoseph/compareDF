@@ -1,3 +1,4 @@
+**2020-01-14: XLSX output is currently buggy on CRAN version. Please use the development version!**
 **New Version released with XLSX Support!!**
 
 ## compareDF

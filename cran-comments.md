@@ -1,13 +1,7 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-*  Made breaking changes to the package, hence a new major version number
-*  Support for `XLSX` format
-*  Write output to file directly
-*  Separate functions to compare output and create output tables
-*  Cleaner abstractions in functions
-*  More bugs squashed
-*  Color blind friendly default colors
+*  Fixed bugs in XLSX output
 
 ## Test environments
 *  local OS X install - 10.14, R 3.5.1

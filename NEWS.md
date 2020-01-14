@@ -1,3 +1,6 @@
+## compareDF 2.0.1
+* Fixed bugs in XLSX output
+
 ## compareDF 2.0.0
 * New Major Version! Contains some breaking changes
 * Support for `XLSX` format
