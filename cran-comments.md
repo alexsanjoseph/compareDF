@@ -1,12 +1,11 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-*  Fixed bugs in XLSX output
+*  Fixed tests for dplyr 1.0
 
 ## Test environments
 *  local OS X install - 10.14, R 3.5.1
 *  ubuntu 16.04 (on travis-ci)
-*  win-builder (devel and release)
 *  Windows (on Appveyor)
 *  Windows Server 2008 R2 SP1, R-devel, 32/64 bit (Rhub)
 *  Ubuntu Linux 16.04 LTS, R-release, GCC (Rhub)

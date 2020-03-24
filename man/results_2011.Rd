@@ -4,7 +4,9 @@
 \name{results_2011}
 \alias{results_2011}
 \title{Data set created set to show off the package capabilities - Results of students for 2011}
-\format{A data frame 13 rows and 8 columns}
+\format{
+A data frame 13 rows and 8 columns
+}
 \usage{
 results_2011
 }

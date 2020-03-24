@@ -4,10 +4,18 @@
 \alias{compare_df}
 \title{Compare Two dataframes}
 \usage{
-compare_df(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
-  tolerance_type = "ratio", stop_on_error = TRUE,
-  keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
-  round_output_to = 3)
+compare_df(
+  df_new,
+  df_old,
+  group_col,
+  exclude = NULL,
+  tolerance = 0,
+  tolerance_type = "ratio",
+  stop_on_error = TRUE,
+  keep_unchanged_rows = FALSE,
+  keep_unchanged_cols = TRUE,
+  round_output_to = 3
+)
 }
 \arguments{
 \item{df_new}{The data frame for which any changes will be shown as an addition (green)}

@@ -4,11 +4,17 @@
 \alias{create_output_table}
 \title{Create human readable output from the comparison_df output}
 \usage{
-create_output_table(comparison_output, output_type = "html",
-  file_name = NULL, limit = 100, color_scheme = c(addition =
-  "#52854C", removal = "#FC4E07", unchanged_cell = "#999999", unchanged_row
-  = "#293352"), headers = NULL, change_col_name = "chng_type",
-  group_col_name = "grp")
+create_output_table(
+  comparison_output,
+  output_type = "html",
+  file_name = NULL,
+  limit = 100,
+  color_scheme = c(addition = "#52854C", removal = "#FC4E07", unchanged_cell =
+    "#999999", unchanged_row = "#293352"),
+  headers = NULL,
+  change_col_name = "chng_type",
+  group_col_name = "grp"
+)
 }
 \arguments{
 \item{comparison_output}{Output from the comparison Table functions}

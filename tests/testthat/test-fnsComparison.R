@@ -148,7 +148,7 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     val1 = c(3,3),
                                     val2 = c("C2", "C1")) #%>%
   # arrange(desc(chng_type)) %>% arrange_("var1")
-expect_equal(ctable$comparison_df, expected_comparison_df)
+expect_equivalent(ctable$comparison_df, expected_comparison_df)
 
 #===============================================================================
 context("compare_df: Other stats")
@@ -177,7 +177,7 @@ expected_comparison_df = data.frame(grp = c(3, 4),
                                     val1 = c(3, 3),
                                     val2 = c("C2", "C1"),
                                     val3 = c(4.0, 3.0))
-expect_equal(ctable$comparison_df, expected_comparison_df)
+expect_equivalent(ctable$comparison_df, expected_comparison_df)
 
 context("compare_df: tolerance with compare_type = 'difference'")
 ctable = compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.06, tolerance_type = 'difference')
@@ -188,7 +188,7 @@ expected_comparison_df = data.frame(grp = c(2, 2, 3, 4),
                                     val1 = c(2, 2, 3, 3),
                                     val2 = c("B1", "B1", "C2", "C1"),
                                     val3 = c(2.1, 2.0, 4.0, 3.0))
-expect_equal(ctable$comparison_df, expected_comparison_df)
+expect_equivalent(ctable$comparison_df, expected_comparison_df)
 
 expect_error(compare_df(new_df, old_df, c("var1", "var2"), tolerance = 0.06, tolerance_type = 'random'), "Unknown tolerance type")
 # Error
@@ -204,7 +204,7 @@ new_df = data.frame(var1 = c("A", "B", "C"),
 
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(-3,3))
-expect_equal(expected_comparison_df, ctable$comparison_df)
+expect_equivalent(expected_comparison_df, ctable$comparison_df)
 
 #===========================
 context("compare_df: Extremely small values - compare rounding parameter")
@@ -216,7 +216,7 @@ new_df = data.frame(var1 = c("A", "B", "C"),
 
 ctable = compare_df(new_df, old_df, c("var1"), round_output_to = 10)
 expected_comparison_df = data.frame(var1 = c("A", "A", "C", "C"), chng_type = c("+", "-"), val1 = c(0.00011,0.00010, 5, 3))
-expect_equal(expected_comparison_df, ctable$comparison_df)
+expect_equivalent(expected_comparison_df, ctable$comparison_df)
 
 #===============================================================================
 

@@ -1,3 +1,6 @@
+## compareDF 2.0.2
+* Fixed test for dplyr 1.0
+
 ## compareDF 2.0.1
 * Fixed bugs in XLSX output
 
