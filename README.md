@@ -7,7 +7,7 @@
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
-![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)
+[![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3AR-CMD-check)
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/compareDF)](https://cran.r-project.org/package=compareDF)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/compareDF)](https://www.r-pkg.org/pkg/compareDF)
