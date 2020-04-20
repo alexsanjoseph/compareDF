@@ -7,6 +7,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 ![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)
+
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/compareDF)](https://cran.r-project.org/package=compareDF)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/compareDF)](https://www.r-pkg.org/pkg/compareDF)
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
