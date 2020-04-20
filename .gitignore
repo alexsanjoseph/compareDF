@@ -19,9 +19,9 @@ vignettes/*.pdf
 .httr-oauth
 .Rproj.user
 
-.Rbuildignore
+# .Rbuildignore
 *.Rproj
-.gitignore
+# .gitignore
 
 # Mac stupidity
 .DS_Store

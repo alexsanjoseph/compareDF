@@ -1,7 +1,8 @@
+
+# compareDF
+
 **2020-02-29: XLSX output bug fixed on CRAN with 2.0.1!**
 **New Version released with XLSX Support!!**
-
-## compareDF
 
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
 [![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)

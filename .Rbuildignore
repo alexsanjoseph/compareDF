@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+.Rhistory
+.gitignore
+.git
+^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$
+^cran-comments\.md$
+^data-raw$
+^github_assets
+^appveyor\.yml$
+^CRAN-RELEASE$
+Dockerfile
