@@ -32,7 +32,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build -t comparedf . 
+            docker build -t $PACKAGE_TAG . 
             docker run $PACKAGE_TAG:latest
           fi
 
@@ -45,10 +45,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build image
-        uses: actions/checkout@v2
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
-
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
