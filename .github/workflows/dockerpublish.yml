@@ -35,16 +35,7 @@ jobs:
             docker build -t $PACKAGE_TAG . 
             docker run $PACKAGE_TAG:latest
           fi
-
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    needs: test
-
-    runs-on: ubuntu-latest
-
-    steps:
+          
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
