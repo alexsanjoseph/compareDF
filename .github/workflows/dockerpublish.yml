@@ -36,7 +36,7 @@ jobs:
             docker run $PACKAGE_TAG:latest
           fi
           
-      - name: Publish to Registry
+      - name: Publish to Registry 
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: alexsanjoseph/comparedf
