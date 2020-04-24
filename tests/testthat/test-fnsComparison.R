@@ -100,17 +100,37 @@ expect_error(compare_df(new_df %>% rename(val2 = val1), new_df, "var1"),
 expect_error(compare_df(new_df %>% rename(val2 = val1), new_df, "var1", stop_on_error = F),
              "The two data frames have different columns!")
 
-# Error if chng_type is used
-expect_error(compare_df(new_df %>% rename(chng_type = var1), old_df %>% rename(chng_type = var1), "chng_type"),
-             "chng_type, X1, X2) are reserved keywords!")
-expect_error(compare_df(new_df %>% rename(X1 = var1), old_df %>% rename(X1 = var1), "chng_type"),
-             "chng_type, X1, X2) are reserved keywords!")
-expect_error(compare_df(new_df %>% rename(X2 = var1), old_df %>% rename(X2 = var1), "chng_type"),
-             "chng_type, X1, X2) are reserved keywords!")
+test_that("Error if chng_type is used", {
+  old_df = data.frame(var1 = c("A", "C", "B", "D"), val1 = c(1, 3, 2, 3))
+  new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
+  expect_error(compare_df(new_df %>% rename(chng_type = var1), old_df %>% rename(chng_type = var1), "chng_type"),
+               "chng_type, X1, X2) are reserved keywords for grouping column!")
+  expect_error(compare_df(new_df %>% rename(X1 = val1), old_df %>% rename(X1 = val1), "X1"),
+               "chng_type, X1, X2) are reserved keywords for grouping column!")
+  expect_error(compare_df(new_df %>% rename(X2 = val1), old_df %>% rename(X2 = val1), "X2"),
+               "chng_type, X1, X2) are reserved keywords for grouping column!")
+})
+
 
 # Error if group_col is not in the data.frames
 expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
+
+# testtibble1<-tribble(
+#   ~colA, ~colB, ~Type,
+#   "a",   1, 'foo',
+#   "b",   2, 'bar',
+#   "c",   3, 'baz'
+# )
+#
+# testtibble2<-tribble(
+#   ~colA, ~colB,
+#   "a",   1,
+#   "b",   2,
+#   "c",   3
+# )
+#
+# compare_df(testtibble1, testtibble2, group_col = c("Type"))
 
 #===============================================================================
 context("compare_df: change count")
@@ -332,3 +352,19 @@ test_that("compare_df: Some integration edge case", {
   expect_equivalent(expected_change_summary, actual_comparison_summary$change_summary)
 })
 
+#===============================================================================
+context("compare_df: No grouping column")
+
+test_that("Uses generated row names as default if grouping column is provided", {
+
+  old_df = data.frame(var1 = c("A", "C"), val1 = c(1, 3))
+  new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
+  expected_output = data.frame(
+    rowname = c("2", "2", "3"),
+    chng_type = c("+", "-", "+"),
+    var1 = c("B", "C", "C"),
+    val1 = c(2, 3, 3)
+  )
+  compare_output = expect_warning(compare_df(new_df, old_df), "Missing grouping columns. Adding rownames to use as the default")
+  compare_output$comparison_df
+})

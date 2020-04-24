@@ -17,6 +17,7 @@
 #' @param keep_unchanged_cols whether to preserve unchanged values or not. Defaults to \code{TRUE}
 #' @param round_output_to Number of digits to round the output to. Defaults to 3.
 #' @import dplyr
+#' @importFrom tibble rownames_to_column
 #' @export
 #' @examples
 #' old_df = data.frame(var1 = c("A", "B", "C"),
@@ -29,6 +30,13 @@
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
                        round_output_to = 3){
+
+  if(missing(group_col)) {
+    warning("Missing grouping columns. Adding rownames to use as the default")
+    group_col = 'rowname'
+    if(!('rowname' %in% names(df_new))) df_new = rownames_to_column(df_new)
+    if(!('rowname' %in% names(df_old))) df_old = rownames_to_column(df_old)
+  }
 
   both_tables = list(df_new = df_new, df_old = df_old)
   if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
@@ -172,9 +180,10 @@ check_if_comparable <- function(df_new, df_old, group_col, stop_on_error){
 
   if(!(all(names(df_new) %in% names(df_old)))) stop("The two data frames have different columns!")
 
-  if(any(c("chng_type", "X2", "X1") %in% group_col)) stop("chng_type, X1, X2) are reserved keywords!")
-
   if(!all(group_col %in% names(df_new))) stop("Grouping column(s) not found in the data.frames!")
+
+  if(any(c("chng_type", "X2", "X1") %in% group_col)) stop("chng_type, X1, X2) are reserved keywords for grouping column!")
+
 
   return(TRUE)
 
