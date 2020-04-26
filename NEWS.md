@@ -1,3 +1,6 @@
+## compareDF 2.1.0
+* Added defaults if no `group_col` is given
+
 ## compareDF 2.0.2
 * Fixed test for dplyr 1.0
 

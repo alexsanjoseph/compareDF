@@ -1,7 +1,7 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-*  Fixed tests for dplyr 1.0
+* Added defaults if no `group_col` is given
 
 ## Test environments
 *  local OS X install - 10.14, R 3.5.1

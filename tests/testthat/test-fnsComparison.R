@@ -116,22 +116,6 @@ test_that("Error if chng_type is used", {
 expect_error(compare_df(new_df, old_df, group_col = c("var1, var3")),
              "Grouping column\\(s\\) not found in the data.frames")
 
-# testtibble1<-tribble(
-#   ~colA, ~colB, ~Type,
-#   "a",   1, 'foo',
-#   "b",   2, 'bar',
-#   "c",   3, 'baz'
-# )
-#
-# testtibble2<-tribble(
-#   ~colA, ~colB,
-#   "a",   1,
-#   "b",   2,
-#   "c",   3
-# )
-#
-# compare_df(testtibble1, testtibble2, group_col = c("Type"))
-
 #===============================================================================
 context("compare_df: change count")
 old_df = data.frame(var1 = c("A", "B", "C"),
