@@ -353,7 +353,7 @@ test_that("Uses generated row names as default if grouping column is provided", 
     val1 = c(2, 3, 3)
   )
   compare_output = expect_warning(compare_df(new_df, old_df), "Missing grouping columns. Adding rownames to use as the default")
-  expect_equal(compare_output$comparison_df, expected_output)
+  expect_equivalent(compare_output$comparison_df, expected_output)
 })
 
 #===============================================================================
