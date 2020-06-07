@@ -1,7 +1,6 @@
 
 # compareDF
 
-**2020-02-29: XLSX output bug fixed on CRAN with 2.0.1!**
 **New Version released with XLSX Support!!**
 
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
@@ -9,7 +8,6 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3AR-CMD-check)
 [![Docker](https://github.com/alexsanjoseph/compareDF/workflows/Docker/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3ADocker)
-
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/compareDF)](https://cran.r-project.org/package=compareDF)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/compareDF)](https://www.r-pkg.org/pkg/compareDF)
@@ -61,6 +59,7 @@ Let's take the example of a teacher who wants to compare the marks and grades of
 two years, 2010 and 2011. The data is stored in tabular format.
 
 ```{r}
+library(compareDF)
 data("results_2010", "results_2011")
 print(results_2010)
 print(results_2011)
@@ -86,7 +85,6 @@ across divisions. In this sub-example, if a student appears in two divisions, he
 of them.
 
 ```{r}
-library(compareDF)
 ctable_student = compare_df(results_2011, results_2010, c("Student"))
 ctable_student$comparison_df
 
@@ -108,7 +106,6 @@ shown in the comparison table.
 While the comparison table can be quickly summarized in various forms for futher analysis, it is 
 very difficult to  process visually. The `html_output` provides a way to represent this is a way that is easier 
 for the numan eye to read. NOTE: You need to install the `htmlTable` package for the HTML comparison to work.
-_For the purpose of the readme I am attaching the html as a png because github markdown doesn't retain styles._
 
 ```{r, results = 'hide'}
 create_output_table(ctable_student)
@@ -129,9 +126,6 @@ scores, which are in _Discipline_, _Maths_, and _Maths_ respectively.
 _Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the all the columns for the rows are shown
 in red, which _DikChik_ and _Vikram_ have joined new in the data set and all the columns for the rows are in green.
 
-```{r}
-create_output_table(ctable_student)
-```
 
 ### XLSX Output
 
@@ -140,8 +134,10 @@ Alternately you can write to an xlsx file as well
 ```{r}
 create_output_table(ctable_student, output_type = 'xlsx', file_name = "test_file.xlsx")
 ```
+<img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/compareDF_excel_output.png" width="500" />
 
 ## Change Count and Summary
+
 You can get an details of what has changed for each group using 
 the `change_count` object in the output. A summary 
 of the same is provided in the `change_summary` object.
