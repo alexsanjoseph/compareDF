@@ -1,3 +1,7 @@
+## compareDF 2.2.0
+* Fixed a bug where the package would corrupt the global environment with `stringsAsFactors=FALSE`
+* Added `futile.logger` as a potential option for logging messages.
+
 ## compareDF 2.1.0
 * Added defaults if no `group_col` is given
 
