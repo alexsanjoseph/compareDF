@@ -30,6 +30,14 @@ create_output_table <- function(comparison_output, output_type = 'html', file_na
   output
 }
 
+message_compareDF <- function(msg){
+  if ("futile.logger" %in% rownames(utils::installed.packages())) {
+    futile.logger::flog.trace(stringr::str_interp(msg, env = parent.frame()))
+  } else {
+    message(msg)
+  }
+}
+
 #' @importFrom utils head
 create_html_table <- function(comparison_output, file_name, limit_html, color_scheme, headers_all){
 
@@ -37,11 +45,11 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
   group_col = comparison_output$group_col
 
-  if(limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
+  if (limit_html > 1000 & comparison_table_diff %>% nrow > 1000)
     warning("Creating HTML diff for a large dataset (>1000 rows) could take a long time!")
 
-  if(limit_html < nrow(comparison_table_diff))
-    message("Truncating HTML diff table to ", limit_html, " rows...")
+  if (limit_html < nrow(comparison_table_diff))
+    message_compareDF("Truncating HTML diff table to ${limit_html} rows...")
 
   requireNamespace("htmlTable")
   comparison_table_color_code  = comparison_table_diff %>% do(.colour_coding_df(., color_scheme)) %>% as.data.frame
@@ -53,7 +61,7 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
 
   colnames(comparison_table_ts2char) <- headers_all
 
-  message("Creating HTML table for first ", limit_html, " rows")
+  message_compareDF("Creating HTML table for first ${limit_html} rows")
   html_table = htmlTable::htmlTable(comparison_table_ts2char %>% head(limit_html),
                                     col.rgroup = shading,
                                     rnames = F, css.cell = table_css,

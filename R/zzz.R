@@ -1,6 +1,6 @@
-.onLoad <- function(libname, pkgname) {
-  options(stringsAsFactors = FALSE) # nocov
-}
+# .onLoad <- function(libname, pkgname) {
+#   options(stringsAsFactors = FALSE) # nocov
+# }
 
 # R CMD Check love
 utils::globalVariables(c("chng_type", ".", "one_of", "everything", "value", "additions", "removals", "from"))

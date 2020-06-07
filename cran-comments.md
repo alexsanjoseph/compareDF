@@ -1,7 +1,8 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Added defaults if no `group_col` is given
+* Fixed a bug where the package would corrupt the global environment with `stringsAsFactors=FALSE`
+* Added `futile.logger` as a potential option for logging messages.
 
 ## Test environments
 *  local OS X install - 10.14, R 3.5.1

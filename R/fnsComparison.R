@@ -31,17 +31,23 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
                        round_output_to = 3){
 
-  if(missing(group_col)) {
+  current_saf_val = options('stringsAsFactors')[[1]]
+  options(stringsAsFactors = FALSE)
+  on.exit(options(stringsAsFactors = current_saf_val))
+
+  if (missing(group_col)) {
     warning("Missing grouping columns. Adding rownames to use as the default")
     group_col = 'rowname'
-    if(!('rowname' %in% names(df_new))) df_new = rownames_to_column(df_new)
-    if(!('rowname' %in% names(df_old))) df_old = rownames_to_column(df_old)
+    if (!('rowname' %in% names(df_new))) df_new = rownames_to_column(df_new)
+    if (!('rowname' %in% names(df_old))) df_old = rownames_to_column(df_old)
   }
 
   both_tables = list(df_new = df_new, df_old = df_old)
-  if(!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
+  if (!is.null(exclude)) both_tables = exclude_columns(both_tables, exclude)
 
   check_if_comparable(both_tables$df_new, both_tables$df_old, group_col, stop_on_error)
+  both_tables = convert_factors_to_character(both_tables)
+
   both_tables$df_new = both_tables$df_new[, names(both_tables$df_old)]
 
   if (length(group_col) > 1) {
@@ -62,7 +68,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   comparison_table_ts2char = comparison_table_ts2char %>% eliminate_tolerant_rows(comparison_table_diff)
   comparison_table_diff    = eliminate_tolerant_rows(comparison_table_diff, comparison_table_diff)
 
-  if(keep_unchanged_rows) {
+  if (keep_unchanged_rows) {
 
     comparison_table = comparison_table %>% keep_unchanged_rows_fn(both_tables, group_col, "val_table")
     comparison_table_ts2char = comparison_table_ts2char %>% keep_unchanged_rows_fn(both_tables, group_col, "val_table")
@@ -99,11 +105,22 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
 
 }
 
+
+convert_factors_to_character <- function(both_tables){
+  lapply(both_tables, function(x){
+    if (any(vapply(x, is.factor, TRUE))) {
+      message_compareDF("Found factor columns! Will be casted to character for comparison!")
+      x = x %>% mutate_if(is.factor, as.character)
+    }
+    x
+  })
+}
+
 keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, type){
   unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
     Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
 
-  if(type == 'color_table') unchanged_rows[] = -1
+  if (type == 'color_table') unchanged_rows[] = -1
   comparison_table %>% rbind(unchanged_rows)
 }
 
@@ -123,7 +140,7 @@ exclude_columns <- function(both_tables, exclude){
 }
 
 group_columns <- function(both_tables, group_col){
-  message("Grouping grouping columns")
+  message_compareDF("Grouping columns")
   df_combined = rbind(both_tables$df_new %>% mutate(from = "new"), both_tables$df_old %>% mutate(from = "old"))
   df_combined =  df_combined %>%
     group_by_at(group_col) %>%
@@ -138,6 +155,7 @@ combined_rowdiffs <- function(both_tables){
 }
 
 stop_or_warn <- function(text, stop_on_error = TRUE){
+  if(is.null(stop_on_error)) return(NULL)
   if(stop_on_error) stop(text) else warning(text)
 }
 
@@ -150,7 +168,7 @@ check_if_similar_after_unique_and_reorder <- function(both_tables, both_diffs, s
 }
 
 create_comparison_table <- function(both_diffs, group_col, round_output_to){
-  message("Creating comparison table...")
+  message_compareDF("Creating comparison table...")
   mixed_df = both_diffs$df1_2 %>% mutate(chng_type = NA_integer_) %>% slice(0) %>% data.frame()
   if(nrow(both_diffs$df1_2) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "1", both_diffs$df1_2))
   if(nrow(both_diffs$df2_1) != 0) mixed_df = mixed_df %>% rbind(data.frame(chng_type = "2", both_diffs$df2_1))
