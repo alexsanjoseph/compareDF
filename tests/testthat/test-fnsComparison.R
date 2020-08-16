@@ -6,14 +6,14 @@ library(stringr)
 
 options(stringsAsFactors = FALSE)
 
+#===============================================================================
+context("compare_df: basic tests")
+
 old_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 3))
 
 new_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 4))
-
-context("compare_df: basic tests")
-#===============================================================================
 
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))

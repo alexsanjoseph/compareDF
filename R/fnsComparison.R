@@ -18,6 +18,7 @@ utils::globalVariables(c("is_changed", "newold", "group_indices"))
 #' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
 #' @param keep_unchanged_rows whether to preserve unchanged values or not. Defaults to \code{FALSE}
 #' @param keep_unchanged_cols whether to preserve unchanged values or not. Defaults to \code{TRUE}
+#' @param change_markers what the different change_type nomenclature should be eg: c("new", "old", "unchanged").
 #' @param round_output_to Number of digits to round the output to. Defaults to 3.
 # #' @import data.table
 # #' @import dplyr
@@ -41,6 +42,7 @@ utils::globalVariables(c("is_changed", "newold", "group_indices"))
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
+                       change_markers = c("+", "-", "="),
                        round_output_to = 3){
 
   current_saf_val = options('stringsAsFactors')[[1]]
@@ -104,13 +106,14 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   change_count =  create_change_count(comparison_table, group_col)
   change_summary =  create_change_summary(change_count, both_tables)
 
-  comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
-  comparison_table_diff_symbols = comparison_table_diff %>% replace_numbers_with_symbols()
+  comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_change_markers(change_markers)
+  comparison_table_diff_symbols = comparison_table_diff %>% replace_numbers_with_change_markers(change_markers)
 
   list(comparison_df = comparison_table,
        comparison_table_diff = comparison_table_diff_symbols,
        change_count = change_count, change_summary = change_summary,
        group_col = group_col,
+       change_markers = change_markers,
        comparison_table_ts2char = comparison_table_ts2char,
        comparison_table_diff_numbers = comparison_table_diff)
 
@@ -135,13 +138,13 @@ keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, typ
   comparison_table %>% rbind(unchanged_rows)
 }
 
-replace_numbers_with_symbols <- function(x){
-  if(is.vector(x) && length(x) == 0) return(x)
-  if(is.data.frame(x) && nrow(x) == 0) return(x)
-  x[x == 2] = "+"
-  x[x == 1] = "-"
-  x[x == 0] = "="
-  x[x == -1] = "="
+replace_numbers_with_change_markers <- function(x, change_markers){
+  if (is.vector(x) && length(x) == 0) return(x)
+  if (is.data.frame(x) && nrow(x) == 0) return(x)
+  x[x == 2] = change_markers[1]
+  x[x == 1] = change_markers[2]
+  x[x == 0] = change_markers[3]
+  x[x == -1] = change_markers[3]
   x
 }
 

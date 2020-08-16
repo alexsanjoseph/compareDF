@@ -11,6 +11,7 @@ create_output_table(
   limit = 100,
   color_scheme = c(addition = "#52854C", removal = "#FC4E07", unchanged_cell =
     "#999999", unchanged_row = "#293352"),
+  change_markers = c("+", "-", "="),
   headers = NULL,
   change_col_name = "chng_type",
   group_col_name = "grp"
@@ -27,6 +28,8 @@ create_output_table(
 
 \item{color_scheme}{What color scheme to use for the  output. Should be a vector/list with
 named_elements. Default - \code{c("addition" = "green", "removal" = "red", "unchanged_cell" = "gray", "unchanged_row" = "deepskyblue")}}
+
+\item{change_markers}{what the different change_type nomenclature should be eg: c("new", "old", "unchanged"). See \link[compareDF]{compare_df}}
 
 \item{headers}{A character vector of column names to be used in the table. Defaults to \code{colnames}.}
 

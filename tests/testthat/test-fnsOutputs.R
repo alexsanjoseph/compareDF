@@ -19,12 +19,50 @@ new_df = data.frame(var1 = c("A", "B", "C"),
 )
 
 #===============================================================================
+# Wide output
+test_that("Wide output works for a single and multiple column", {
+  ctable = compare_df(new_df, old_df, c("var1"))
+  wide_output = create_wide_output(ctable)
+  expected_wide_output = data.frame(
+    var1 = c("B", "C"),
+    var2_old = c("Y", "X"),
+    var2_new = c("Y", "X"),
+    val3_old = c(2, 3),
+    val3_new = c(2.1, 4),
+    val2_old = c("B1", "C1"),
+    val2_new = c("B1", "C2"),
+    val1_old = c(2, 3),
+    val1_new = c(2, 3)
+  )
+  expect_equal(wide_output, expected_wide_output)
+
+  ctable = compare_df(new_df, old_df, c("var1", "var2"))
+  wide_output = create_wide_output(ctable)
+  expected_wide_output = data.frame(
+    grp = c(2, 3),
+    var2_old = c("Y", "X"),
+    var2_new = c("Y", "X"),
+    var1_old = c("B", "C"),
+    var1_new = c("B", "C"),
+    val3_old = c(2, 3),
+    val3_new = c(2.1, 4),
+    val2_old = c("B1", "C1"),
+    val2_new = c("B1", "C2"),
+    val1_old = c(2, 3),
+    val1_new = c(2, 3)
+  )
+  expect_equal(wide_output, expected_wide_output)
+})
+
+
+#===============================================================================
 # HTML
 #===============================================================================
 # Limit
 context("compare_df: limit")
 max_rows = 2
 ctable = compare_df(new_df, old_df, c("var1", "var2"))
+
 html_output = create_output_table(ctable, limit = max_rows)
 expect_equal(html_output %>% as.character() %>% stringr::str_count("<tr style="), max_rows)
 

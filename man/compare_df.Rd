@@ -14,6 +14,7 @@ compare_df(
   stop_on_error = TRUE,
   keep_unchanged_rows = FALSE,
   keep_unchanged_cols = TRUE,
+  change_markers = c("+", "-", "="),
   round_output_to = 3
 )
 }
@@ -38,6 +39,8 @@ is shown off. Doesn't apply to categorical variables.}
 \item{keep_unchanged_rows}{whether to preserve unchanged values or not. Defaults to \code{FALSE}}
 
 \item{keep_unchanged_cols}{whether to preserve unchanged values or not. Defaults to \code{TRUE}}
+
+\item{change_markers}{what the different change_type nomenclature should be eg: c("new", "old", "unchanged").}
 
 \item{round_output_to}{Number of digits to round the output to. Defaults to 3.}
 }
