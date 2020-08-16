@@ -136,7 +136,7 @@ create_output_table(ctable_student, output_type = 'xlsx', file_name = "test_file
 ```
 <img src="https://raw.githubusercontent.com/alexsanjoseph/compareDF/master/man/figures/compareDF_excel_output.png" width="500" />
 
-## Change Count and Summary
+### Change Count and Summary
 
 You can get an details of what has changed for each group using 
 the `change_count` object in the output. A summary 
@@ -212,6 +212,7 @@ Naturally, tolerance has no meaning for non-numeric values.
 * option change column name
 * option to change group column name
 * keep only the columns which have changed using `keep_unchanged_cols`
+* convert output to wide format using `create_wide_output`
 
 ## Using compare DF in GAP analysis
 
@@ -219,9 +220,12 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 
 ## Acknowledgements
 
+Thanks to D3SL<https://github.com/jdbarillas> for the reimplementation of the core engine using data.table which should increase the peformance by quite a bit.
+
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 ## Contributors
+* D3SL <https://github.com/jdbarillas>
 * Brice Richard
 * Joshua David Barillas - <https://github.com/jdbarillas>
 
