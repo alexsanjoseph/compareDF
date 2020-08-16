@@ -220,12 +220,12 @@ The compareDF package can be used to conduct effective Gap analyses. If the pack
 
 ## Acknowledgements
 
-Thanks to D3SL<https://github.com/jdbarillas> for the reimplementation of the core engine using data.table which should increase the peformance by quite a bit.
+Thanks to D3SL<https://github.com/D3SL> for the reimplementation of the core engine using data.table which should increase the peformance by quite a bit.
 
 Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 ## Contributors
-* D3SL <https://github.com/jdbarillas>
+* D3SL <https://github.com/D3SL>
 * Brice Richard
 * Joshua David Barillas - <https://github.com/jdbarillas>
 
