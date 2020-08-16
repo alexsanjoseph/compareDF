@@ -2,7 +2,7 @@ FROM rocker/r-ver:4.0.2
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    zlib1g-dev \
+    zlib1g-dev=1:1.2.11.dfsg-1 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
