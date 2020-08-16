@@ -1,5 +1,9 @@
 FROM rocker/r-ver:3.6.3
 
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    zlib1g-dev
+
 # Installing dependencies
 RUN R -q -e 'install.packages("dplyr", repo="http://cran.rstudio.com/")'
 RUN R -q -e 'install.packages("data.table", repo="http://cran.rstudio.com/")'
