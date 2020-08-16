@@ -334,16 +334,15 @@ get_headers_for_table <- function(headers, change_col_name, group_col_name, comp
 
 ### Deprecated
 
-rowdiff <- function(x.1,x.2,...){
-  if(nrow(x.2) == 0) return(x.1)
-  x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
-}
-
-
-combined_rowdiffs <- function(both_tables){
-  list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
-       df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
-
-  list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
-       df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
-}
+# rowdiff <- function(x.1,x.2,...){
+#   if(nrow(x.2) == 0) return(x.1)
+#   x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
+# }
+#
+# combined_rowdiffs <- function(both_tables){
+#   list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
+#        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+#
+#   list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
+#        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+# }
