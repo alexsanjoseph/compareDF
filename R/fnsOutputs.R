@@ -144,6 +144,7 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
 #' @title Convert to wide format
 #' @description Easier to compare side-by-side
 #' @param comparison_output Output from the comparison Table functions
+#' @param suffix Nomenclature for the new and old dataframe
 #' @export
 create_wide_output <- function(comparison_output, suffix = c("_new", "_old")){
   dplyr::full_join(

@@ -28,7 +28,7 @@ utils::globalVariables(c("is_changed", "newold", "group_indices"))
 
 #' @importFrom dplyr `%>%`
 #' @importFrom dplyr mutate transmute select slice arrange desc do filter tally n ungroup
-#' @importFrom dplyr group_by_at mutate_if arrange_at summarize arrange_at
+#' @importFrom dplyr group_by_at mutate_if arrange_at summarize arrange_at starts_with full_join
 
 #' @importFrom tibble rownames_to_column
 #' @export
