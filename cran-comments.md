@@ -10,7 +10,7 @@ This is a new version. In this version I have:
 
 *  Mac OS X Catalina install - 10.15.6, R 3.6.3 (Local)
 *  Ubuntu 16.04 (on travis-ci)
-*  Ubuntu 18.04 - Docker, R 4.02 (Github Acions)
+*  Ubuntu 18.04 - Docker, R 3.6.3 (Github Acions)
 *  Ubuntu Linux 16.04 LTS, R-release, GCC (Rhub)
 *  Fedora Linux, R-devel, clang, gfortran (Rhub)
 *  Windows Server 2008 R2 SP1, R-devel, 32/64 bit (Rhub)
