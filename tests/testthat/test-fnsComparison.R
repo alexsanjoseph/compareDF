@@ -113,11 +113,13 @@ test_that("Error if chng_type is used", {
   old_df = data.frame(var1 = c("A", "C", "B", "D"), val1 = c(1, 3, 2, 3))
   new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
   expect_error(compare_df(new_df %>% rename(chng_type = var1), old_df %>% rename(chng_type = var1), "chng_type"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
   expect_error(compare_df(new_df %>% rename(X1 = val1), old_df %>% rename(X1 = val1), "X1"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
   expect_error(compare_df(new_df %>% rename(X2 = val1), old_df %>% rename(X2 = val1), "X2"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
+  expect_error(compare_df(new_df %>% rename(newold_type = val1), old_df %>% rename(newold_type = val1), "newold_type"),
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
 })
 
 
@@ -375,8 +377,24 @@ test_that("Uses generated row names as default if grouping column is provided", 
   expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"), stringsAsFactors = F)
   expect_equivalent(df_compare$comparison_df, expected_df)
 })
-
 options(stringsAsFactors = FALSE)
+
+#===============================================================================
+context("compare_df: Change Markers")
+test_that("Change markers are correct", {
+
+  df1 <- data.frame(a = 1:3, b = letters[1:3], row = 1:3)
+  df2 <- data.frame(a = c(1, 2, 6), b = c("a", "l", "e"), row = c(1:2, 5))
+
+  df_compare = compare_df(df1, df2, "row", keep_unchanged_rows =  TRUE, change_markers = c("new", "old", "unchanged"))
+  expected_df = data.frame(
+    row = c(1, 1, 2, 2, 3, 5),
+    chng_type = c("unchanged", "unchanged", "new", "old", "new", "old"),
+    a = c(1, 1, 2, 2, 3, 6),
+    b = c("a", "a", "b", "l", "c", "e")
+  )
+  expect_equivalent(df_compare$comparison_df, expected_df)
+})
 
 
 #===============================================================================

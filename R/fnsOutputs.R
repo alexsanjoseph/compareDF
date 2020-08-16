@@ -17,12 +17,11 @@
 create_output_table <- function(comparison_output, output_type = 'html', file_name = NULL, limit = 100,
                                 color_scheme = c("addition" = "#52854C", "removal" = "#FC4E07",
                                                  "unchanged_cell" = "#999999", "unchanged_row" = "#293352"),
-                                change_markers = c("+", "-", "="),
                                 headers = NULL, change_col_name = "chng_type", group_col_name = "grp"){
   headers_all = get_headers_for_table(headers, change_col_name, group_col_name, comparison_output$comparison_table_diff)
 
   comparison_output$comparison_table_ts2char$chng_type = comparison_output$comparison_table_ts2char$chng_type %>%
-    replace_numbers_with_change_markers(change_markers)
+    replace_numbers_with_change_markers(comparison_output$change_markers)
 
   if (limit == 0 || nrow(comparison_output$comparison_table_diff) == 0 || nrow(comparison_output$comparison_df) == 0)
     return(NULL)

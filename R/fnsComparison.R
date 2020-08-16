@@ -165,8 +165,8 @@ group_columns <- function(both_tables, group_col){
 
 combined_rowdiffs_v2 <- function(both_tables, group_col){
   df_combined <- as.data.table(
-    rbind(both_tables$df_old %>% mutate(newold = 'old'),
-          both_tables$df_new %>% mutate(newold = 'new')), key = group_col)
+    rbind(both_tables$df_old %>% mutate(newold_type = 'old'),
+          both_tables$df_new %>% mutate(newold_type = 'new')), key = group_col)
 
   df_combined[
     ,
@@ -174,15 +174,15 @@ combined_rowdiffs_v2 <- function(both_tables, group_col){
     by = group_col
     ]
   df_combined[
-    (duplicated(df_combined, by=setdiff(names(df_combined), 'newold')) |
-       duplicated(df_combined, fromLast=TRUE,by=setdiff(names(df_combined), 'newold'))),
-    is_changed := FALSE
+    (duplicated(df_combined, by=setdiff(names(df_combined), 'newold_type')) |
+       duplicated(df_combined, fromLast=TRUE,by=setdiff(names(df_combined), 'newold_type'))),
+    chng_type := FALSE
     ]
-  df_combined[is.na(is_changed), is_changed := TRUE]
+  df_combined[is.na(chng_type), chng_type := TRUE]
 
   list(
-    df1_2 = df_combined[newold == 'old' & is_changed,,] %>% data.frame() %>% select(-newold, -is_changed),
-    df2_1 = df_combined[newold == 'new' & is_changed,,] %>% data.frame() %>% select(-newold, -is_changed)
+    df1_2 = df_combined[newold_type == 'old' & chng_type,,] %>% data.frame() %>% select(-newold_type, -chng_type),
+    df2_1 = df_combined[newold_type == 'new' & chng_type,,] %>% data.frame() %>% select(-newold_type, -chng_type)
   )
 }
 
@@ -232,8 +232,7 @@ check_if_comparable <- function(df_new, df_old, group_col, stop_on_error){
 
   if(!all(group_col %in% names(df_new))) stop("Grouping column(s) not found in the data.frames!")
 
-  if(any(c("chng_type", "X2", "X1") %in% group_col)) stop("chng_type, X1, X2) are reserved keywords for grouping column!")
-
+  if(any(c("chng_type", "X2", "X1", "newold_type") %in% group_col)) stop("chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
 
   return(TRUE)
 
