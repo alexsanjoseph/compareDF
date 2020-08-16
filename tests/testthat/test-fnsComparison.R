@@ -26,6 +26,12 @@ df_compare = compare_df(df1, df2, "row")
 expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"))
 expect_equal(df_compare$comparison_df, expected_df)
 
+df12 = rbind(df1, data.frame(a = 6, b = 'f', row = 5))
+
+df_compare = compare_df(df12, df2, "row")
+expected_df = data.frame(row = c(4, 5, 5), chng_type = "+", a = c(4, 5, 6), b = c("d", "e", "f"))
+expect_equal(df_compare$comparison_df, expected_df)
+
 #===============================================================================
 # Case when there are only new rows
 new_df = data.frame(var1 = c("A", "B"), val1 = c(1, 2))
@@ -372,3 +378,35 @@ test_that("Uses generated row names as default if grouping column is provided", 
 
 options(stringsAsFactors = FALSE)
 
+
+#===============================================================================
+context("compare_df: Performance test, big dataframe")
+
+test_that("Elapsed comparison time should be less than expected maximum for this big data frame", {
+
+  set.seed(42)
+  old_df = data.frame(var1 = paste0(c("A", "B", "C"), sample(1:200, 240000, replace = T)),
+                      var2 = c("Z", "Y", "X"),
+                      val1 = c(1, 2, 3),
+                      val2 = paste0(c("A1", "B1", "C1"), sample(1:200, 240000, replace = T)),
+                      val3 = c(1, 2, 3)
+  )
+
+  new_df = data.frame(var1 = paste0(c("A", "B", "C"), sample(1:200, 360000, replace = T)),
+                      var2 = c("Z", "Y", "W"),
+                      val1 = c(1, 2, 3),
+                      val2 = paste0(c("A1", "B1", "C2"), sample(1:200, 360000, replace = T)),
+                      val3 = c(1, 2.1, 4)
+  )
+  comparison_time = system.time({ctable = compare_df(new_df, old_df, c("var1", "var2"))})
+
+  expected_time = 2.1
+  tolerance = 1.5
+  # Don't want CI CD to fail in case of random events/bad system config, but still produce an informative message
+  testthat::skip_if(
+    comparison_time['elapsed'] > expected_time + tolerance,
+    message = "Performance test seems to be failing. Just a random edge case, or inherent issue?"
+  )
+  expect_true(comparison_time['elapsed'] < expected_time + tolerance)
+
+})
