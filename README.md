@@ -1,4 +1,3 @@
-
 # compareDF
 
 **New Version released with XLSX Support!!**
@@ -125,7 +124,6 @@ For Example, _Akshay_, _Ananth_ and _Bulla_ has had changes in
 scores, which are in _Discipline_, _Maths_, and _Maths_ respectively.
 _Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the all the columns for the rows are shown
 in red, which _DikChik_ and _Vikram_ have joined new in the data set and all the columns for the rows are in green.
-
 
 ### XLSX Output
 

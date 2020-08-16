@@ -1,4 +1,6 @@
-# Resubmission
+# CRAN Comments
+
+## Resubmission
 
 This is a new version. In this version I have:
 
@@ -6,7 +8,7 @@ This is a new version. In this version I have:
 * convert output to wide format using `create_wide_output`
 * customize nomenclature of the chng_type using `change_markers`
 
-# Test environments
+## Test environments
 
 *  Mac OS X Catalina install - 10.15.6, R 3.6.3 (Local)
 *  Ubuntu 16.04 (on travis-ci)
@@ -16,10 +18,10 @@ This is a new version. In this version I have:
 *  Windows Server 2008 R2 SP1, R-devel, 32/64 bit (Rhub)
 *  Windows (on Appveyor)
 
-# R CMD check results
+## R CMD check results
 
 0 errors | 0 warnings | 0 notes
 
-# Reverse dependencies
+## Reverse dependencies
 
 There are no reverse dependencies.
