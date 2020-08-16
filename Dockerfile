@@ -1,12 +1,14 @@
-FROM rocker/r-ver:3.6.3
+FROM rocker/r-ver:4.0.2
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    zlib1g-dev
+    zlib1g-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Installing dependencies
+RUN R -q -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'
 RUN R -q -e 'install.packages("dplyr", repo="http://cran.rstudio.com/")'
-RUN R -q -e 'install.packages("data.table", repo="http://cran.rstudio.com/")'
 RUN R -q -e 'install.packages("magrittr", repo="http://cran.rstudio.com/")'
 RUN R -q -e 'install.packages("htmlTable", repo="http://cran.rstudio.com/")'
 RUN R -q -e 'install.packages("openxlsx", repo="http://cran.rstudio.com/")'
