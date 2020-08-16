@@ -1,8 +1,9 @@
 ## Resubmission
 This is a new version. In this version I have:
 
-* Fixed a bug where the package would corrupt the global environment with `stringsAsFactors=FALSE`
-* Added `futile.logger` as a potential option for logging messages.
+* internals now use data.table making the comparison MUCH faster!
+* convert output to wide format using `create_wide_output`
+* customize nomenclature of the chng_type using `change_markers`
 
 ## Test environments
 *  local OS X install - 10.14, R 3.5.1

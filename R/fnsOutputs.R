@@ -12,7 +12,6 @@
 #' @param headers A character vector of column names to be used in the table. Defaults to \code{colnames}.
 #' @param change_col_name Name of the change column to use in the table. Defaults to \code{chng_type}.
 #' @param group_col_name Name of the group column to be used in the table (if there are multiple grouping vars). Defaults to \code{grp}.
-#' @param change_markers what the different change_type nomenclature should be eg: c("new", "old", "unchanged"). See \link[compareDF]{compare_df}
 #' @export
 create_output_table <- function(comparison_output, output_type = 'html', file_name = NULL, limit = 100,
                                 color_scheme = c("addition" = "#52854C", "removal" = "#FC4E07",

@@ -1,5 +1,5 @@
 
-utils::globalVariables(c("is_changed", "newold", "group_indices"))
+utils::globalVariables(c("is_changed", "newold_type", "group_indices"))
 .datatable.aware = TRUE
 
 #' @title Compare Two dataframes

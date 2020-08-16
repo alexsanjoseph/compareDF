@@ -213,6 +213,7 @@ Naturally, tolerance has no meaning for non-numeric values.
 * option to change group column name
 * keep only the columns which have changed using `keep_unchanged_cols`
 * convert output to wide format using `create_wide_output`
+* customize nomenclature of the chng_type using `change_markers`
 
 ## Using compare DF in GAP analysis
 
