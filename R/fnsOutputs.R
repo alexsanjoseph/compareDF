@@ -19,7 +19,8 @@ create_output_table <- function(comparison_output, output_type = 'html', file_na
                                 headers = NULL, change_col_name = "chng_type", group_col_name = "grp"){
   headers_all = get_headers_for_table(headers, change_col_name, group_col_name, comparison_output$comparison_table_diff)
 
-  comparison_output$comparison_table_ts2char$chng_type = comparison_output$comparison_table_ts2char$chng_type %>% replace_numbers_with_symbols()
+  comparison_output$comparison_table_ts2char$chng_type = comparison_output$comparison_table_ts2char$chng_type %>%
+    replace_numbers_with_change_markers(comparison_output$change_markers)
 
   if (limit == 0 || nrow(comparison_output$comparison_table_diff) == 0 || nrow(comparison_output$comparison_df) == 0)
     return(NULL)
@@ -67,7 +68,7 @@ create_html_table <- function(comparison_output, file_name, limit_html, color_sc
                                     rnames = F, css.cell = table_css,
                                     padding.rgroup = rep("5em", length(shading))
   )
-  if(!is.null(file_name)){
+  if (!is.null(file_name)){
     cat(html_table, file = file_name)
     return(file_name)
   }
@@ -138,6 +139,22 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
 
 }
 
+#' @title Convert to wide format
+#' @description Easier to compare side-by-side
+#' @param comparison_output Output from the comparison Table functions
+#' @param suffix Nomenclature for the new and old dataframe
+#' @export
+create_wide_output <- function(comparison_output, suffix = c("_new", "_old")){
+  dplyr::full_join(
+      comparison_output$comparison_df %>% filter(chng_type == comparison_output$change_markers[1]),
+      comparison_output$comparison_df %>% filter(chng_type == comparison_output$change_markers[2]),
+      by = comparison_output$group_col,
+      suffix = suffix,
+    ) %>%
+    select(-starts_with("chng_type")) %>%
+    select(comparison_output$group_col, one_of(sort(names(.), decreasing = TRUE)))
+}
+
 # nocov start
 #' @title View Comparison output HTML
 #'
@@ -161,3 +178,4 @@ view_html <- function(comparison_output){
   unlink("temp.html")
 }
 # nocov end
+

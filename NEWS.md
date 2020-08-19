@@ -1,3 +1,8 @@
+## compareDF 2.3.0
+* internals now use data.table making the comparison MUCH faster!
+* convert output to wide format using `create_wide_output`
+* customize nomenclature of the chng_type using `change_markers`
+
 ## compareDF 2.2.0
 * Fixed a bug where the package would corrupt the global environment with `stringsAsFactors=FALSE`
 * Added `futile.logger` as a potential option for logging messages.

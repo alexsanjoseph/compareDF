@@ -1,4 +1,7 @@
 
+utils::globalVariables(c("is_changed", "newold_type", "group_indices"))
+.datatable.aware = TRUE
+
 #' @title Compare Two dataframes
 #'
 #' @description Do a git style comparison between two data frames of similar columnar structure
@@ -15,8 +18,18 @@
 #' @param tolerance_type Defaults to 'ratio'. The type of comparison for numeric values, can be 'ratio' or 'difference'
 #' @param keep_unchanged_rows whether to preserve unchanged values or not. Defaults to \code{FALSE}
 #' @param keep_unchanged_cols whether to preserve unchanged values or not. Defaults to \code{TRUE}
+#' @param change_markers what the different change_type nomenclature should be eg: c("new", "old", "unchanged").
 #' @param round_output_to Number of digits to round the output to. Defaults to 3.
-#' @import dplyr
+# #' @import data.table
+# #' @import dplyr
+
+#' @importFrom data.table :=
+#' @importFrom data.table data.table as.data.table uniqueN .N .SD
+
+#' @importFrom dplyr `%>%`
+#' @importFrom dplyr mutate transmute select slice arrange desc do filter tally n ungroup
+#' @importFrom dplyr group_by_at mutate_if arrange_at summarize arrange_at starts_with full_join
+
 #' @importFrom tibble rownames_to_column
 #' @export
 #' @examples
@@ -29,6 +42,7 @@
 #' ctable$html_output
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
+                       change_markers = c("+", "-", "="),
                        round_output_to = 3){
 
   current_saf_val = options('stringsAsFactors')[[1]]
@@ -55,12 +69,11 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
     group_col = "grp"
   }
 
-  both_diffs = combined_rowdiffs(both_tables)
+  both_diffs = combined_rowdiffs_v2(both_tables, group_col)
 
   check_if_similar_after_unique_and_reorder(both_tables, both_diffs, stop_on_error)
 
   comparison_table         = create_comparison_table(both_diffs, group_col, round_output_to)
-
   comparison_table_ts2char = .ts2char(comparison_table)
   comparison_table_diff    = create_comparison_table_diff(comparison_table_ts2char, group_col, tolerance, tolerance_type)
 
@@ -79,7 +92,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
     comparison_table = comparison_table[order(comparison_table[[group_col]]),]
   }
 
-  if(!keep_unchanged_cols){
+  if (!keep_unchanged_cols) {
     all_unchanged = apply(comparison_table_diff %>% select(-!!group_col), 2, function(x) all(x <= 0))
     unchanged_cols = names(Filter(identity, all_unchanged))
     comparison_table = comparison_table %>% select(-one_of(unchanged_cols))
@@ -87,19 +100,20 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
     comparison_table_diff = comparison_table_diff %>% select(-one_of(unchanged_cols))
   }
 
-  if(nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
-  if(nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
+  if (nrow(comparison_table) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
+  if (nrow(comparison_table_diff) == 0) stop_or_warn("The two data frames are the same after accounting for tolerance!", stop_on_error)
 
   change_count =  create_change_count(comparison_table, group_col)
   change_summary =  create_change_summary(change_count, both_tables)
 
-  comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_symbols()
-  comparison_table_diff_symbols = comparison_table_diff %>% replace_numbers_with_symbols()
+  comparison_table$chng_type = comparison_table$chng_type %>% replace_numbers_with_change_markers(change_markers)
+  comparison_table_diff_symbols = comparison_table_diff %>% replace_numbers_with_change_markers(change_markers)
 
   list(comparison_df = comparison_table,
        comparison_table_diff = comparison_table_diff_symbols,
        change_count = change_count, change_summary = change_summary,
        group_col = group_col,
+       change_markers = change_markers,
        comparison_table_ts2char = comparison_table_ts2char,
        comparison_table_diff_numbers = comparison_table_diff)
 
@@ -124,13 +138,13 @@ keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, typ
   comparison_table %>% rbind(unchanged_rows)
 }
 
-replace_numbers_with_symbols <- function(x){
-  if(is.vector(x) && length(x) == 0) return(x)
-  if(is.data.frame(x) && nrow(x) == 0) return(x)
-  x[x == 2] = "+"
-  x[x == 1] = "-"
-  x[x == 0] = "="
-  x[x == -1] = "="
+replace_numbers_with_change_markers <- function(x, change_markers){
+  if (is.vector(x) && length(x) == 0) return(x)
+  if (is.data.frame(x) && nrow(x) == 0) return(x)
+  x[x == 2] = change_markers[1]
+  x[x == 1] = change_markers[2]
+  x[x == 0] = change_markers[3]
+  x[x == -1] = change_markers[3]
   x
 }
 
@@ -149,9 +163,27 @@ group_columns <- function(both_tables, group_col){
        df_old = df_combined %>% filter(from == "old") %>% select(-from))
 }
 
-combined_rowdiffs <- function(both_tables){
-  list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
-       df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+combined_rowdiffs_v2 <- function(both_tables, group_col){
+  df_combined <- as.data.table(
+    rbind(both_tables$df_old %>% mutate(newold_type = 'old'),
+          both_tables$df_new %>% mutate(newold_type = 'new')), key = group_col)
+
+  df_combined[
+    ,
+    if (uniqueN(.N) == 1) .SD,
+    by = group_col
+    ]
+  df_combined[
+    (duplicated(df_combined, by=setdiff(names(df_combined), 'newold_type')) |
+       duplicated(df_combined, fromLast=TRUE,by=setdiff(names(df_combined), 'newold_type'))),
+    chng_type := FALSE
+    ]
+  df_combined[is.na(chng_type), chng_type := TRUE]
+
+  list(
+    df1_2 = df_combined[newold_type == 'old' & chng_type,,] %>% data.frame() %>% select(-newold_type, -chng_type),
+    df2_1 = df_combined[newold_type == 'new' & chng_type,,] %>% data.frame() %>% select(-newold_type, -chng_type)
+  )
 }
 
 stop_or_warn <- function(text, stop_on_error = TRUE){
@@ -200,8 +232,7 @@ check_if_comparable <- function(df_new, df_old, group_col, stop_on_error){
 
   if(!all(group_col %in% names(df_new))) stop("Grouping column(s) not found in the data.frames!")
 
-  if(any(c("chng_type", "X2", "X1") %in% group_col)) stop("chng_type, X1, X2) are reserved keywords for grouping column!")
-
+  if(any(c("chng_type", "X2", "X1", "newold_type") %in% group_col)) stop("chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
 
   return(TRUE)
 
@@ -245,11 +276,6 @@ round_num_cols <- function(df, round_digits = 2)
 #   do.call("rbind", setdiff(split(x.1, rownames(x.1)), split(x.2, rownames(x.2))))
 # }
 
-rowdiff <- function(x.1,x.2,...){
-  if(nrow(x.2) == 0) return(x.1)
-  x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
-}
-
 .ts2char <- function(df)
 {
   ts_cols = which(sapply(df, is.POSIXct))
@@ -258,7 +284,7 @@ rowdiff <- function(x.1,x.2,...){
   }else
     df[[ts_cols]] = as.character(df[[ts_cols]])
 
-    df
+  df
 }
 
 is.POSIXct <- function(x) inherits(x, "POSIXct")
@@ -305,3 +331,18 @@ get_headers_for_table <- function(headers, change_col_name, group_col_name, comp
 
   headers_all
 }
+
+### Deprecated
+
+# rowdiff <- function(x.1,x.2,...){
+#   if(nrow(x.2) == 0) return(x.1)
+#   x.1[!duplicated(rbind(x.2, x.1))[-(1:nrow(x.2))],]
+# }
+#
+# combined_rowdiffs <- function(both_tables){
+#   list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
+#        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+#
+#   list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
+#        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+# }

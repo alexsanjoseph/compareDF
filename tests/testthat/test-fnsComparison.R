@@ -6,14 +6,14 @@ library(stringr)
 
 options(stringsAsFactors = FALSE)
 
+#===============================================================================
+context("compare_df: basic tests")
+
 old_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 3))
 
 new_df = data.frame(var1 = c("A", "B", "C"),
                     val1 = c(1, 2, 4))
-
-context("compare_df: basic tests")
-#===============================================================================
 
 ctable = compare_df(new_df, old_df, c("var1"))
 expected_comparison_df = data.frame(var1 = ("C"), chng_type = c("+", "-"), val1 = c(4,3))
@@ -24,6 +24,12 @@ df2 <- data.frame(a = 1:3, b = letters[1:3], row = 1:3)
 
 df_compare = compare_df(df1, df2, "row")
 expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"))
+expect_equal(df_compare$comparison_df, expected_df)
+
+df12 = rbind(df1, data.frame(a = 6, b = 'f', row = 5))
+
+df_compare = compare_df(df12, df2, "row")
+expected_df = data.frame(row = c(4, 5, 5), chng_type = "+", a = c(4, 5, 6), b = c("d", "e", "f"))
 expect_equal(df_compare$comparison_df, expected_df)
 
 #===============================================================================
@@ -107,11 +113,13 @@ test_that("Error if chng_type is used", {
   old_df = data.frame(var1 = c("A", "C", "B", "D"), val1 = c(1, 3, 2, 3))
   new_df = data.frame(var1 = c("A", "B", "C"), val1 = c(1, 2, 3))
   expect_error(compare_df(new_df %>% rename(chng_type = var1), old_df %>% rename(chng_type = var1), "chng_type"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
   expect_error(compare_df(new_df %>% rename(X1 = val1), old_df %>% rename(X1 = val1), "X1"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
   expect_error(compare_df(new_df %>% rename(X2 = val1), old_df %>% rename(X2 = val1), "X2"),
-               "chng_type, X1, X2) are reserved keywords for grouping column!")
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
+  expect_error(compare_df(new_df %>% rename(newold_type = val1), old_df %>% rename(newold_type = val1), "newold_type"),
+               "chng_type, newold_type, X1, X2 are reserved keywords for grouping column!")
 })
 
 
@@ -369,6 +377,54 @@ test_that("Uses generated row names as default if grouping column is provided", 
   expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"), stringsAsFactors = F)
   expect_equivalent(df_compare$comparison_df, expected_df)
 })
-
 options(stringsAsFactors = FALSE)
 
+#===============================================================================
+context("compare_df: Change Markers")
+test_that("Change markers are correct", {
+
+  df1 <- data.frame(a = 1:3, b = letters[1:3], row = 1:3)
+  df2 <- data.frame(a = c(1, 2, 6), b = c("a", "l", "e"), row = c(1:2, 5))
+
+  df_compare = compare_df(df1, df2, "row", keep_unchanged_rows =  TRUE, change_markers = c("new", "old", "unchanged"))
+  expected_df = data.frame(
+    row = c(1, 1, 2, 2, 3, 5),
+    chng_type = c("unchanged", "unchanged", "new", "old", "new", "old"),
+    a = c(1, 1, 2, 2, 3, 6),
+    b = c("a", "a", "b", "l", "c", "e")
+  )
+  expect_equivalent(df_compare$comparison_df, expected_df)
+})
+
+
+#===============================================================================
+context("compare_df: Performance test, big dataframe")
+
+test_that("Elapsed comparison time should be less than expected maximum for this big data frame", {
+
+  set.seed(42)
+  old_df = data.frame(var1 = paste0(c("A", "B", "C"), sample(1:200, 240000, replace = T)),
+                      var2 = c("Z", "Y", "X"),
+                      val1 = c(1, 2, 3),
+                      val2 = paste0(c("A1", "B1", "C1"), sample(1:200, 240000, replace = T)),
+                      val3 = c(1, 2, 3)
+  )
+
+  new_df = data.frame(var1 = paste0(c("A", "B", "C"), sample(1:200, 360000, replace = T)),
+                      var2 = c("Z", "Y", "W"),
+                      val1 = c(1, 2, 3),
+                      val2 = paste0(c("A1", "B1", "C2"), sample(1:200, 360000, replace = T)),
+                      val3 = c(1, 2.1, 4)
+  )
+  comparison_time = system.time({ctable = compare_df(new_df, old_df, c("var1", "var2"))})
+
+  expected_time = 2.1
+  tolerance = 1.5
+  # Don't want CI CD to fail in case of random events/bad system config, but still produce an informative message
+  testthat::skip_if(
+    comparison_time['elapsed'] > expected_time + tolerance,
+    message = "Performance test seems to be failing. Just a random edge case, or inherent issue?"
+  )
+  expect_true(comparison_time['elapsed'] < expected_time + tolerance)
+
+})
