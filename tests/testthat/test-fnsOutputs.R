@@ -18,7 +18,9 @@ new_df = data.frame(var1 = c("A", "B", "C"),
                     val3 = c(1, 2.1, 4)
 )
 
+
 #===============================================================================
+context("fnsOutputs: wide_output")
 # Wide output
 test_that("Wide output works for a single and multiple column", {
   ctable = compare_df(new_df, old_df, c("var1"))
@@ -59,7 +61,7 @@ test_that("Wide output works for a single and multiple column", {
 # HTML
 #===============================================================================
 # Limit
-context("compare_df: limit")
+context("fnsOutputs: limit")
 max_rows = 2
 ctable = compare_df(new_df, old_df, c("var1", "var2"))
 
@@ -80,7 +82,7 @@ get_html_header_names <- function(html_output){
 
 }
 
-context("compare_df: Headers")
+context("fnsOutputs:  Headers")
 
 test_that("compare_df: headers with 1 grouping column", {
   ctable = compare_df(new_df, old_df, c("var1"))
@@ -168,7 +170,7 @@ test_that("compare_df: write output to file", {
 # XLSX
 #===============================================================================
 
-context("compare_df: Output to Excel")
+context("fnsOutputs: Output to Excel")
 
 old_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "X"),
@@ -189,7 +191,6 @@ compare_output = compareDF::compare_df(old_df, new_df, c('var1', 'var2'))
 test_that("compare_df: Error out if file name is NULL", {
   expect_error(create_output_table(compare_output, output_type = 'xlsx'), "file_name cannot be null if output format is xlsx")
 })
-
 
 test_that("compare_df: Write to file correctly", {
   temp_file = tempfile()
