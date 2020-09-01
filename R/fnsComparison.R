@@ -1,5 +1,5 @@
 
-utils::globalVariables(c("is_changed", "newold_type", "group_indices"))
+utils::globalVariables(c("is_changed", "newold_type"))
 .datatable.aware = TRUE
 
 #' @title Compare Two dataframes
@@ -153,6 +153,7 @@ exclude_columns <- function(both_tables, exclude){
        df_new = both_tables$df_new %>% select(-one_of(exclude)))
 }
 
+#' @importFrom dplyr group_indices
 group_columns <- function(both_tables, group_col){
   message_compareDF("Grouping columns")
   df_combined = rbind(both_tables$df_new %>% mutate(from = "new"), both_tables$df_old %>% mutate(from = "old"))
