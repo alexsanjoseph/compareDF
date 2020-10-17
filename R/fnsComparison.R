@@ -49,6 +49,9 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   options(stringsAsFactors = FALSE)
   on.exit(options(stringsAsFactors = current_saf_val))
 
+  data.table::setDT(df_old)
+  data.table::setDT(df_new)
+
   if (missing(group_col)) {
     warning("Missing grouping columns. Adding rownames to use as the default")
     group_col = 'rowname'
@@ -62,7 +65,7 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   check_if_comparable(both_tables$df_new, both_tables$df_old, group_col, stop_on_error)
   both_tables = convert_factors_to_character(both_tables)
 
-  both_tables$df_new = both_tables$df_new[, names(both_tables$df_old)]
+  both_tables$df_new = both_tables$df_new[, .SD, .SDcols = names(both_tables$df_old)]
 
   if (length(group_col) > 1) {
     both_tables = group_columns(both_tables, group_col)
