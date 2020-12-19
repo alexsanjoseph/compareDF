@@ -365,6 +365,24 @@ test_that("Uses generated row names as default if grouping column is provided", 
 })
 
 #===============================================================================
+context("compare_df: Bad Names in data frames are accepted")
+
+test_that("Bad names are not mangled by data.frame", {
+
+  old_df = data.frame("var 1" = c("A", "B", "C"),
+                      "val(1)" = c(1, 2, 3), check.names = F)
+
+  new_df = data.frame("var 1" = c("A", "B", "C"),
+                      "val(1)" = c(1, 2, 4), check.names = F)
+
+  ctable = compare_df(new_df, old_df, c("var 1"))
+  expected_comparison_df = data.frame("var 1" = ("C"), chng_type = c("+", "-"), "val(1)" = c(4,3), check.names = F)
+
+  expect_equal(ctable$comparison_df, expected_comparison_df)
+
+})
+
+#===============================================================================
 context("compare_df: Works with Factors")
 options(stringsAsFactors = TRUE)
 
