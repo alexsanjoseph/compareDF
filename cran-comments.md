@@ -4,9 +4,7 @@
 
 This is a new version. In this version I have:
 
-* internals now use data.table making the comparison MUCH faster!
-* convert output to wide format using `create_wide_output`
-* customize nomenclature of the chng_type using `change_markers`
+* prevented the `compareDF` function from mangling non-standard column names in input dataframes.
 
 ## Test environments
 

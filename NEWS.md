@@ -1,3 +1,6 @@
+## compareDF 2.3.1
+* prevented the `compareDF` function from mangling non-standard column names in input dataframes (thanks to `lcougnaud`!).
+
 ## compareDF 2.3.0
 * internals now use data.table making the comparison MUCH faster!
 * convert output to wide format using `create_wide_output`
