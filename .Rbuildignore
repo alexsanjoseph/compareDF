@@ -13,3 +13,5 @@
 ^appveyor\.yml$
 ^CRAN-RELEASE$
 Dockerfile
+^\.github$
+^codecov\.yml$

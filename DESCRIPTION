@@ -21,7 +21,8 @@ Imports:
     tibble (>= 3.0.1)
 Suggests:
     testthat,
-    futile.logger
+    futile.logger,
+    covr
 LazyData: TRUE
 RoxygenNote: 7.1.1
 Encoding: UTF-8
