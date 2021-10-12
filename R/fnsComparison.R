@@ -133,7 +133,10 @@ convert_factors_to_character <- function(both_tables){
 }
 
 keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, type){
-  unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
+
+  unchanged_rows = lapply(both_tables, function(x)
+    x[!duplicated(rbind(x, comparison_table %>% select(-chng_type)), fromLast = TRUE)[seq_len(nrow(x))], ]
+  ) %>%
     Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
 
   if (type == 'color_table') unchanged_rows[] = -1
