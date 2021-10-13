@@ -2,16 +2,21 @@
 
 ## Resubmission
 
-This is a new version. In this version I have:
+This is a resubmission of new version. In this version I have:
 
-* prevented the `compareDF` function from mangling non-standard column names in input dataframes.
+* Fixed an edge case with `keep_unchanged_rows`
+* Removed naked `stringsAsFactors` from tests into data.frame creation function.
+
+I've also fixed examples to run faster since the last submission.
 
 ## Test environments
 
-*  Mac OS X Catalina install - 10.15.6, R 3.6.3 (Local)
+*  Mac OS X Big Sur install - 11.5.2, R 4.1.1 (Local)
 *  Ubuntu 16.04 (on travis-ci)
-*  Ubuntu 18.04 - Docker, R 3.6.3 (Github Acions)
-*  Ubuntu Linux 16.04 LTS, R-release, GCC (Rhub)
+*  Ubuntu 18.04 - Docker, R 3.6.3 (Github Actions)
+*  Windows - Latest (on Github Actions)
+*  MacOS - Latest (on Github Actions)
+*  Ubuntu Linux 20.04.1 LTS, R-release, GCC (Rhub)
 *  Fedora Linux, R-devel, clang, gfortran (Rhub)
 *  Windows Server 2008 R2 SP1, R-devel, 32/64 bit (Rhub)
 *  Windows (on Appveyor)
