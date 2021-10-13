@@ -38,7 +38,7 @@ utils::globalVariables(c("is_changed", "newold_type"))
 #'                     val1 = c(1, 2, 4))
 #' ctable = compare_df(new_df, old_df, c("var1"))
 #' print(ctable$comparison_df)
-#' ctable$html_output
+#' \dontrun{ctable$html_output}
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
                        change_markers = c("+", "-", "="),
@@ -133,7 +133,10 @@ convert_factors_to_character <- function(both_tables){
 }
 
 keep_unchanged_rows_fn <- function(comparison_table, both_tables, group_col, type){
-  unchanged_rows = lapply(both_tables, function(x) x[!(x[[group_col]] %in% comparison_table[[group_col]]), ] ) %>%
+
+  unchanged_rows = lapply(both_tables, function(x)
+    x[!duplicated(rbind(x, comparison_table %>% select(-chng_type)), fromLast = TRUE)[seq_len(nrow(x))], ]
+  ) %>%
     Reduce(rbind, .) %>% dplyr::mutate(chng_type = '0')
 
   if (type == 'color_table') unchanged_rows[] = -1

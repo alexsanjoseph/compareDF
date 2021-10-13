@@ -1,3 +1,7 @@
+## compareDF 2.3.2
+* Fixed an edge case with `keep_unchanged_rows`
+* Removed naked `stringsAsFactors` from tests into data.frame creation function.
+
 ## compareDF 2.3.1
 * prevented the `compareDF` function from mangling non-standard column names in input dataframes (thanks to `lcougnaud`!).
 

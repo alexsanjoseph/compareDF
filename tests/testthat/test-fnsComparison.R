@@ -282,6 +282,56 @@ expect_equivalent(expected_change_count, ctable$change_count)
 
 #===============================================================================
 
+context("compare_df: keep_unchanged_rows edge case")
+old_df = data.frame(var1 = c("B", "B", "C"),
+                    var2 = c("Y", "Y", "W"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C1"),
+                    val3 = c(1, 2, 3)
+)
+
+new_df = data.frame(var1 = c("B", "B", "C"),
+                    var2 = c("Y", "Y", "W"),
+                    val1 = c(1, 2, 3),
+                    val2 = c("A1", "B1", "C2"),
+                    val3 = c(1, 2.1, 3)
+)
+
+ctable = compare_df(new_df, old_df, c("var1", "var2"), keep_unchanged_rows = T)
+expected_comparison_df = data.frame(grp = c(1, 1, 1, 1, 2, 2),
+                                    chng_type = c("+", "-", "=", "=", "+", "-"),
+                                    var1 = c("B", "B", "B", "B", "C", "C"),
+                                    var2 = c("Y", "Y", "Y", "Y", "W", "W"),
+                                    val1 = c(2, 2, 1, 1, 3, 3),
+                                    val2 = c("B1", "B1", "A1", "A1", "C2", "C1"),
+                                    val3 = c(2.1, 2, 1, 1, 3, 3)) 
+
+expected_comparison_table_diff = data.frame(grp = c("=", "=", "=", "=", "=", "="),
+                                            chng_type = c("+", "-", "=", "=", "+", "-"),
+                                            var1 = c("=", "=", "=", "=", "=", "="),
+                                            var2 = c("=", "=", "=", "=", "=", "="),
+                                            val1 = c("=", "=", "=", "=", "=", "="),
+                                            val2 = c("=", "=", "=", "=", "+", "-"),
+                                            val3 = c("+", "-", "=", "=", "=", "=")) 
+
+expected_change_count = data.frame(grp = c(1, 2),
+                                   changes = c(1L, 1L),
+                                   additions = c(0, 0),
+                                   removals = c(0, 0)) 
+
+expected_change_summary = data.frame(old_obs = 3,
+                                     new_obs = 3,
+                                     changes = 2,
+                                     additions = 0,
+                                     removals = 0) 
+
+expect_equivalent(expected_comparison_df, ctable$comparison_df)
+expect_equivalent(expected_comparison_table_diff, ctable$comparison_table_diff)
+expect_equivalent(expected_change_summary, ctable$change_summary)
+expect_equivalent(expected_change_count, ctable$change_count)
+
+#===============================================================================
+
 context("compare_df: keep_unchanged_cols")
 old_df = data.frame(var1 = c("A", "B", "C"),
                     var2 = c("Z", "Y", "X"),
@@ -384,18 +434,18 @@ test_that("Bad names are not mangled by data.frame", {
 
 #===============================================================================
 context("compare_df: Works with Factors")
-options(stringsAsFactors = TRUE)
 
 test_that("Uses generated row names as default if grouping column is provided", {
-
-  df1 <- data.frame(a = 1:5, b = letters[1:5], row = 1:5)
-  df2 <- data.frame(a = 1:3, b = letters[1:3], row = 1:3)
+  # options(stringsAsFactors = TRUE)
+  df1 <- data.frame(a = 1:5, b = letters[1:5], row = 1:5, stringsAsFactors = TRUE)
+  df2 <- data.frame(a = 1:3, b = letters[1:3], row = 1:3, stringsAsFactors = TRUE)
 
   df_compare = compare_df(df1, df2, "row")
   expected_df = data.frame(row = c(4, 5), chng_type = "+", a = c(4, 5), b = c("d", "e"), stringsAsFactors = F)
   expect_equivalent(df_compare$comparison_df, expected_df)
+  # options(stringsAsFactors = FALSE)
 })
-options(stringsAsFactors = FALSE)
+
 
 #===============================================================================
 context("compare_df: Change Markers")
