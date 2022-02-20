@@ -28,7 +28,7 @@ utils::globalVariables(c("is_changed", "newold_type"))
 #' @importFrom dplyr `%>%`
 #' @importFrom dplyr mutate transmute select slice arrange desc do filter tally n ungroup
 #' @importFrom dplyr group_by_at mutate_if arrange_at summarize arrange_at starts_with full_join
-
+#' @importFrom rlang .data
 #' @importFrom tibble rownames_to_column
 #' @export
 #' @examples
@@ -306,14 +306,15 @@ sequence_order_vector <- function(data)
 create_change_count <- function(comparison_table_ts2char, group_col){
   change_count = comparison_table_ts2char %>% group_by_at(c(group_col, "chng_type")) %>% tally()
   change_count_replace = change_count %>%
-    tidyr::pivot_wider(names_from = chng_type, values_from = n, names_prefix = "X") %>%
+    tidyr::pivot_wider(names_from = .data$chng_type, values_from = .data$n, names_prefix = "X") %>%
     data.frame(check.names = F)
   change_count_replace[is.na(change_count_replace)] = 0
 
   if(is.null(change_count_replace[['X1']])) change_count_replace = change_count_replace %>% mutate(X1 = 0L)
   if(is.null(change_count_replace[['X2']])) change_count_replace = change_count_replace %>% mutate(X2 = 0L)
-  change_count_replace = change_count_replace %>% as.data.frame %>%
-    tidyr::gather_("variable", "value", c("X2", "X1"))
+  change_count_replace = change_count_replace %>%
+    as.data.frame %>%
+    tidyr::pivot_longer(cols = c(.data$X2, .data$X1), names_to = "variable")
 
   change_count_output = change_count_replace %>% group_by_at(group_col) %>% arrange_at('variable') %>%
     summarize(changes = min(value), additions = value[2] - value[1], removals = value[1] - value[2]) %>%
