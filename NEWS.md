@@ -1,3 +1,7 @@
+## compareDF 2.3.3
+* Changed deprecated `_gather` to `pivot_longer` (thanks to `olivroy`!)
+* Fixed a bug where `compare_df` would mutate the global data to data.table
+
 ## compareDF 2.3.2
 * Fixed an edge case with `keep_unchanged_rows`
 * Removed naked `stringsAsFactors` from tests into data.frame creation function.

@@ -229,6 +229,8 @@ Thanks to Nitin for proofreading the doc and making sure everything made sense.
 * D3SL <https://github.com/D3SL>
 * Brice Richard
 * Joshua David Barillas - <https://github.com/jdbarillas>
+* <https://github.com/lcougnaud>
+* <https://github.com/olivroy>
 
 License (MIT)
 
