@@ -48,8 +48,8 @@ compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0,
   options(stringsAsFactors = FALSE)
   on.exit(options(stringsAsFactors = current_saf_val))
 
-  data.table::setDT(df_old)
-  data.table::setDT(df_new)
+  df_old = data.table::data.table(df_old)
+  df_new = data.table::data.table(df_new)
 
   if (missing(group_col)) {
     warning("Missing grouping columns. Adding rownames to use as the default")
