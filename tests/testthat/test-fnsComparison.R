@@ -511,6 +511,6 @@ test_that("global data is preserved", {
                       val1 = c(1, 2, 4))
   
   output = compare_df(new_df, old_df, c("var1"))
-    expect_false(data.table::is.data.table(old_df))
+  expect_false(data.table::is.data.table(old_df))
   expect_false(data.table::is.data.table(new_df))
 })

@@ -13,7 +13,6 @@ Depends:
 Imports:
     dplyr (>= 1.0.0),
     data.table (>= 1.12.8),
-    magrittr (>= 1.5),
     htmlTable (>= 1.5),
     openxlsx (>= 4.1),
     tidyr (>= 1.1.0),
