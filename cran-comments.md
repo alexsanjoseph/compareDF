@@ -22,9 +22,8 @@ This is a resubmission of new version. In this version I have:
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 NOTE
+0 errors | 0 warnings | 0 notes
 
-This note is not reproducible on my local machine or AppVeyor or Win. Seems like something specific to Rhub. Not affecting the package in any way, so submitting it. 
 
 ## Reverse dependencies
 
