@@ -4,14 +4,13 @@
 
 This is a resubmission of new version. In this version I have:
 
-* Fixed an edge case with `keep_unchanged_rows`
-* Removed naked `stringsAsFactors` from tests into data.frame creation function.
+* Changed deprecated `_gather` to `pivot_longer` (thanks to `olivroy`!)
+* Fixed a bug where `compare_df` would mutate the global data to data.table
 
-I've also fixed examples to run faster since the last submission.
 
 ## Test environments
 
-*  Mac OS X Big Sur install - 11.5.2, R 4.1.1 (Local)
+*  Mac OS X Monterey install - 12.2.1, R 4.1.1 (Local)
 *  Ubuntu 16.04 (on travis-ci)
 *  Ubuntu 18.04 - Docker, R 3.6.3 (Github Actions)
 *  Windows - Latest (on Github Actions)
@@ -24,6 +23,7 @@ I've also fixed examples to run faster since the last submission.
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
+
 
 ## Reverse dependencies
 

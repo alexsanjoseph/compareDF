@@ -15,3 +15,5 @@
 Dockerfile
 ^\.github$
 ^codecov\.yml$
+^LICENSE\.md$
+^CRAN-SUBMISSION$

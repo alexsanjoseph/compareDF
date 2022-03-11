@@ -496,3 +496,21 @@ test_that("Elapsed comparison time should be less than expected maximum for this
   expect_true(comparison_time['elapsed'] < expected_time + tolerance)
 
 })
+
+#==============================================================================
+context("compare_df: shouldn't coerce global data to data.table")
+
+test_that("global data is preserved", {
+  
+  set.seed(42)
+  
+  old_df = data.frame(var1 = c("A", "B", "C"),
+                      val1 = c(1, 2, 3))
+  
+  new_df = data.frame(var1 = c("A", "B", "C"),
+                      val1 = c(1, 2, 4))
+  
+  output = compare_df(new_df, old_df, c("var1"))
+  expect_false(data.table::is.data.table(old_df))
+  expect_false(data.table::is.data.table(new_df))
+})

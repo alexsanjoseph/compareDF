@@ -74,10 +74,9 @@ expect_equal(html_output %>% as.character() %>% stringr::str_count("<tr style=")
 get_html_header_names <- function(html_output){
   html_output_string = html_output %>% str_replace_all("\\n", "")
 
-  html_output_string %>%
+  (html_output_string %>%
     str_extract("thead.*thead") %>%
-    str_extract_all("'>.+?<") %>%
-    magrittr::extract2(1) %>%
+    str_extract_all("'>.+?<"))[[1]] %>%
     str_replace_all("'>(.*)<", "\\1")
 
 }
