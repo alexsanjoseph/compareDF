@@ -12,12 +12,3 @@ view_html(comparison_output)
 \description{
 Some versions of Rstudio doesn't automatically show the html pane for the html output. This is a workaround
 }
-\examples{
-old_df = data.frame(var1 = c("A", "B", "C"),
-                    val1 = c(1, 2, 3))
-new_df = data.frame(var1 = c("A", "B", "C"),
-                    val1 = c(1, 2, 4))
-ctable = compare_df(new_df, old_df, c("var1"))
-# Not Run::
-# view_html(ctable)
-}

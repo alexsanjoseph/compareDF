@@ -47,12 +47,3 @@ is shown off. Doesn't apply to categorical variables.}
 \description{
 Do a git style comparison between two data frames of similar columnar structure
 }
-\examples{
-old_df = data.frame(var1 = c("A", "B", "C"),
-                    val1 = c(1, 2, 3))
-new_df = data.frame(var1 = c("A", "B", "C"),
-                    val1 = c(1, 2, 4))
-ctable = compare_df(new_df, old_df, c("var1"))
-print(ctable$comparison_df)
-\dontrun{ctable$html_output}
-}

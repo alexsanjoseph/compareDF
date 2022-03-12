@@ -6,7 +6,7 @@ This is a resubmission of new version. In this version I have:
 
 * Changed deprecated `_gather` to `pivot_longer` (thanks to `olivroy`!)
 * Fixed a bug where `compare_df` would mutate the global data to data.table
-
+* Removed all examples from the code because CRAN server can't handle it
 
 ## Test environments
 

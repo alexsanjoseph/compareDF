@@ -162,14 +162,6 @@ create_wide_output <- function(comparison_output, suffix = c("_new", "_old")){
 #'
 #' @param comparison_output output from the comparisonDF compare function
 #' @export
-#' @examples
-#' old_df = data.frame(var1 = c("A", "B", "C"),
-#'                     val1 = c(1, 2, 3))
-#' new_df = data.frame(var1 = c("A", "B", "C"),
-#'                     val1 = c(1, 2, 4))
-#' ctable = compare_df(new_df, old_df, c("var1"))
-#' # Not Run::
-#' # view_html(ctable)
 view_html <- function(comparison_output){
   temp_dir = tempdir()
   temp_file <- paste0(temp_dir, "/temp.html")

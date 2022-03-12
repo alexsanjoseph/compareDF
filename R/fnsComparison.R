@@ -31,14 +31,6 @@ utils::globalVariables(c("is_changed", "newold_type"))
 #' @importFrom rlang .data
 #' @importFrom tibble rownames_to_column
 #' @export
-#' @examples
-#' old_df = data.frame(var1 = c("A", "B", "C"),
-#'                     val1 = c(1, 2, 3))
-#' new_df = data.frame(var1 = c("A", "B", "C"),
-#'                     val1 = c(1, 2, 4))
-#' ctable = compare_df(new_df, old_df, c("var1"))
-#' print(ctable$comparison_df)
-#' \dontrun{ctable$html_output}
 compare_df <- function(df_new, df_old, group_col, exclude = NULL, tolerance = 0, tolerance_type = 'ratio',
                        stop_on_error = TRUE, keep_unchanged_rows = FALSE, keep_unchanged_cols = TRUE,
                        change_markers = c("+", "-", "="),
