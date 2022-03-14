@@ -446,6 +446,30 @@ test_that("Uses generated row names as default if grouping column is provided", 
   # options(stringsAsFactors = FALSE)
 })
 
+#===============================================================================
+context("compare_df: Works with dates")
+
+test_that("Uses generated row names as default if grouping column is provided", {
+  df1 <- data.frame(a = as.Date(2:5, origin = as.Date("1970-01-01")), b = letters[1:5], row = 1:5)
+  df2 <- data.frame(a = as.Date(1:3, origin = as.Date("1970-01-01")), b = letters[1:3], row = 1:3)
+  
+  df1 <- data.frame(a = letters[2:5], b = as.Date(2:5, origin = as.Date("1970-01-01")), row = 1:4)
+  df2 <- data.frame(a = letters[1:3], b = as.Date(1:3, origin = as.Date("1970-01-01")), row = 1:3)
+  
+  df_compare = compare_df(df1, df2, "row", keep_unchanged_rows = TRUE)
+  
+  expected_df = data.frame(
+    row = c(1, 1, 2, 2, 3, 3, 4), 
+    chng_type = c("+", "-", "+", "-", "+", "-", "+"),
+    b = c("b", "a", "c", "b", "d", "c", "e"), 
+    a = as.character(as.Date(c(2, 1, 3, 2, 4, 3, 5), origin = as.Date("1970-01-01")))
+  )
+  
+  expect_equivalent(df_compare$comparison_df, expected_df)
+  # options(stringsAsFactors = FALSE)
+})
+
+
 
 #===============================================================================
 context("compare_df: Change Markers")
@@ -514,3 +538,4 @@ test_that("global data is preserved", {
   expect_false(data.table::is.data.table(old_df))
   expect_false(data.table::is.data.table(new_df))
 })
+

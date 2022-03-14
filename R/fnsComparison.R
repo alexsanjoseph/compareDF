@@ -120,6 +120,10 @@ convert_factors_to_character <- function(both_tables){
       message_compareDF("Found factor columns! Will be casted to character for comparison!")
       x = x %>% mutate_if(is.factor, as.character)
     }
+    if (any(vapply(x, lubridate::is.Date, TRUE))) {
+      message_compareDF("Found Date columns! Will be casted to character for comparison!")
+      x = x %>% mutate_if(lubridate::is.Date, as.character)
+    }
     x
   })
 }

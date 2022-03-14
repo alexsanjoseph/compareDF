@@ -1,3 +1,7 @@
+## compareDF 2.3.4
+* Fixed a bug where dates  couldn't be compared (thanks to `jaw8`!)
+
+
 ## compareDF 2.3.3
 * Changed deprecated `_gather` to `pivot_longer` (thanks to `olivroy`!)
 * Fixed a bug where `compare_df` would mutate the global data to data.table
