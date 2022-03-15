@@ -450,9 +450,6 @@ test_that("Uses generated row names as default if grouping column is provided", 
 context("compare_df: Works with dates")
 
 test_that("Uses generated row names as default if grouping column is provided", {
-  df1 <- data.frame(a = as.Date(2:5, origin = as.Date("1970-01-01")), b = letters[1:5], row = 1:5)
-  df2 <- data.frame(a = as.Date(1:3, origin = as.Date("1970-01-01")), b = letters[1:3], row = 1:3)
-  
   df1 <- data.frame(a = letters[2:5], b = as.Date(2:5, origin = as.Date("1970-01-01")), row = 1:4)
   df2 <- data.frame(a = letters[1:3], b = as.Date(1:3, origin = as.Date("1970-01-01")), row = 1:3)
   
