@@ -4,16 +4,12 @@
 
 This is a resubmission of new version. In this version I have:
 
-* Changed deprecated `_gather` to `pivot_longer` (thanks to `olivroy`!)
-* Fixed a bug where `compare_df` would mutate the global data to data.table
-* Removed all examples from the code because CRAN server can't handle it
+* Fixed a bug where precision was lost while comparison (thanks to `jenko1979`)
 
 ## Test environments
 
 *  Mac OS X Monterey install - 12.2.1, R 4.1.1 (Local)
-*  Ubuntu 16.04 (on travis-ci)
 *  Ubuntu 18.04 - Docker, R 3.6.3 (Github Actions)
-*  Windows - Latest (on Github Actions)
 *  MacOS - Latest (on Github Actions)
 *  Ubuntu Linux 20.04.1 LTS, R-release, GCC (Rhub)
 *  Fedora Linux, R-devel, clang, gfortran (Rhub)

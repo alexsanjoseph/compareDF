@@ -1,10 +1,8 @@
-
 # compareDF
 
 **New Version released with XLSX Support!!**
 
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
-[![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3AR-CMD-check)
 [![Docker](https://github.com/alexsanjoseph/compareDF/workflows/Docker/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3ADocker)
@@ -126,7 +124,6 @@ scores, which are in _Discipline_, _Maths_, and _Maths_ respectively.
 _Dhakkan_ and _Mugger_ have dropped out of the dataset from 2010 and the all the columns for the rows are shown
 in red, which _DikChik_ and _Vikram_ have joined new in the data set and all the columns for the rows are in green.
 
-
 ### XLSX Output
 
 Alternately you can write to an xlsx file as well
@@ -234,8 +231,6 @@ Thanks to Nitin for proofreading the doc and making sure everything made sense.
 
 License (MIT)
 
-Copyright (c) 2016 System Insights, Inc.
-
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -243,3 +238,5 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 _A version of this README has been published as a blog [here](http://alexsanjoseph.github.io/r/2018/10/03/comparing-dataframes-in-r-using-comparedf)_
+
+

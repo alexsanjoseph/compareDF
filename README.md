@@ -3,7 +3,6 @@
 **New Version released with XLSX Support!!**
 
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
-[![Travis-CI Build Status](https://travis-ci.org/alexsanjoseph/compareDF.svg?branch=master)](https://travis-ci.org/alexsanjoseph/compareDF)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3AR-CMD-check)
 [![Docker](https://github.com/alexsanjoseph/compareDF/workflows/Docker/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3ADocker)

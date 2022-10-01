@@ -242,14 +242,6 @@ check_if_comparable <- function(df_new, df_old, group_col, stop_on_error){
 
 }
 
-round_num_cols <- function(df, round_digits = 2)
-{
-  numeric_cols = which(sapply(df, is.numeric))
-  df[, numeric_cols] = lapply(df[, numeric_cols, drop = F], round, round_digits)
-
-  df
-}
-
 #' @importFrom stats na.omit
 .diff_type_df <- function(df, tolerance = 1e-6, tolerance_type = 'ratio'){
 
@@ -352,4 +344,12 @@ get_headers_for_table <- function(headers, change_col_name, group_col_name, comp
 #
 #   list(df1_2 = rowdiff(both_tables$df_old, both_tables$df_new),
 #        df2_1 = rowdiff(both_tables$df_new, both_tables$df_old))
+# }
+
+# round_num_cols <- function(df, round_digits = 2)
+# {
+#   numeric_cols = which(sapply(df, is.numeric))
+#   df[, numeric_cols] = lapply(df[, numeric_cols, drop = F], round, round_digits)
+# 
+#   df
 # }

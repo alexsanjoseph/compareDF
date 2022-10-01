@@ -1,5 +1,5 @@
 ## compareDF 2.3.5
-* Fixed a bug where precision was lost while comparison (thanks to @jenko1979!)
+* Fixed a bug where precision was lost while comparison (thanks to `jenko1979`)
 
 ## compareDF 2.3.4
 * Fixed a bug where dates  couldn't be compared (thanks to `jaw8`!)
