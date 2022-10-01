@@ -536,3 +536,15 @@ test_that("global data is preserved", {
   expect_false(data.table::is.data.table(new_df))
 })
 
+#==============================================================================
+context("compare_df: shouldn't lose precision by rounding before output")
+test_that("Works fine without rounding", {
+  
+  old_df = data.frame(group = "A", value = -0.100000000000001)
+  new_df = data.frame(group = "B", value = 0.1)
+  
+  output = compare_df(new_df, old_df, group_col = c("group"), keep_unchanged_rows = TRUE, tolerance = 0)
+  
+  expected_output = data.frame(group = c("A", "B"), chng_type=c("-", "+"), value=c(-0.100000000000001, 0.1))
+  expect_equal(expected_output, output$comparison_df)
+})
