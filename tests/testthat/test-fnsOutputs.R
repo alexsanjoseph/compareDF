@@ -193,7 +193,7 @@ test_that("compare_df: Error out if file name is NULL", {
 
 test_that("compare_df: Write to file correctly", {
   temp_file = tempfile()
-  create_output_table(compare_output, output_type = 'xlsx', file_name = temp_file)
+  create_output_table(compare_output, output_type = 'xlsx', file_name = temp_file, change_col_name = "test")
   expect_true(file.exists(temp_file))
   unlink(temp_file)
 })
