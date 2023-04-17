@@ -113,6 +113,8 @@ create_xlsx_document <- function(comparison_output, file_name, limit, color_sche
   if(is.null(file_name)) stop("file_name cannot be null if output format is xlsx")
   comparison_table_diff = comparison_output$comparison_table_diff_numbers
   comparison_table_ts2char = comparison_output$comparison_table_ts2char
+  colnames(comparison_table_ts2char) = headers_all
+  
   group_col = comparison_output$group_col
 
   requireNamespace("openxlsx")
