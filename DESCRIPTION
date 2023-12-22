@@ -8,6 +8,8 @@ Description: Compares two dataframes which have the same column
     structure to show the rows that have changed. Also gives a git style diff format
     to quickly see what has changed in addition to summary statistics.
 License: MIT + file LICENSE
+URL: https://github.com/alexsanjoseph/compareDF
+BugReports: https://github.com/alexsanjoseph/compareDF/issues
 Depends:
     R (>= 3.5.0)
 Imports:
