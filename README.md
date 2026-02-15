@@ -2,6 +2,7 @@
 
 **New Version released with XLSX Support!!**
 
+![maintenance-status](https://img.shields.io/badge/maintenance-as--is-yellow.svg)
 [![codecov.io](https://codecov.io/github/alexsanjoseph/compareDF/coverage.svg?branch=master)](https://codecov.io/github/alexsanjoseph/compareDF?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/alexsanjoseph/compareDF?branch=master&svg=true)](https://ci.appveyor.com/project/alexsanjoseph/compareDF)
 [![R-CMD-check](https://github.com/alexsanjoseph/compareDF/workflows/R-CMD-check/badge.svg)](https://github.com/alexsanjoseph/compareDF/actions?query=workflow%3AR-CMD-check)
@@ -11,6 +12,9 @@
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/compareDF)](https://www.r-pkg.org/pkg/compareDF)
 ![CRAN Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/compareDF)
 ![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
+
+> [!NOTE]
+> This package is **feature-complete** and in **maintenance mode**. It is stable and working as intended. No new features are planned, but critical bug reports are welcome.
 
 ## Introduction
 
